@@ -336,7 +336,7 @@
     
     <script>
         // 配置：在这里填入你的Google Apps Script URL
-        const GOOGLE_SCRIPT_URL = '在这里粘贴你的新Google Apps Script URL';
+        const GOOGLE_SCRIPT_URL = ' ';
         
         // 页面元素
         const formSection = document.getElementById('formSection');
@@ -557,9 +557,9 @@
         
         // 初始化提示
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec')) {
-            console.log('⚠️ 请先配置Google Apps Script URL');
-            console.log('1. 部署Google Apps Script');
-            console.log('2. 将生成的URL粘贴到第141行的GOOGLE_SCRIPT_URL变量中');
+        console.warn('未配置Google Apps Script URL，数据仅本地保存');
+        console.log('数据内容:', data);
+        return true;  // 这里返回 true，让页面继续显示
         }
     </script>
 </body>
