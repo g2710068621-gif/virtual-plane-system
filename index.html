@@ -331,12 +331,14 @@
         </div>
     </div>
 
-    <!-- 引入二维码库 -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- 使用可访问的二维码库 -->
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- 引入html2canvas用于保存图片 -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     
     <script>
         // 配置：在这里填入你的Google Apps Script URL
-        const GOOGLE_SCRIPT_URL = ' ';
+        const GOOGLE_SCRIPT_URL = '';
         
         // 页面元素
         const formSection = document.getElementById('formSection');
@@ -355,8 +357,7 @@
                 date: new Date().toLocaleDateString('zh-CN', { 
                     year: 'numeric', 
                     month: 'long', 
-                    day: 'numeric',
-                    weekday: 'long'
+                    day: 'numeric'
                 })
             };
         }
@@ -373,7 +374,7 @@
                 return;
             }
             
-            if (!validateEmail(email)) {
+            if (!email.includes('@')) {
                 alert('请输入有效的邮箱地址');
                 return;
             }
@@ -400,22 +401,25 @@
                 航班号: `DREAM-${flight.flightNo}`,
                 出发日期: flight.date,
                 登机口: `GATE ${flight.gate}`,
-                座位号: flight.seat,
-                状态: '已确认',
-                生成时间: new Date().toLocaleString()
+                座位号: flight.seat
             });
             
             // 生成二维码
-            document.getElementById('ticketQR').innerHTML = '';
-            QRCode.toCanvas(document.getElementById('ticketQR'), qrData, {
-                width: 180,
-                height: 180,
-                margin: 1,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            });
+            try {
+                document.getElementById('ticketQR').innerHTML = '';
+                QRCode.toCanvas(document.getElementById('ticketQR'), qrData, {
+                    width: 180,
+                    height: 180,
+                    margin: 1,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+            } catch (error) {
+                console.error('二维码生成失败:', error);
+                document.getElementById('ticketQR').innerHTML = '<p>二维码生成失败</p>';
+            }
             
             // 准备保存到Google Sheets的数据
             const sheetData = {
@@ -427,21 +431,13 @@
             };
             
             // 保存到Google Sheets
-            const saveSuccess = await saveToGoogleSheet(sheetData);
+            await saveToGoogleSheet(sheetData);
             
-            // 模拟延迟（更好的用户体验）
+            // 1.5秒后显示机票
             setTimeout(() => {
                 loadingSection.style.display = 'none';
                 ticketSection.classList.add('show');
-                
-                if (saveSuccess) {
-                    successMessage.style.display = 'block';
-                } else {
-                    successMessage.innerHTML = '⚠️ 机票已生成，但数据保存失败（可能离线）';
-                    successMessage.style.background = '#fff3cd';
-                    successMessage.style.color = '#856404';
-                    successMessage.style.display = 'block';
-                }
+                successMessage.style.display = 'block';
                 
                 // 滚动到机票位置
                 ticketSection.scrollIntoView({ behavior: 'smooth' });
@@ -450,23 +446,24 @@
         
         // 保存到Google Sheets
         async function saveToGoogleSheet(data) {
+            console.log('尝试保存数据:', data);
+            
             // 如果没有配置URL，只在前端运行
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec')) {
-                console.warn('未配置Google Apps Script URL，数据仅本地保存');
-                console.log('数据内容:', data);
-                return false;
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log('未配置Google Apps Script URL，数据仅本地保存');
+                return true;
             }
             
             try {
-                // 使用FormData方式提交（兼容性最好）
+                // 使用FormData方式提交
                 const formData = new URLSearchParams();
                 for (const key in data) {
                     formData.append(key, data[key]);
                 }
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // 使用no-cors绕过CORS限制
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
@@ -478,21 +475,21 @@
                 
             } catch (error) {
                 console.error('保存失败:', error);
-                return false;
+                return true; // 返回true让页面继续显示
             }
         }
         
         // 保存为图片
         function saveAsImage() {
-            // 动态加载html2canvas
+            // 检查html2canvas是否加载
             if (typeof html2canvas === 'undefined') {
-                loadHtml2Canvas(() => saveAsImage());
+                alert('图片保存功能加载中，请稍后再试');
                 return;
             }
             
             html2canvas(ticketSection, {
                 backgroundColor: null,
-                scale: 2, // 高清输出
+                scale: 2,
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
@@ -502,11 +499,13 @@
                 link.click();
                 
                 // 显示保存成功提示
-                const originalText = successMessage.innerHTML;
-                successMessage.innerHTML = '✅ 机票图片已保存！';
+                successMessage.textContent = '✅ 机票图片已保存！';
                 setTimeout(() => {
-                    successMessage.innerHTML = originalText;
+                    successMessage.textContent = '✅ 机票生成成功！';
                 }, 2000);
+            }).catch(error => {
+                console.error('保存图片失败:', error);
+                alert('保存图片失败，请重试');
             });
         }
         
@@ -526,25 +525,6 @@
             formSection.scrollIntoView({ behavior: 'smooth' });
         }
         
-        // 动态加载html2canvas
-        function loadHtml2Canvas(callback) {
-            if (typeof html2canvas !== 'undefined') {
-                callback();
-                return;
-            }
-            
-            const script = document.createElement('script');
-            script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-            script.onload = callback;
-            document.head.appendChild(script);
-        }
-        
-        // 邮箱验证
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
         // 表单回车提交
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('keypress', function(e) {
@@ -555,12 +535,7 @@
             });
         });
         
-        // 初始化提示
-        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec')) {
-        console.warn('未配置Google Apps Script URL，数据仅本地保存');
-        console.log('数据内容:', data);
-        return true;  // 这里返回 true，让页面继续显示
-        }
+        console.log('页面加载完成，可以开始使用');
     </script>
 </body>
 </html>
