@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>生成你的梦想机票</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 30px; border-radius: 15px; }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .ticket { background: white; border-radius: 10px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ 生成你的梦想机票</h1>
+        
+        <!-- 表单部分 -->
+        <div id="formSection">
+            <form id="ticketForm">
+                <input type="text" id="name" placeholder="请输入您的姓名" required>
+                <input type="text" id="city" placeholder="请输入想去的城市" required>
+                <input type="email" id="email" placeholder="请输入邮箱（接收机票）" required>
+                <button type="submit">生成虚拟机票</button>
+            </form>
+        </div>
+        
+        <!-- 机票显示部分 -->
+        <div id="ticketSection" class="hidden">
+            <div class="ticket" id="ticketDisplay">
+                <h2>✈️ 梦想航空公司</h2>
+                <p><strong>乘客姓名：</strong><span id="ticketName"></span></p>
+                <p><strong>目的地：</strong><span id="ticketCity"></span></p>
+                <p><strong>航班号：</strong>DREAM-<span id="flightNo"></span></p>
+                <p><strong>出发日期：</strong><span id="departureDate"></span></p>
+                <p><strong>登机口：</strong>GATE <span id="gate"></span></p>
+                <p><strong>座位号：</strong><span id="seat"></span></p>
+                <div id="ticketQR"></div>
+                <button onclick="saveAsImage()">保存机票图片</button>
+                <button onclick="window.location.reload()">生成新机票</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入二维码库 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <script>
+        // 随机生成航班信息
+        function generateFlightInfo() {
+            return {
+                flightNo: Math.floor(1000 + Math.random() * 9000),
+                gate: Math.floor(1 + Math.random() * 50),
+                seat: String.fromCharCode(65 + Math.floor(Math.random() * 6)) + 
+                      Math.floor(1 + Math.random() * 30),
+                date: new Date().toLocaleDateString('zh-CN', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })
+            };
+        }
+
+        // 提交表单
+        document.getElementById('ticketForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const city = document.getElementById('city').value;
+            const email = document.getElementById('email').value;
+            
+            // 生成机票信息
+            const flight = generateFlightInfo();
+            
+            // 显示机票
+            document.getElementById('ticketName').textContent = name;
+            document.getElementById('ticketCity').textContent = city;
+            document.getElementById('flightNo').textContent = flight.flightNo;
+            document.getElementById('departureDate').textContent = flight.date;
+            document.getElementById('gate').textContent = flight.gate;
+            document.getElementById('seat').textContent = flight.seat;
+            
+            // 生成二维码
+            const qrData = JSON.stringify({
+                name: name,
+                city: city,
+                flight: `DREAM-${flight.flightNo}`,
+                date: flight.date
+            });
+            
+            document.getElementById('ticketQR').innerHTML = '';
+            QRCode.toCanvas(document.getElementById('ticketQR'), qrData, {
+                width: 200,
+                margin: 1
+            });
+            
+            // 切换显示
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('ticketSection').classList.remove('hidden');
+            
+            // 保存到Google Sheet
+            await saveToGoogleSheet(name, city, email, qrData);
+        });
+
+        // 保存到Google Sheets
+        async function saveToGoogleSheet(name, city, email, qrData) {
+            try {
+                // 使用Google Apps Script Web App URL
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec';
+                
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', // 简化处理
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        city: city,
+                        email: email,
+                        qrData: qrData,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                console.log('数据已保存到Google Sheets');
+            } catch (error) {
+                console.log('离线模式运行，数据仅本地保存');
+            }
+        }
+
+        // 保存为图片
+        function saveAsImage() {
+            const ticketElement = document.getElementById('ticketDisplay');
+            html2canvas(ticketElement).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '我的虚拟机票.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+    
+    <!-- 引入html2canvas用于保存图片 -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</body>
+</html>
