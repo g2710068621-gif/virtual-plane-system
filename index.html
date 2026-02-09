@@ -2,43 +2,331 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>生成你的梦想机票</title>
+    <title>生成梦想机票</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
-        .container { background: #f5f5f5; padding: 30px; border-radius: 15px; }
-        input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
-        .ticket { background: white; border-radius: 10px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .hidden { display: none; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .ticket {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px dashed #667eea;
+            display: none;
+        }
+        
+        .ticket.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .ticket-header {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .ticket-header h2 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .ticket-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .qrcode-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .save-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .new-btn {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 480px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .ticket-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>✈️ 生成你的梦想机票</h1>
-        
-        <!-- 表单部分 -->
-        <div id="formSection">
-            <form id="ticketForm">
-                <input type="text" id="name" placeholder="请输入您的姓名" required>
-                <input type="text" id="city" placeholder="请输入想去的城市" required>
-                <input type="email" id="email" placeholder="请输入邮箱（接收机票）" required>
-                <button type="submit">生成虚拟机票</button>
-            </form>
+        <div class="header">
+            <h1>✈️ 生成梦想机票</h1>
+            <p>填写信息，立即获得专属虚拟机票</p>
         </div>
         
-        <!-- 机票显示部分 -->
-        <div id="ticketSection" class="hidden">
-            <div class="ticket" id="ticketDisplay">
-                <h2>✈️ 梦想航空公司</h2>
-                <p><strong>乘客姓名：</strong><span id="ticketName"></span></p>
-                <p><strong>目的地：</strong><span id="ticketCity"></span></p>
-                <p><strong>航班号：</strong>DREAM-<span id="flightNo"></span></p>
-                <p><strong>出发日期：</strong><span id="departureDate"></span></p>
-                <p><strong>登机口：</strong>GATE <span id="gate"></span></p>
-                <p><strong>座位号：</strong><span id="seat"></span></p>
-                <div id="ticketQR"></div>
-                <button onclick="saveAsImage()">保存机票图片</button>
-                <button onclick="window.location.reload()">生成新机票</button>
+        <div class="content">
+            <!-- 成功消息 -->
+            <div id="successMessage" class="success-message">
+                ✅ 数据已保存！机票生成成功
+            </div>
+            
+            <!-- 表单部分 -->
+            <div id="formSection">
+                <div class="form-group">
+                    <label for="name">👤 您的姓名</label>
+                    <input type="text" id="name" placeholder="请输入姓名" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">🌍 想去的城市</label>
+                    <input type="text" id="city" placeholder="例如：巴黎、东京、马尔代夫" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">📧 邮箱地址</label>
+                    <input type="email" id="email" placeholder="用于接收机票信息" required>
+                </div>
+                
+                <button id="submitBtn" class="submit-btn">🎫 生成我的机票</button>
+            </div>
+            
+            <!-- 加载中 -->
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <p>正在生成机票并保存数据...</p>
+            </div>
+            
+            <!-- 机票部分 -->
+            <div id="ticketSection" class="ticket">
+                <div class="ticket-header">
+                    <h2>梦想航空公司</h2>
+                    <p>电子登机牌</p>
+                </div>
+                
+                <div class="ticket-info">
+                    <div class="info-item">
+                        <div class="info-label">乘客姓名</div>
+                        <div class="info-value" id="ticketName">-</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">目的地</div>
+                        <div class="info-value" id="ticketCity">-</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">航班号</div>
+                        <div class="info-value">DREAM-<span id="flightNo">0000</span></div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">出发日期</div>
+                        <div class="info-value" id="departureDate">-</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">登机口</div>
+                        <div class="info-value">GATE <span id="gate">00</span></div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">座位号</div>
+                        <div class="info-value" id="seat">-</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 25px 0;">
+                    <div class="qrcode-container">
+                        <div id="ticketQR"></div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">扫描二维码验证机票</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button onclick="saveAsImage()" class="action-btn save-btn">📸 保存机票</button>
+                    <button onclick="generateNewTicket()" class="action-btn new-btn">🔄 重新生成</button>
+                </div>
             </div>
         </div>
     </div>
@@ -47,7 +335,17 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     
     <script>
-        // 随机生成航班信息
+        // 配置：在这里填入你的Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = '在这里粘贴你的新Google Apps Script URL';
+        
+        // 页面元素
+        const formSection = document.getElementById('formSection');
+        const loadingSection = document.getElementById('loadingSection');
+        const ticketSection = document.getElementById('ticketSection');
+        const successMessage = document.getElementById('successMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // 生成随机航班信息
         function generateFlightInfo() {
             return {
                 flightNo: Math.floor(1000 + Math.random() * 9000),
@@ -57,23 +355,37 @@
                 date: new Date().toLocaleDateString('zh-CN', { 
                     year: 'numeric', 
                     month: 'long', 
-                    day: 'numeric' 
+                    day: 'numeric',
+                    weekday: 'long'
                 })
             };
         }
-
+        
         // 提交表单
-        document.getElementById('ticketForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        submitBtn.addEventListener('click', async function() {
+            const name = document.getElementById('name').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const email = document.getElementById('email').value.trim();
             
-            const name = document.getElementById('name').value;
-            const city = document.getElementById('city').value;
-            const email = document.getElementById('email').value;
+            // 验证输入
+            if (!name || !city || !email) {
+                alert('请填写所有信息');
+                return;
+            }
             
-            // 生成机票信息
+            if (!validateEmail(email)) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+            
+            // 生成航班信息
             const flight = generateFlightInfo();
             
-            // 显示机票
+            // 显示加载
+            formSection.style.display = 'none';
+            loadingSection.style.display = 'block';
+            
+            // 显示机票信息
             document.getElementById('ticketName').textContent = name;
             document.getElementById('ticketCity').textContent = city;
             document.getElementById('flightNo').textContent = flight.flightNo;
@@ -81,68 +393,174 @@
             document.getElementById('gate').textContent = flight.gate;
             document.getElementById('seat').textContent = flight.seat;
             
-            // 生成二维码
+            // 生成二维码数据
             const qrData = JSON.stringify({
-                name: name,
-                city: city,
-                flight: `DREAM-${flight.flightNo}`,
-                date: flight.date
+                乘客: name,
+                目的地: city,
+                航班号: `DREAM-${flight.flightNo}`,
+                出发日期: flight.date,
+                登机口: `GATE ${flight.gate}`,
+                座位号: flight.seat,
+                状态: '已确认',
+                生成时间: new Date().toLocaleString()
             });
             
+            // 生成二维码
             document.getElementById('ticketQR').innerHTML = '';
             QRCode.toCanvas(document.getElementById('ticketQR'), qrData, {
-                width: 200,
-                margin: 1
+                width: 180,
+                height: 180,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
             });
             
-            // 切换显示
-            document.getElementById('formSection').classList.add('hidden');
-            document.getElementById('ticketSection').classList.remove('hidden');
+            // 准备保存到Google Sheets的数据
+            const sheetData = {
+                timestamp: new Date().toISOString(),
+                name: name,
+                city: city,
+                email: email,
+                ticketData: qrData
+            };
             
-            // 保存到Google Sheet
-            await saveToGoogleSheet(name, city, email, qrData);
-        });
-
-        // 保存到Google Sheets
-        async function saveToGoogleSheet(name, city, email, qrData) {
-            try {
-                // 使用Google Apps Script Web App URL
-                const scriptUrl = 'https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec';
+            // 保存到Google Sheets
+            const saveSuccess = await saveToGoogleSheet(sheetData);
+            
+            // 模拟延迟（更好的用户体验）
+            setTimeout(() => {
+                loadingSection.style.display = 'none';
+                ticketSection.classList.add('show');
                 
-                const response = await fetch(scriptUrl, {
+                if (saveSuccess) {
+                    successMessage.style.display = 'block';
+                } else {
+                    successMessage.innerHTML = '⚠️ 机票已生成，但数据保存失败（可能离线）';
+                    successMessage.style.background = '#fff3cd';
+                    successMessage.style.color = '#856404';
+                    successMessage.style.display = 'block';
+                }
+                
+                // 滚动到机票位置
+                ticketSection.scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        });
+        
+        // 保存到Google Sheets
+        async function saveToGoogleSheet(data) {
+            // 如果没有配置URL，只在前端运行
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec')) {
+                console.warn('未配置Google Apps Script URL，数据仅本地保存');
+                console.log('数据内容:', data);
+                return false;
+            }
+            
+            try {
+                // 使用FormData方式提交（兼容性最好）
+                const formData = new URLSearchParams();
+                for (const key in data) {
+                    formData.append(key, data[key]);
+                }
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // 简化处理
+                    mode: 'no-cors', // 使用no-cors绕过CORS限制
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: JSON.stringify({
-                        name: name,
-                        city: city,
-                        email: email,
-                        qrData: qrData,
-                        timestamp: new Date().toISOString()
-                    })
+                    body: formData
                 });
                 
-                console.log('数据已保存到Google Sheets');
+                console.log('数据发送成功');
+                return true;
+                
             } catch (error) {
-                console.log('离线模式运行，数据仅本地保存');
+                console.error('保存失败:', error);
+                return false;
             }
         }
-
+        
         // 保存为图片
         function saveAsImage() {
-            const ticketElement = document.getElementById('ticketDisplay');
-            html2canvas(ticketElement).then(canvas => {
+            // 动态加载html2canvas
+            if (typeof html2canvas === 'undefined') {
+                loadHtml2Canvas(() => saveAsImage());
+                return;
+            }
+            
+            html2canvas(ticketSection, {
+                backgroundColor: null,
+                scale: 2, // 高清输出
+                useCORS: true
+            }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = '我的虚拟机票.png';
+                const fileName = `梦想机票-${document.getElementById('ticketName').textContent}-${Date.now()}.png`;
+                link.download = fileName;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+                
+                // 显示保存成功提示
+                const originalText = successMessage.innerHTML;
+                successMessage.innerHTML = '✅ 机票图片已保存！';
+                setTimeout(() => {
+                    successMessage.innerHTML = originalText;
+                }, 2000);
             });
         }
+        
+        // 生成新机票
+        function generateNewTicket() {
+            // 隐藏机票，显示表单
+            ticketSection.classList.remove('show');
+            successMessage.style.display = 'none';
+            formSection.style.display = 'block';
+            
+            // 清空表单
+            document.getElementById('name').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('email').value = '';
+            
+            // 滚动到表单
+            formSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 动态加载html2canvas
+        function loadHtml2Canvas(callback) {
+            if (typeof html2canvas !== 'undefined') {
+                callback();
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+        
+        // 邮箱验证
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // 表单回车提交
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitBtn.click();
+                }
+            });
+        });
+        
+        // 初始化提示
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbyA898VrMRhtzJYMB-BRE0wPRNSJNTqZsbGl6UcFEgaAq7nLktSSi1WZDLOy3eSKlpr/exec')) {
+            console.log('⚠️ 请先配置Google Apps Script URL');
+            console.log('1. 部署Google Apps Script');
+            console.log('2. 将生成的URL粘贴到第141行的GOOGLE_SCRIPT_URL变量中');
+        }
     </script>
-    
-    <!-- 引入html2canvas用于保存图片 -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
