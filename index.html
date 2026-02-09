@@ -415,6 +415,10 @@
             }
         }
     </style>
+    <!-- 先加载所有外部库，避免未定义错误 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -534,164 +538,165 @@
             </div>
         </div>
     </div>
-
-    <!-- 二维码库 -->
-    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <!-- 条形码库 -->
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-    <!-- html2canvas用于保存图片 -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     
     <script>
-        // 页面元素
-        const formSection = document.getElementById('formSection');
-        const loadingSection = document.getElementById('loadingSection');
-        const ticketSection = document.getElementById('ticketSection');
-        const successMessage = document.getElementById('successMessage');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        // 生成随机航班信息（婚礼专属）
-        function generateFlightInfo() {
-            return {
-                flightNo: Math.floor(5200 + Math.random() * 999), // 520开头的航班号
-                gate: Math.floor(13 + Math.random() * 99), // 1314相关
-                seat: String.fromCharCode(76 + Math.floor(Math.random() * 5)) + // L-O开头
-                      Math.floor(13 + Math.random() * 14), // 13-27座位号
-                date: new Date().toLocaleDateString('zh-CN', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric'
-                })
-            };
-        }
-        
-        // 提交表单
-        submitBtn.addEventListener('click', async function() {
-            const name = document.getElementById('name').value.trim();
-            const city = document.getElementById('city').value.trim();
+        // 等待页面和所有库加载完成后再执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 页面元素
+            const formSection = document.getElementById('formSection');
+            const loadingSection = document.getElementById('loadingSection');
+            const ticketSection = document.getElementById('ticketSection');
+            const successMessage = document.getElementById('successMessage');
+            const submitBtn = document.getElementById('submitBtn');
             
-            // 验证输入
-            if (!name || !city) {
-                alert('请填写新人姓名和蜜月目的地！');
-                return;
+            // 生成随机航班信息（婚礼专属）
+            function generateFlightInfo() {
+                return {
+                    flightNo: Math.floor(5200 + Math.random() * 999), // 520开头的航班号
+                    gate: Math.floor(13 + Math.random() * 99), // 1314相关
+                    seat: String.fromCharCode(76 + Math.floor(Math.random() * 5)) + // L-O开头
+                          Math.floor(13 + Math.random() * 14), // 13-27座位号
+                    date: new Date().toLocaleDateString('zh-CN', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric'
+                    })
+                };
             }
             
-            // 生成航班信息
-            const flight = generateFlightInfo();
-            
-            // 显示加载
-            formSection.style.display = 'none';
-            loadingSection.style.display = 'block';
-            
-            // 填充机票信息
-            document.getElementById('ticketName').textContent = name;
-            document.getElementById('ticketCity').textContent = city;
-            document.getElementById('flightNo').textContent = flight.flightNo;
-            document.getElementById('departureDate').textContent = flight.date;
-            document.getElementById('gate').textContent = flight.gate;
-            document.getElementById('seat').textContent = flight.seat;
-            
-            // ========== 生成条形码（扫码显示：新婚快乐） ==========
-            const barcodeData = "新婚快乐";
-            // 创建条形码画布
-            document.getElementById('barcodeContainer').innerHTML = '<canvas id="barcodeCanvas"></canvas>';
-            // 生成条形码
-            JsBarcode("#barcodeCanvas", barcodeData, {
-                format: "CODE128", // 常用条码格式，可扫描
-                width: 2,
-                height: 80,
-                displayValue: true,
-                text: "新婚快乐",
-                fontSize: 14,
-                lineColor: "#e53e3e",
-                background: "#ffffff"
+            // 提交表单
+            submitBtn.addEventListener('click', function() {
+                const name = document.getElementById('name').value.trim();
+                const city = document.getElementById('city').value.trim();
+                
+                // 验证输入
+                if (!name || !city) {
+                    alert('请填写新人姓名和蜜月目的地！');
+                    return;
+                }
+                
+                // 生成航班信息
+                const flight = generateFlightInfo();
+                
+                // 显示加载
+                formSection.style.display = 'none';
+                loadingSection.style.display = 'block';
+                
+                // 填充机票信息
+                document.getElementById('ticketName').textContent = name;
+                document.getElementById('ticketCity').textContent = city;
+                document.getElementById('flightNo').textContent = flight.flightNo;
+                document.getElementById('departureDate').textContent = flight.date;
+                document.getElementById('gate').textContent = flight.gate;
+                document.getElementById('seat').textContent = flight.seat;
+                
+                // ========== 生成条形码（扫码显示：新婚快乐） ==========
+                const barcodeData = "新婚快乐";
+                // 创建条形码画布
+                document.getElementById('barcodeContainer').innerHTML = '<canvas id="barcodeCanvas"></canvas>';
+                // 生成条形码
+                try {
+                    JsBarcode("#barcodeCanvas", barcodeData, {
+                        format: "CODE128", // 常用条码格式，可扫描
+                        width: 2,
+                        height: 80,
+                        displayValue: true,
+                        text: "新婚快乐",
+                        fontSize: 14,
+                        lineColor: "#e53e3e",
+                        background: "#ffffff"
+                    });
+                } catch (e) {
+                    console.error('条形码生成失败:', e);
+                    document.getElementById('barcodeContainer').innerHTML = '<p style="color:#e53e3e;">条形码生成失败</p>';
+                }
+                
+                // ========== 生成二维码（扫码显示：新婚快乐） ==========
+                const qrData = "新婚快乐";
+                try {
+                    document.getElementById('ticketQR').innerHTML = '';
+                    // 兼容不同的QRCode库写法
+                    new QRCode(document.getElementById('ticketQR'), {
+                        text: qrData,
+                        width: 150,
+                        colorDark: '#e53e3e',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } catch (error) {
+                    console.error('二维码生成失败:', error);
+                    document.getElementById('ticketQR').innerHTML = '<p style="color:#e53e3e;">二维码生成失败</p>';
+                }
+                
+                // 显示机票
+                setTimeout(() => {
+                    loadingSection.style.display = 'none';
+                    ticketSection.classList.add('show');
+                    successMessage.style.display = 'block';
+                    
+                    // 平滑滚动到机票
+                    ticketSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 1800);
             });
             
-            // ========== 生成二维码（扫码显示：新婚快乐） ==========
-            const qrData = "新婚快乐";
-            try {
-                document.getElementById('ticketQR').innerHTML = '';
-                QRCode.toCanvas(document.getElementById('ticketQR'), qrData, {
-                    width: 150,
-                    margin: 2,
-                    color: {
-                        dark: '#e53e3e',
-                        light: '#ffffff'
+            // 保存为图片
+            function saveAsImage() {
+                if (typeof html2canvas === 'undefined') {
+                    alert('图片保存功能正在加载，请稍等片刻再试');
+                    return;
+                }
+                
+                html2canvas(ticketSection, {
+                    backgroundColor: null,
+                    scale: 2, // 2倍分辨率，保存更清晰
+                    useCORS: true,
+                    logging: false
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    const userName = document.getElementById('ticketName').textContent || '新婚快乐';
+                    const fileName = `新婚机票-${userName}-${new Date().getTime()}.png`;
+                    link.download = fileName;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                    
+                    // 更新成功提示
+                    successMessage.textContent = '✅ 新婚机票图片已保存！祝永结同心～';
+                    setTimeout(() => {
+                        successMessage.textContent = '✅ 新婚机票生成成功！扫码有惊喜哦～';
+                    }, 3000);
+                }).catch(error => {
+                    console.error('保存图片失败:', error);
+                    alert('保存图片失败，请检查浏览器权限或重试');
+                });
+            }
+            
+            // 重新生成机票
+            function generateNewTicket() {
+                // 重置界面状态
+                ticketSection.classList.remove('show');
+                successMessage.style.display = 'none';
+                formSection.style.display = 'block';
+                
+                // 清空表单
+                document.getElementById('name').value = '';
+                document.getElementById('city').value = '';
+                
+                // 平滑滚动到表单
+                formSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // 表单回车提交
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        submitBtn.click();
                     }
                 });
-            } catch (error) {
-                console.error('二维码生成失败:', error);
-                document.getElementById('ticketQR').innerHTML = '<p style="color:#e53e3e;">二维码生成失败</p>';
-            }
-            
-            // 显示机票
-            setTimeout(() => {
-                loadingSection.style.display = 'none';
-                ticketSection.classList.add('show');
-                successMessage.style.display = 'block';
-                
-                // 平滑滚动到机票
-                ticketSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 1800);
-        });
-        
-        // 保存为图片
-        function saveAsImage() {
-            if (typeof html2canvas === 'undefined') {
-                alert('图片保存功能正在加载，请稍等片刻再试');
-                return;
-            }
-            
-            html2canvas(ticketSection, {
-                backgroundColor: null,
-                scale: 2, // 2倍分辨率，保存更清晰
-                useCORS: true,
-                logging: false
-            }).then(canvas => {
-                const link = document.createElement('a');
-                const userName = document.getElementById('ticketName').textContent || '新婚快乐';
-                const fileName = `新婚机票-${userName}-${new Date().getTime()}.png`;
-                link.download = fileName;
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.click();
-                
-                // 更新成功提示
-                successMessage.textContent = '✅ 新婚机票图片已保存！祝永结同心～';
-                setTimeout(() => {
-                    successMessage.textContent = '✅ 新婚机票生成成功！扫码有惊喜哦～';
-                }, 3000);
-            }).catch(error => {
-                console.error('保存图片失败:', error);
-                alert('保存图片失败，请检查浏览器权限或重试');
             });
-        }
-        
-        // 重新生成机票
-        function generateNewTicket() {
-            // 重置界面状态
-            ticketSection.classList.remove('show');
-            successMessage.style.display = 'none';
-            formSection.style.display = 'block';
             
-            // 清空表单
-            document.getElementById('name').value = '';
-            document.getElementById('city').value = '';
-            
-            // 平滑滚动到表单
-            formSection.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // 表单回车提交
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    submitBtn.click();
-                }
-            });
+            console.log('新婚机票生成器已加载完成 💑');
         });
-        
-        console.log('新婚机票生成器已加载完成 💑');
     </script>
 </body>
 </html>
