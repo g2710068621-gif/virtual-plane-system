@@ -73,51 +73,67 @@
             background: #002244;
         }
         
-        /* 真实机票样式 */
+        /* 横向登机牌样式 */
         .boarding-pass {
             background: white;
             width: 100%;
-            max-width: 450px;
+            max-width: 800px; /* 横向宽度 */
+            height: 300px; /* 横向高度 */
             border: 1px solid #ccc;
             position: relative;
             display: none;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             font-family: 'Courier New', monospace;
+            overflow: hidden;
         }
         
         .boarding-pass.show {
-            display: block;
+            display: flex; /* 使用flex布局实现横向 */
         }
         
-        /* 机票头部 - 航空公司区域 */
-        .airline-header {
-            background: #003366;
-            color: white;
+        /* 左侧：登机牌主信息区 */
+        .boarding-pass-left {
+            flex: 2;
             padding: 20px;
-            text-align: center;
+            border-right: 2px dashed #ccc;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 右侧：条码和登机信息区 */
+        .boarding-pass-right {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        /* 航空公司头部 */
+        .airline-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
         }
         
         .airline-logo {
             font-size: 32px;
-            margin-bottom: 10px;
+            margin-right: 15px;
         }
         
         .airline-name {
             font-size: 28px;
             font-weight: bold;
-            letter-spacing: 2px;
+            color: #003366;
+            letter-spacing: 1px;
         }
         
-        .boarding-pass-title {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-        
-        /* 乘客信息区域 */
+        /* 乘客信息 */
         .passenger-info {
-            padding: 25px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 25px;
         }
         
         .passenger-name {
@@ -131,49 +147,46 @@
             font-size: 12px;
         }
         
-        /* 航班信息 - 真实机票布局 */
-        .flight-info-container {
-            padding: 25px;
-            border-bottom: 1px solid #ddd;
+        /* 航班信息表格 */
+        .flight-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
         
-        .flight-row {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        
-        .flight-info {
-            flex: 1;
+        .flight-table td {
+            padding: 8px 0;
+            vertical-align: top;
         }
         
         .info-label {
             font-size: 12px;
             color: #666;
-            margin-bottom: 5px;
             text-transform: uppercase;
         }
         
         .info-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
         }
         
         /* 行程信息 */
-        .route-container {
+        .route-info {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px;
+            margin-top: 20px;
+            padding: 15px;
             background: #f8f9fa;
+            border-radius: 5px;
         }
         
         .airport {
             text-align: center;
-            flex: 1;
         }
         
         .airport-code {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             color: #003366;
         }
@@ -187,38 +200,43 @@
         .flight-arrow {
             font-size: 24px;
             color: #666;
-            padding: 0 20px;
         }
         
-        /* 登机信息 */
-        .boarding-info {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            padding: 25px;
-            border-bottom: 1px solid #ddd;
+        /* 右侧登机信息 */
+        .boarding-details {
+            text-align: center;
+            margin-bottom: 20px;
         }
         
         .boarding-item {
+            margin-bottom: 15px;
+        }
+        
+        .boarding-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .boarding-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        /* 条码区域 */
+        .barcode-area {
             text-align: center;
+            margin-top: 20px;
         }
         
-        /* 条码和二维码区域 */
-        .barcode-section {
-            padding: 25px;
-            text-align: center;
-            background: #f8f9fa;
-        }
-        
-        .barcode {
-            height: 80px;
-            background: #333;
-            margin: 10px 0;
-            position: relative;
-        }
-        
-        .qrcode-container {
-            margin: 25px 0;
+        /* 条形码样式 */
+        #barcodeCanvas {
+            width: 100%;
+            max-width: 250px;
+            height: 60px;
+            margin: 10px auto;
+            background: white;
+            border: 1px solid #ddd;
         }
         
         .scan-text {
@@ -227,13 +245,25 @@
             margin-top: 10px;
         }
         
+        /* 二维码区域 */
+        .qrcode-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #qrcode canvas {
+            border: 1px solid #ddd;
+            padding: 5px;
+            background: white;
+        }
+        
         /* 操作按钮 */
         .action-buttons {
             display: flex;
             gap: 15px;
             margin-top: 30px;
             width: 100%;
-            max-width: 450px;
+            max-width: 800px;
         }
         
         .action-btn {
@@ -250,9 +280,17 @@
             color: white;
         }
         
+        .save-btn:hover {
+            background: #218838;
+        }
+        
         .new-btn {
             background: #dc3545;
             color: white;
+        }
+        
+        .new-btn:hover {
+            background: #c82333;
         }
         
         /* 加载动画 */
@@ -277,6 +315,10 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    <!-- 引入JsBarcode库生成真正的条形码 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <!-- 二维码库 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
     <div class="form-container">
@@ -305,81 +347,95 @@
         <p>正在生成登机牌...</p>
     </div>
     
-    <!-- 登机牌 -->
+    <!-- 横向登机牌 -->
     <div id="boardingPass" class="boarding-pass">
-        <!-- 航空公司头部 -->
-        <div class="airline-header">
-            <div class="airline-logo">✈️</div>
-            <div class="airline-name">TRAVEL</div>
-            <div class="boarding-pass-title">BOARDING PASS</div>
-        </div>
-        
-        <!-- 乘客信息 -->
-        <div class="passenger-info">
-            <div class="passenger-name" id="passengerName">-</div>
-            <div class="eticket">ELECTRONIC TICKET</div>
-        </div>
-        
-        <!-- 航班信息 -->
-        <div class="flight-info-container">
-            <div class="flight-row">
-                <div class="flight-info">
-                    <div class="info-label">Flight / 航班</div>
-                    <div class="info-value">AA0011</div>
-                </div>
-                <div class="flight-info">
-                    <div class="info-label">Date / 日期</div>
-                    <div class="info-value" id="flightDate">-</div>
-                </div>
-            </div>
-            <div class="flight-row">
-                <div class="flight-info">
-                    <div class="info-label">Boarding Time / 登机时间</div>
-                    <div class="info-value">01:01</div>
-                </div>
-                <div class="flight-info">
-                    <div class="info-label">Seat / 座位</div>
-                    <div class="info-value">01</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 行程信息 -->
-        <div class="route-container">
-            <div class="airport" id="departureAirport">
-                <div class="airport-code">-</div>
-                <div class="airport-name" id="departureCity">出发地</div>
+        <!-- 左侧：主信息区 -->
+        <div class="boarding-pass-left">
+            <!-- 航空公司头部 -->
+            <div class="airline-header">
+                <div class="airline-logo">✈️</div>
+                <div class="airline-name">TRAVEL AIRLINES</div>
             </div>
             
-            <div class="flight-arrow">→</div>
+            <!-- 乘客信息 -->
+            <div class="passenger-info">
+                <div class="passenger-name" id="passengerName">-</div>
+                <div class="eticket">ELECTRONIC TICKET / 电子客票</div>
+            </div>
             
-            <div class="airport" id="arrivalAirport">
-                <div class="airport-code">-</div>
-                <div class="airport-name" id="arrivalCity">目的地</div>
+            <!-- 航班信息表格 -->
+            <table class="flight-table">
+                <tr>
+                    <td style="width: 40%;">
+                        <div class="info-label">Flight / 航班</div>
+                        <div class="info-value">AA0011</div>
+                    </td>
+                    <td>
+                        <div class="info-label">Date / 日期</div>
+                        <div class="info-value" id="flightDate">-</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="info-label">Departure / 出发地</div>
+                        <div class="info-value" id="departureCity">-</div>
+                    </td>
+                    <td>
+                        <div class="info-label">Arrival / 目的地</div>
+                        <div class="info-value" id="arrivalCity">-</div>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- 行程信息 -->
+            <div class="route-info">
+                <div class="airport">
+                    <div class="airport-code" id="departureCode">-</div>
+                    <div class="airport-city" id="departureName">出发地</div>
+                </div>
+                
+                <div class="flight-arrow">→</div>
+                
+                <div class="airport">
+                    <div class="airport-code" id="arrivalCode">-</div>
+                    <div class="airport-city" id="arrivalName">目的地</div>
+                </div>
             </div>
         </div>
         
-        <!-- 登机信息 -->
-        <div class="boarding-info">
-            <div class="boarding-item">
-                <div class="info-label">Gate / 登机口</div>
-                <div class="info-value">01</div>
+        <!-- 右侧：条码和登机信息 -->
+        <div class="boarding-pass-right">
+            <!-- 登机信息 -->
+            <div class="boarding-details">
+                <div class="boarding-item">
+                    <div class="boarding-label">Gate / 登机口</div>
+                    <div class="boarding-value">01</div>
+                </div>
+                <div class="boarding-item">
+                    <div class="boarding-label">Seat / 座位</div>
+                    <div class="boarding-value">01</div>
+                </div>
+                <div class="boarding-item">
+                    <div class="boarding-label">Seq / 序号</div>
+                    <div class="boarding-value">01</div>
+                </div>
+                <div class="boarding-item">
+                    <div class="boarding-label">Boarding / 登机时间</div>
+                    <div class="boarding-value">01:01</div>
+                </div>
             </div>
-            <div class="boarding-item">
-                <div class="info-label">Seat / 座位</div>
-                <div class="info-value">01</div>
+            
+            <!-- 条码区域 -->
+            <div class="barcode-area">
+                <canvas id="barcodeCanvas"></canvas>
+                <div class="scan-text">扫描条码</div>
             </div>
-            <div class="boarding-item">
-                <div class="info-label">Sequence / 序号</div>
-                <div class="info-value">01</div>
+            
+            <!-- 二维码区域 -->
+            <div class="qrcode-container">
+                <div id="qrcode"></div>
+                <div class="scan-text">扫描二维码</div>
             </div>
-        </div>
-        
-        <!-- 条码和二维码区域 -->
-        <div class="barcode-section">
-            <div class="barcode" id="barcode"></div>
-            <div class="qrcode-container" id="qrcode"></div>
-            <div class="scan-text">扫描条码或二维码显示：新婚快乐，玩的开心！</div>
         </div>
     </div>
     
@@ -389,39 +445,28 @@
         <button onclick="newTicket()" class="action-btn new-btn">重新生成</button>
     </div>
 
-    <!-- 二维码生成库 -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    
     <script>
-        // 机场代码映射（前3位字母）
+        // 机场代码映射
         const airportCodes = {
-            '北京': 'PEK',
-            '上海': 'SHA',
-            '广州': 'CAN',
-            '深圳': 'SZX',
-            '成都': 'CTU',
-            '重庆': 'CKG',
-            '杭州': 'HGH',
-            '南京': 'NKG',
-            '武汉': 'WUH',
-            '西安': 'XIY',
-            '天津': 'TSN',
-            '青岛': 'TAO',
-            '大连': 'DLC',
-            '厦门': 'XMN',
-            '福州': 'FOC',
-            '长沙': 'CSX',
-            '沈阳': 'SHE',
-            '哈尔滨': 'HRB',
-            '长春': 'CGQ',
-            '昆明': 'KMG'
+            '北京': { code: 'PEK', name: '北京首都' },
+            '上海': { code: 'SHA', name: '上海虹桥' },
+            '广州': { code: 'CAN', name: '广州白云' },
+            '深圳': { code: 'SZX', name: '深圳宝安' },
+            '成都': { code: 'CTU', name: '成都双流' },
+            '重庆': { code: 'CKG', name: '重庆江北' },
+            '杭州': { code: 'HGH', name: '杭州萧山' },
+            '南京': { code: 'NKG', name: '南京禄口' },
+            '武汉': { code: 'WUH', name: '武汉天河' },
+            '西安': { code: 'XIY', name: '西安咸阳' },
+            '天津': { code: 'TSN', name: '天津滨海' },
+            '青岛': { code: 'TAO', name: '青岛流亭' },
+            '大连': { code: 'DLC', name: '大连周水子' },
+            '厦门': { code: 'XMN', name: '厦门高崎' },
+            '福州': { code: 'FOC', name: '福州长乐' }
         };
         
         // 页面加载完成
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Travel Airlines登机牌生成器已加载');
-            
-            // 获取元素
             const formContainer = document.querySelector('.form-container');
             const loadingSection = document.getElementById('loadingSection');
             const boardingPass = document.getElementById('boardingPass');
@@ -433,12 +478,10 @@
             
             // 生成登机牌函数
             function generateBoardingPass() {
-                // 获取输入值
                 const name = document.getElementById('name').value.trim();
                 const fromCity = document.getElementById('fromCity').value.trim();
                 const toCity = document.getElementById('toCity').value.trim();
                 
-                // 验证输入
                 if (!name || !fromCity || !toCity) {
                     alert('请填写所有信息');
                     return;
@@ -448,7 +491,7 @@
                 formContainer.style.display = 'none';
                 loadingSection.style.display = 'block';
                 
-                // 生成日期
+                // 生成日期（明天）
                 const today = new Date();
                 const tomorrow = new Date(today);
                 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -457,30 +500,26 @@
                 // 更新登机牌信息
                 document.getElementById('passengerName').textContent = name;
                 document.getElementById('flightDate').textContent = formattedDate;
+                document.getElementById('departureCity').textContent = fromCity;
+                document.getElementById('arrivalCity').textContent = toCity;
                 
-                // 获取机场代码
-                const fromCode = airportCodes[fromCity] || fromCity.substring(0, 3).toUpperCase();
-                const toCode = airportCodes[toCity] || toCity.substring(0, 3).toUpperCase();
+                // 获取机场信息
+                const fromAirport = airportCodes[fromCity] || { code: fromCity.substring(0, 3).toUpperCase(), name: fromCity };
+                const toAirport = airportCodes[toCity] || { code: toCity.substring(0, 3).toUpperCase(), name: toCity };
                 
-                // 更新出发地
-                document.getElementById('departureAirport').innerHTML = `
-                    <div class="airport-code">${fromCode}</div>
-                    <div class="airport-name">${fromCity}</div>
-                `;
+                // 更新机场信息
+                document.getElementById('departureCode').textContent = fromAirport.code;
+                document.getElementById('departureName').textContent = fromAirport.name;
+                document.getElementById('arrivalCode').textContent = toAirport.code;
+                document.getElementById('arrivalName').textContent = toAirport.name;
                 
-                // 更新目的地
-                document.getElementById('arrivalAirport').innerHTML = `
-                    <div class="airport-code">${toCode}</div>
-                    <div class="airport-name">${toCity}</div>
-                `;
-                
-                // 生成条形码
+                // 生成条形码（使用JsBarcode库）
                 generateBarcode();
                 
                 // 生成二维码
                 generateQRCode();
                 
-                // 2秒后显示登机牌
+                // 显示登机牌
                 setTimeout(() => {
                     loadingSection.style.display = 'none';
                     boardingPass.classList.add('show');
@@ -489,24 +528,30 @@
                     // 滚动到登机牌位置
                     boardingPass.scrollIntoView({ behavior: 'smooth' });
                     
-                }, 2000);
+                }, 1500);
             }
             
-            // 生成条形码（模拟）
+            // 生成条形码（使用真正的条形码库）
             function generateBarcode() {
-                const barcode = document.getElementById('barcode');
-                barcode.innerHTML = '';
-                
-                // 创建条形码线条
-                for (let i = 0; i < 50; i++) {
-                    const line = document.createElement('div');
-                    line.style.display = 'inline-block';
-                    line.style.height = `${40 + Math.random() * 40}px`;
-                    line.style.width = '2px';
-                    line.style.backgroundColor = '#000';
-                    line.style.marginRight = '1px';
-                    line.style.verticalAlign = 'bottom';
-                    barcode.appendChild(line);
+                try {
+                    // 清空画布
+                    const canvas = document.getElementById('barcodeCanvas');
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // 生成真正的CODE128条形码
+                    JsBarcode("#barcodeCanvas", "新婚快乐，玩的开心！", {
+                        format: "CODE128",
+                        width: 2,
+                        height: 40,
+                        displayValue: false, // 不显示文本
+                        background: "#ffffff",
+                        lineColor: "#000000"
+                    });
+                } catch (error) {
+                    console.error('条形码生成失败:', error);
+                    // 备用：显示文本
+                    document.getElementById('barcodeCanvas').innerHTML = '<div style="text-align:center;padding:20px;">条形码生成失败</div>';
                 }
             }
             
@@ -518,7 +563,7 @@
                 
                 try {
                     QRCode.toCanvas(qrcodeContainer, qrData, {
-                        width: 150,
+                        width: 100, // 缩小二维码尺寸以适应横向布局
                         margin: 1,
                         color: {
                             dark: '#000000',
@@ -527,13 +572,13 @@
                     });
                 } catch (error) {
                     console.error('二维码生成失败:', error);
-                    qrcodeContainer.innerHTML = '<p>二维码生成失败</p>';
+                    qrcodeContainer.innerHTML = '<div style="color:red;">二维码生成失败</div>';
                 }
             }
             
             // 保存机票
             window.saveTicket = function() {
-                alert('保存功能需要html2canvas库支持\n您可以使用截图工具（Windows: Win+Shift+S, Mac: Shift+Command+4）保存图片');
+                alert('请使用截图工具保存图片：\nWindows: Win+Shift+S\nMac: Shift+Command+4\n或按PrtSc键');
             };
             
             // 重新生成
@@ -541,6 +586,7 @@
                 formContainer.style.display = 'block';
                 boardingPass.classList.remove('show');
                 actionButtons.style.display = 'none';
+                loadingSection.style.display = 'none';
                 
                 // 滚动到表单
                 formContainer.scrollIntoView({ behavior: 'smooth' });
@@ -552,6 +598,8 @@
                     generateBoardingPass();
                 }
             });
+            
+            console.log('Travel Airlines登机牌生成器已加载');
         });
     </script>
 </body>
