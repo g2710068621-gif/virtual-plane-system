@@ -271,17 +271,7 @@
             margin: 0 auto;
         }
         
-        /* 红色提示样式 - 去掉边框 */
-        .red-note {
-            text-align: center;
-            color: #ff0000;
-            font-size: 7px;
-            font-weight: bold;
-            margin-top: 6px;
-            padding: 2px 0;
-            border: none;
-            background-color: transparent;
-        }
+        /* 删除红色提示样式 */
         
         /* 操作按钮 */
         .action-buttons {
@@ -489,10 +479,8 @@
             <div class="scan-instruction">扫描填写信息获取电子机票</div>
         </div>
         
-        <!-- 最后一行：红字提示 -->
-        <div class="red-note">
-            请保存图片与v：123456789兑换
-        </div>
+        <!-- 删除红字提示行 -->
+        
     </div>
         
     <!-- 右侧：登机信息区 - 占2/5，分成两个1/5部分 -->
@@ -683,11 +671,11 @@
             document.getElementById('toCity').textContent = toCity.toUpperCase();
             
             // 生成完整的登机牌信息
-            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code, toCity);
+            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code);
         });
         
-        // 生成登机牌信息
-        function generateBoardingInfo(name, fromCode, toCode, toCity) {
+        // 生成登机牌信息 - 修复了toCity错误
+        function generateBoardingInfo(name, fromCode, toCode) {
             // 生成明天日期
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
@@ -733,8 +721,10 @@
             const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             document.getElementById('boardingTime').textContent = boardingTime;
             
-            // 设置目的地
-            const toCityUpperCase = toCity.toUpperCase();
+            // 修复：设置目的地 - 从页面元素获取
+            const toCityElement = document.getElementById('toCity');
+            const toCityText = toCityElement ? toCityElement.textContent : 'SHANGHAI';
+            const toCityUpperCase = String(toCityText).toUpperCase();
             document.getElementById('toCityRight1').textContent = toCityUpperCase;
             document.getElementById('toCityRight2').textContent = toCityUpperCase;
             
