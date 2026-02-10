@@ -38,7 +38,7 @@
         
         /* 左侧主要区域 - 占3/5 */
         .left-section {
-            flex: 3; /* 从2改为3 */
+            flex: 3;
             padding: 6px 8px;
             position: relative;
         }
@@ -60,11 +60,42 @@
             );
         }
         
-        /* 右侧登机信息区域 - 占2/5 */
+        /* 右侧整体区域 - 占2/5 */
         .right-section {
-            flex: 2; /* 从1改为2 */
+            flex: 2;
+            display: flex;
+        }
+        
+        /* 右侧第一部分 - 占1/5 */
+        .right-part-1 {
+            flex: 1;
             padding: 6px 8px;
-            background: white; /* 白色背景 */
+            background: white;
+            position: relative;
+        }
+        
+        /* 右侧第二部分 - 占1/5 */
+        .right-part-2 {
+            flex: 1;
+            padding: 6px 8px;
+            background: white;
+        }
+        
+        /* 两个右侧部分中间的虚线 */
+        .right-part-1::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 2px;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 5px,
+                #999 5px,
+                #999 10px
+            );
         }
         
         /* 航空公司标题栏 - 深色背景 */
@@ -197,17 +228,16 @@
             letter-spacing: 0.5px;
         }
         
-        /* 红色提示样式 */
+        /* 红色提示样式 - 去掉边框 */
         .red-note {
             text-align: center;
             color: #ff0000;
             font-size: 7px;
             font-weight: bold;
             margin-top: 6px;
-            padding: 3px;
-            border: 1px solid #ff0000;
-            border-radius: 2px;
-            background-color: #fff0f0;
+            padding: 2px 0;
+            border: none;
+            background-color: transparent;
         }
         
         /* 操作按钮 */
@@ -421,67 +451,135 @@
         </div>
     </div>
         
-    <!-- 右侧：登机信息区 - 占2/5 -->
+    <!-- 右侧：登机信息区 - 占2/5，分成两个1/5部分 -->
     <div class="right-section">
-        <!-- 右侧标题栏 - 和左侧一样的深蓝色背景和高度 -->
-        <div class="right-header">
-            <div class="right-title">登机牌</div>
+        <!-- 右侧第一部分 - 占1/5 -->
+        <div class="right-part-1">
+            <!-- 右侧标题栏 -->
+            <div class="right-header">
+                <div class="right-title">登机牌</div>
+            </div>
+            
+            <!-- 右侧单列信息布局 -->
+            <div class="info-single-column">
+                <!-- 航班 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">航班</span>
+                        <span class="info-label-english">FLIGHT</span>
+                    </div>
+                    <div class="info-content" id="flightNumRight1">AA0011</div>
+                </div>
+                
+                <!-- 日期 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">日期</span>
+                        <span class="info-label-english">DATE</span>
+                    </div>
+                    <div class="info-content" id="dateRight1">2024/01/01</div>
+                </div>
+                
+                <!-- 目的地 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">目的地</span>
+                        <span class="info-label-english">TO</span>
+                    </div>
+                    <div class="info-content" id="toCityRight1">SHANGHAI</div>
+                </div>
+                
+                <!-- 座位/登机号 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">座位/登机号</span>
+                        <span class="info-label-english">SEAT/BDG</span>
+                    </div>
+                    <div class="info-content" id="seatBdgValue1">01L/001</div>
+                </div>
+                
+                <!-- 常旅客 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">常旅客</span>
+                        <span class="info-label-english">FQT</span>
+                    </div>
+                    <div class="info-content">FREQUENT</div>
+                </div>
+                
+                <!-- ETKT -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">电子票号</span>
+                        <span class="info-label-english">ETKT</span>
+                    </div>
+                    <div class="info-content">016-1234567890</div>
+                </div>
+            </div>
         </div>
         
-        <!-- 右侧单列信息布局 -->
-        <div class="info-single-column">
-            <!-- 航班 -->
-            <div class="info-single-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">航班</span>
-                    <span class="info-label-english">FLIGHT</span>
-                </div>
-                <div class="info-content" id="flightNumRight">AA0011</div>
+        <!-- 右侧第二部分 - 占1/5 -->
+        <div class="right-part-2">
+            <!-- 右侧标题栏 -->
+            <div class="right-header">
+                <div class="right-title">登机牌</div>
             </div>
             
-            <!-- 日期 -->
-            <div class="info-single-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">日期</span>
-                    <span class="info-label-english">DATE</span>
+            <!-- 右侧单列信息布局 -->
+            <div class="info-single-column">
+                <!-- 航班 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">航班</span>
+                        <span class="info-label-english">FLIGHT</span>
+                    </div>
+                    <div class="info-content" id="flightNumRight2">AA0011</div>
                 </div>
-                <div class="info-content" id="dateRight">2024/01/01</div>
-            </div>
-            
-            <!-- 目的地 -->
-            <div class="info-single-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">目的地</span>
-                    <span class="info-label-english">TO</span>
+                
+                <!-- 日期 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">日期</span>
+                        <span class="info-label-english">DATE</span>
+                    </div>
+                    <div class="info-content" id="dateRight2">2024/01/01</div>
                 </div>
-                <div class="info-content" id="toCityRight">SHANGHAI</div>
-            </div>
-            
-            <!-- 座位/登机号 -->
-            <div class="info-single-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">座位/登机号</span>
-                    <span class="info-label-english">SEAT/BDG</span>
+                
+                <!-- 目的地 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">目的地</span>
+                        <span class="info-label-english">TO</span>
+                    </div>
+                    <div class="info-content" id="toCityRight2">SHANGHAI</div>
                 </div>
-                <div class="info-content" id="seatBdgValue">01L/001</div>
-            </div>
-            
-            <!-- 常旅客 -->
-            <div class="info-single-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">常旅客</span>
-                    <span class="info-label-english">FQT</span>
+                
+                <!-- 座位/登机号 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">座位/登机号</span>
+                        <span class="info-label-english">SEAT/BDG</span>
+                    </div>
+                    <div class="info-content" id="seatBdgValue2">01L/001</div>
                 </div>
-                <div class="info-content">FREQUENT</div>
-            </div>
-            
-            <!-- ETKT -->
-            <div class="info-single-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">电子票号</span>
-                    <span class="info-label-english">ETKT</span>
+                
+                <!-- 常旅客 -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">常旅客</span>
+                        <span class="info-label-english">FQT</span>
+                    </div>
+                    <div class="info-content">FREQUENT</div>
                 </div>
-                <div class="info-content">016-1234567890</div>
+                
+                <!-- ETKT -->
+                <div class="info-single-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">电子票号</span>
+                        <span class="info-label-english">ETKT</span>
+                    </div>
+                    <div class="info-content">016-1234567890</div>
+                </div>
             </div>
         </div>
     </div>
@@ -557,14 +655,16 @@
             
             // 设置日期
             document.getElementById('flightDate').textContent = dateStr;
-            document.getElementById('dateRight').textContent = dateStr;
+            document.getElementById('dateRight1').textContent = dateStr;
+            document.getElementById('dateRight2').textContent = dateStr;
             
             // 生成航班号
             const flightNum = `${fromCode.charAt(0)}${toCode.charAt(0)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
             
             // 设置航班号
             document.getElementById('flightNumber').textContent = flightNum;
-            document.getElementById('flightNumRight').textContent = flightNum;
+            document.getElementById('flightNumRight1').textContent = flightNum;
+            document.getElementById('flightNumRight2').textContent = flightNum;
             
             // 生成登机口
             const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
@@ -581,7 +681,9 @@
             // 生成序号和登机号
             const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
             document.getElementById('serialNo').textContent = seq;
-            document.getElementById('seatBdgValue').textContent = `${seatNo}/${seq}`;
+            const seatBdgValue = `${seatNo}/${seq}`;
+            document.getElementById('seatBdgValue1').textContent = seatBdgValue;
+            document.getElementById('seatBdgValue2').textContent = seatBdgValue;
             
             // 生成登机时间（当前时间+随机1-4小时）
             const now = new Date();
@@ -592,7 +694,9 @@
             document.getElementById('boardingTime').textContent = boardingTime;
             
             // 设置目的地
-            document.getElementById('toCityRight').textContent = toCity.toUpperCase();
+            const toCityUpperCase = toCity.toUpperCase();
+            document.getElementById('toCityRight1').textContent = toCityUpperCase;
+            document.getElementById('toCityRight2').textContent = toCityUpperCase;
             
             // 生成条形码
             generateBarcode(`${flightNum}-${dateStr}-${name}-${fromCode}-${toCode}`);
