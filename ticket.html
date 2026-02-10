@@ -614,52 +614,98 @@
     </div>
 
     <script>
-        // 获取URL参数
+        // 获取URL参数 - 完全适配form.html传递的参数
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
+            console.log('从form.html接收到的参数:', Object.fromEntries(params));
+            
             return {
-                name: params.get('name') || '张先生/女士',
-                id: params.get('id') || '123456199001011234',
-                flight: params.get('flight') || 'AA0011'
+                name: params.get('name') || '未填写姓名',
+                id: params.get('id') || '未填写身份证号',
+                from: params.get('from') || '北京',
+                to: params.get('to') || '上海',
+                date: params.get('date') || '',
+                time: params.get('time') || ''
             };
         }
         
         // 页面加载时设置电子机票信息
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('ticket.html 页面加载完成');
+            
             const params = getUrlParams();
             
             // 设置乘客信息
             const passengerName = params.name.toUpperCase();
             const idNo = params.id;
-            const flightNumber = params.flight;
+            
+            console.log('设置乘客姓名:', passengerName);
+            console.log('设置身份证号:', idNo);
             
             // 设置姓名和ID
             document.getElementById('ticketPassengerName').textContent = passengerName;
             document.getElementById('ticketIdNo').textContent = idNo;
-            document.getElementById('ticketFlight').textContent = flightNumber;
-            document.getElementById('ticketFlightRight1').textContent = flightNumber;
-            document.getElementById('ticketFlightRight2').textContent = flightNumber;
             
-            // 生成随机日期（明天）
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const dateStr = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
-            document.getElementById('ticketDate').textContent = dateStr;
-            document.getElementById('ticketDateRight1').textContent = dateStr;
-            document.getElementById('ticketDateRight2').textContent = dateStr;
+            // 使用form.html传递的出发城市和目的城市
+            const fromCity = params.from;
+            const toCity = params.to;
             
-            // 生成随机城市（如果没有从boarding-pass传递）
-            const cities = ['北京', '上海', '广州', '深圳', '成都', '重庆'];
-            const fromCity = cities[Math.floor(Math.random() * cities.length)];
-            let toCity;
-            do {
-                toCity = cities[Math.floor(Math.random() * cities.length)];
-            } while (toCity === fromCity);
+            console.log('出发城市:', fromCity);
+            console.log('目的城市:', toCity);
             
             document.getElementById('ticketFromCity').textContent = fromCity.toUpperCase();
             document.getElementById('ticketToCity').textContent = toCity.toUpperCase();
             document.getElementById('ticketToCityRight1').textContent = toCity.toUpperCase();
             document.getElementById('ticketToCityRight2').textContent = toCity.toUpperCase();
+            
+            // 使用form.html传递的日期和时间
+            let displayDate, displayTime;
+            
+            if (params.date) {
+                // 如果form传递了日期，使用该日期
+                displayDate = params.date;
+                console.log('使用表单日期:', displayDate);
+            } else {
+                // 否则使用明天
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                displayDate = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
+                console.log('使用默认日期:', displayDate);
+            }
+            
+            if (params.time) {
+                // 如果form传递了时间，使用该时间
+                displayTime = params.time;
+                console.log('使用表单时间:', displayTime);
+            } else {
+                // 否则使用默认时间
+                displayTime = '10:00';
+                console.log('使用默认时间:', displayTime);
+            }
+            
+            document.getElementById('ticketDate').textContent = displayDate;
+            document.getElementById('ticketDateRight1').textContent = displayDate;
+            document.getElementById('ticketDateRight2').textContent = displayDate;
+            
+            // 根据出发城市和目的城市生成航班号
+            const generateFlightNumber = (from, to) => {
+                if (!from || !to) return 'AA0011';
+                
+                // 取城市拼音的首字母
+                const fromCode = from.charAt(0).toUpperCase();
+                const toCode = to.charAt(0).toUpperCase();
+                
+                // 生成随机航班号
+                const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                return `${fromCode}${toCode}${randomNum}`;
+            };
+            
+            const flightNumber = generateFlightNumber(fromCity, toCity);
+            console.log('生成的航班号:', flightNumber);
+            
+            document.getElementById('ticketFlight').textContent = flightNumber;
+            document.getElementById('ticketFlightRight1').textContent = flightNumber;
+            document.getElementById('ticketFlightRight2').textContent = flightNumber;
             
             // 生成随机座位号
             const row = Math.floor(Math.random() * 35) + 10;
@@ -682,21 +728,48 @@
             const gate = gates[Math.floor(Math.random() * gates.length)];
             document.getElementById('ticketGate').textContent = gate;
             
-            // 生成登机时间（当前时间+随机1-4小时）
-            const now = new Date();
-            const addHours = Math.floor(Math.random() * 3) + 1;
-            now.setHours(now.getHours() + addHours);
-            now.setMinutes(Math.floor(Math.random() * 60));
-            const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            // 生成登机时间（基于form的时间+1-2小时）
+            let boardingTime;
+            if (params.time) {
+                // 如果form有时间，在此基础上加1-2小时
+                const [hours, minutes] = params.time.split(':').map(Number);
+                const addHours = Math.floor(Math.random() * 2) + 1;
+                const newHours = (hours + addHours) % 24;
+                boardingTime = `${newHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            } else {
+                // 随机生成登机时间
+                const now = new Date();
+                const addHours = Math.floor(Math.random() * 3) + 1;
+                now.setHours(now.getHours() + addHours);
+                now.setMinutes(Math.floor(Math.random() * 60));
+                boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // 生成票价
-            const fares = ['CNY 1200.00', 'CNY 1500.00', 'CNY 1800.00', 'CNY 2000.00'];
-            const fare = fares[Math.floor(Math.random() * fares.length)];
+            // 生成票价（根据城市距离）
+            const generateFare = (from, to) => {
+                const cityPairs = {
+                    '北京-上海': 'CNY 1200.00',
+                    '上海-北京': 'CNY 1200.00',
+                    '北京-广州': 'CNY 1800.00',
+                    '广州-北京': 'CNY 1800.00',
+                    '上海-广州': 'CNY 1500.00',
+                    '广州-上海': 'CNY 1500.00',
+                    '深圳-北京': 'CNY 2000.00',
+                    '成都-上海': 'CNY 1400.00'
+                };
+                
+                const key = `${from}-${to}`;
+                return cityPairs[key] || 'CNY ' + (1000 + Math.floor(Math.random() * 1000)).toString() + '.00';
+            };
+            
+            const fare = generateFare(fromCity, toCity);
             document.getElementById('ticketFare').textContent = fare;
             
             // 生成条形码
-            generateBarcode(`${flightNumber}-${dateStr}-${passengerName}-${fromCity}-${toCity}-${seatNo}`);
+            generateBarcode(`${flightNumber}-${displayDate}-${passengerName}-${fromCity}-${toCity}-${seatNo}`);
+            
+            console.log('电子机票生成完成');
         });
         
         // 生成条形码
