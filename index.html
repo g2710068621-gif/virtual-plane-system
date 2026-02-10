@@ -19,11 +19,12 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            -webkit-text-size-adjust: 100%;
         }
         
         .form-container {
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             width: 100%;
@@ -34,19 +35,20 @@
         .form-container h1 {
             text-align: center;
             color: #003366;
-            margin-bottom: 25px;
-            font-size: 24px;
+            margin-bottom: 20px;
+            font-size: 22px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #333;
             font-weight: bold;
+            font-size: 14px;
         }
         
         input {
@@ -55,6 +57,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            -webkit-appearance: none;
         }
         
         .submit-btn {
@@ -67,6 +70,7 @@
             font-size: 18px;
             cursor: pointer;
             margin-top: 10px;
+            font-weight: bold;
         }
         
         .submit-btn:hover {
@@ -77,28 +81,66 @@
         .boarding-pass {
             background: white;
             width: 100%;
-            max-width: 800px;
-            height: 320px;
+            max-width: 95vw;
+            height: auto;
+            min-height: 280px;
             position: relative;
             display: none;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             font-family: 'Courier New', monospace;
             overflow: hidden;
+            transform-origin: top center;
+            margin: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .boarding-pass {
+                max-width: 100%;
+                transform: rotate(0deg);
+                margin: 10px 0;
+            }
+            
+            body {
+                padding: 10px;
+            }
         }
         
         .boarding-pass.show {
             display: block;
         }
         
+        /* 强制横屏显示 */
+        @media screen and (orientation: portrait) {
+            .boarding-pass {
+                transform: rotate(90deg);
+                transform-origin: center center;
+                width: 90vh;
+                height: 90vw;
+                margin: 5vh auto;
+            }
+            
+            .action-buttons {
+                transform: rotate(-90deg);
+                margin-top: 10px;
+            }
+        }
+        
+        @media screen and (orientation: landscape) {
+            .boarding-pass {
+                max-width: 800px;
+                height: 320px;
+            }
+        }
+        
         /* 蓝色顶部头部 */
         .boarding-pass-header {
             background: #003366;
             color: white;
-            padding: 15px 25px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
+            height: 70px;
         }
         
         .airline-info {
@@ -107,91 +149,99 @@
         }
         
         .airline-logo {
-            font-size: 36px;
-            margin-right: 15px;
+            font-size: 30px;
+            margin-right: 12px;
         }
         
         .airline-text h2 {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         
         .airline-text p {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.9;
         }
         
         .boarding-pass-label {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             letter-spacing: 1px;
+            text-align: right;
         }
         
         /* 登机牌主体 - 单列布局 */
         .boarding-pass-body {
             display: flex;
-            height: calc(100% - 80px);
+            height: calc(100% - 70px);
+            min-height: 210px;
         }
         
         /* 左侧：所有信息 */
         .flight-info-section {
             flex: 2;
-            padding: 25px;
+            padding: 15px;
             border-right: 2px dashed #ccc;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         
         /* 右侧：登机信息 */
         .boarding-info-section {
             flex: 1;
-            padding: 25px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            min-width: 180px;
         }
         
         /* 乘客信息 */
         .passenger-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .passenger-name {
-            font-size: 26px;
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             color: #333;
+            line-height: 1.2;
         }
         
         .ticket-type {
             color: #666;
-            font-size: 12px;
+            font-size: 11px;
         }
         
         /* 航班信息网格 */
         .flight-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .detail-item {
+            gap: 12px;
             margin-bottom: 15px;
         }
         
+        .detail-item {
+            margin-bottom: 10px;
+            min-width: 0;
+        }
+        
         .info-label {
-            font-size: 12px;
+            font-size: 10px;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             text-transform: uppercase;
+            white-space: nowrap;
         }
         
         .info-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
+            line-height: 1.2;
         }
         
         /* 行程信息 */
@@ -199,47 +249,50 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: 20px 0;
-            padding: 20px;
+            margin: 15px 0;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         
         .airport {
             text-align: center;
             flex: 1;
+            min-width: 0;
         }
         
         .airport-code {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
             color: #003366;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+            line-height: 1.1;
         }
         
         .airport-city {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
+            line-height: 1.2;
         }
         
         .flight-arrow {
-            font-size: 28px;
+            font-size: 20px;
             color: #666;
-            padding: 0 20px;
+            padding: 0 15px;
         }
         
         /* 条形码区域 - 左侧底部 */
         .barcode-section {
             margin-top: auto;
-            padding: 15px;
+            padding: 10px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
         }
         
         #barcodeContainer {
             width: 100%;
-            height: 70px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -247,86 +300,84 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             overflow: hidden;
-            margin-bottom: 10px;
-        }
-        
-        #barcodeCanvas {
-            width: 100%;
-            height: 100%;
+            margin-bottom: 8px;
         }
         
         .barcode-text {
-            font-size: 11px;
+            font-size: 9px;
             color: #666;
-            margin-top: 5px;
+            margin-top: 3px;
         }
         
         /* 右侧登机信息网格 */
         .boarding-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
         }
         
         .boarding-item {
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid #ddd;
         }
         
         .boarding-label {
-            font-size: 11px;
+            font-size: 9px;
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             text-transform: uppercase;
         }
         
         .boarding-value {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
             color: #003366;
         }
         
-        /* 登机时间大字体显示 */
+        /* 登机时间突出显示 */
         .boarding-time-section {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
+            margin-top: 20px;
+            padding: 15px;
             background: #003366;
             color: white;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         
         .boarding-time-label {
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 12px;
+            margin-bottom: 8px;
             opacity: 0.9;
         }
         
         .boarding-time-value {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
         }
         
         /* 操作按钮 */
         .action-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 20px;
             width: 100%;
-            max-width: 800px;
+            max-width: 95vw;
+            justify-content: center;
         }
         
         .action-btn {
             flex: 1;
+            max-width: 200px;
             padding: 12px;
             border: none;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            font-weight: bold;
         }
         
         .save-btn {
@@ -368,9 +419,25 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* 手机横屏提示 */
+        .orientation-tip {
+            display: none;
+            background: #ffcc00;
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        @media screen and (orientation: portrait) and (max-width: 768px) {
+            .orientation-tip {
+                display: block;
+            }
+        }
     </style>
-    <!-- 引入JsBarcode库 -->
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
     <div class="form-container">
@@ -391,6 +458,11 @@
         </div>
         
         <button id="submitBtn" class="submit-btn">生成登机牌</button>
+    </div>
+    
+    <!-- 手机横屏提示 -->
+    <div class="orientation-tip">
+        💡 提示：为获得最佳浏览体验，建议将手机横屏查看登机牌
     </div>
     
     <!-- 加载中 -->
@@ -523,17 +595,6 @@
             const actionButtons = document.getElementById('actionButtons');
             const submitBtn = document.getElementById('submitBtn');
             
-            // 检查JsBarcode库是否加载
-            if (typeof JsBarcode === 'undefined') {
-                console.log('加载JsBarcode库...');
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js';
-                script.onload = function() {
-                    console.log('JsBarcode库加载完成');
-                };
-                document.head.appendChild(script);
-            }
-            
             // 提交按钮点击事件
             submitBtn.addEventListener('click', generateBoardingPass);
             
@@ -592,46 +653,19 @@
             // 生成条形码
             function generateBarcode() {
                 const barcodeContainer = document.getElementById('barcodeContainer');
-                // 清空容器并创建canvas
-                barcodeContainer.innerHTML = '<canvas id="barcodeCanvas"></canvas>';
                 
-                // 等待库完全加载
-                const checkAndGenerate = () => {
-                    if (typeof JsBarcode !== 'undefined') {
-                        try {
-                            // 生成条形码，扫码时会显示"新婚快乐，玩的开心！"
-                            JsBarcode("#barcodeCanvas", "新婚快乐，玩的开心！", {
-                                format: "CODE128",
-                                width: 2,
-                                height: 60,
-                                displayValue: false, // 不在页面上显示文本
-                                background: "#ffffff",
-                                lineColor: "#000000",
-                                margin: 15
-                            });
-                            console.log('条形码生成成功');
-                        } catch (error) {
-                            console.error('JsBarcode生成失败:', error);
-                            createFallbackBarcode();
-                        }
-                    } else {
-                        console.log('等待JsBarcode库加载...');
-                        setTimeout(checkAndGenerate, 100);
-                    }
-                };
-                
-                checkAndGenerate();
-            }
-            
-            // 备用条形码（如果JsBarcode失败）
-            function createFallbackBarcode() {
-                const barcodeContainer = document.getElementById('barcodeContainer');
-                barcodeContainer.innerHTML = '<div style="padding:20px;color:#666;text-align:center;font-size:12px;">条形码生成失败<br>扫描时会显示：新婚快乐，玩的开心！</div>';
+                // 清空容器并创建条形码图片
+                barcodeContainer.innerHTML = `
+                    <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=Wishing%20you%20a%20smooth%20and%20joyful%20journey%21&scale=2&includetext&height=40&width=250"
+                         alt="祝福条形码"
+                         style="width: 100%; height: 40px; object-fit: contain; background: white; padding: 3px;">
+                `;
+                console.log('祝福条形码加载成功');
             }
             
             // 保存机票
             window.saveTicket = function() {
-                alert('请使用截图工具保存图片：\nWindows: Win+Shift+S\nMac: Shift+Command+4');
+                alert('请使用截图工具保存图片：\nWindows: Win+Shift+S\nMac: Shift+Command+4\n手机：同时按下电源键和音量减键');
             };
             
             // 重新生成
@@ -656,6 +690,18 @@
                     generateBoardingPass();
                 }
             });
+            
+            // 监听屏幕方向变化
+            function handleOrientationChange() {
+                if (boardingPass.classList.contains('show')) {
+                    setTimeout(() => {
+                        boardingPass.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+            
+            // 添加方向变化监听
+            window.addEventListener('orientationchange', handleOrientationChange);
         });
     </script>
 </body>
