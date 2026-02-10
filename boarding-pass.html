@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Airlines - 登机牌</title>
     <style>
-        /* 所有登机牌的CSS样式（去掉弹窗样式） */
         * {
             margin: 0;
             padding: 0;
@@ -26,8 +25,8 @@
         .boarding-pass {
             background: white;
             width: 100%;
-            max-width: 500px;
-            min-height: 130px;
+            max-width: 500px; /* 加长宽度 */
+            min-height: 130px; /* 保持原高度 */
             position: relative;
             border-radius: 0;
             display: flex;
@@ -120,7 +119,7 @@
             text-align: center;
             margin: -6px -8px 8px -8px;
             font-size: 10px;
-            min-height: 18px;
+            min-height: 18px; /* 确保和左侧标题栏高度一致 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -162,7 +161,7 @@
         .info-label {
             font-size: 7px;
             color: #666;
-            margin-bottom: -3px;
+            margin-bottom: -3px; /* 与下面内容的距离为-3px */
             line-height: 1;
             text-align: center;
             position: relative;
@@ -174,7 +173,7 @@
             color: #000;
             font-weight: normal;
             position: relative;
-            left: -15px;
+            left: -15px; /* 中文向左偏移 */
         }
         
         .info-label-english {
@@ -184,36 +183,36 @@
             font-weight: normal;
             margin-left: 2px;
             position: relative;
-            left: -15px;
+            left: -15px; /* 英文也向左偏移相同的值 */
         }
         
         /* 内容样式 */
         .info-content {
-            font-size: 11px;
+            font-size: 11px; /* 从9px加大到11px */
             color: #000;
-            font-weight: normal;
+            font-weight: normal; /* 去掉加粗 */
             text-align: center;
             min-height: 12px;
-            line-height: 1;
-            margin-top: -3px;
+            line-height: 1; /* 调整行高，减少间距 */
+            margin-top: -3px; /* 与上面标签的距离为-3px */
             position: relative;
-            left: 0px;
+            left: 0px; /* 内容也向左偏移，对齐英文标签 */
         }
         
-        /* 右侧区域样式 */
+        /* 右侧区域样式 - 需要单独调整偏移量 */
         .right-part-1 .info-label-chinese,
         .right-part-2 .info-label-chinese {
-            left: -10px;
+            left: -10px; /* 右侧区域偏移量小一些 */
         }
         
         .right-part-1 .info-label-english,
         .right-part-2 .info-label-english {
-            left: -10px;
+            left: -10px; /* 右侧区域偏移量小一些 */
         }
         
         .right-part-1 .info-content,
         .right-part-2 .info-content {
-            left: 5px;
+            left: 5px; /* 右侧区域偏移量小一些 */
         }
         
         /* 右侧单列布局样式 */
@@ -232,8 +231,8 @@
             margin-bottom: 3px;
         }
         
-        /* 条形码区域 */
-               .barcode-area {
+        /* 条形码区域 - 修改为二维码区域 */
+        .barcode-area {
             margin: 10px 0 8px 0;
             text-align: center;
         }
@@ -272,7 +271,7 @@
             margin: 0 auto;
         }
         
-        /* 红色提示样式 */
+        /* 红色提示样式 - 去掉边框 */
         .red-note {
             text-align: center;
             color: #ff0000;
@@ -481,13 +480,13 @@
             </div>
         </div>
         
-        <!-- 第五行：条形码 -->
+        <!-- 第五行：条形码区域（现在显示二维码） -->
         <div class="barcode-area">
             <div class="barcode-container" id="barcodeContainer">
-                <!-- 条形码会在这里生成 -->
+                <!-- 二维码会在这里生成 -->
             </div>
             <div class="barcode-text">SCAN TO FILL INFO</div>
-	    <div class="scan-instruction">扫描填写信息获取电子机票</div>
+            <div class="scan-instruction">扫描填写信息获取电子机票</div>
         </div>
         
         <!-- 最后一行：红字提示 -->
@@ -505,8 +504,9 @@
                 <div class="right-title">登机牌</div>
             </div>
             
-            <!-- 右侧单列信息布局 -->
+            <!-- 右侧单列信息布局 - 座位号后直接跟两行文字 -->
             <div class="info-single-column">
+                <!-- 航班 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">航班</span>
@@ -515,6 +515,7 @@
                     <div class="info-content" id="flightNumRight1">AA0011</div>
                 </div>
                 
+                <!-- 日期 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">日期</span>
@@ -523,6 +524,7 @@
                     <div class="info-content" id="dateRight1">2024/01/01</div>
                 </div>
                 
+                <!-- 目的地 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">目的地</span>
@@ -531,6 +533,7 @@
                     <div class="info-content" id="toCityRight1">SHANGHAI</div>
                 </div>
                 
+                <!-- 座位/登机号 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">座位/登机号</span>
@@ -539,6 +542,7 @@
                     <div class="info-content" id="seatBdgValue1">01L/001</div>
                 </div>
                 
+                <!-- 两行纯文字（只有标签，没有内容） -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">常旅客</span>
@@ -563,8 +567,9 @@
                 <div class="right-title">登机牌</div>
             </div>
             
-            <!-- 右侧单列信息布局 -->
+            <!-- 右侧单列信息布局 - 座位号后直接跟两行文字 -->
             <div class="info-single-column">
+                <!-- 航班 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">航班</span>
@@ -573,6 +578,7 @@
                     <div class="info-content" id="flightNumRight2">AA0011</div>
                 </div>
                 
+                <!-- 日期 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">日期</span>
@@ -581,6 +587,7 @@
                     <div class="info-content" id="dateRight2">2024/01/01</div>
                 </div>
                 
+                <!-- 目的地 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">目的地</span>
@@ -589,6 +596,7 @@
                     <div class="info-content" id="toCityRight2">SHANGHAI</div>
                 </div>
                 
+                <!-- 座位/登机号 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">座位/登机号</span>
@@ -597,6 +605,7 @@
                     <div class="info-content" id="seatBdgValue2">01L/001</div>
                 </div>
                 
+                <!-- 两行纯文字（只有标签，没有内容） -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">常旅客</span>
@@ -674,92 +683,83 @@
             document.getElementById('toCity').textContent = toCity.toUpperCase();
             
             // 生成完整的登机牌信息
-            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code, toCity);
+            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code);
         });
         
         // 生成登机牌信息
-        function generateBoardingInfo(name, fromCode, toCode, toCityName) {
-    // 参数安全检查
-    name = String(name || 'ZHANG SAN');
-    fromCode = String(fromCode || 'PEK');
-    toCode = String(toCode || 'SHA');
-    toCityName = String(toCityName || 'SHANGHAI');
-    
-    // 设置目的地
-    const toCityUpperCase = toCityName.toUpperCase();
-    document.getElementById('toCityRight1').textContent = toCityUpperCase;
-    document.getElementById('toCityRight2').textContent = toCityUpperCase;
-    
-    // 生成明天日期
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const dateStr = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
-    
-    // 设置日期
-    document.getElementById('flightDate').textContent = dateStr;
-    document.getElementById('dateRight1').textContent = dateStr;
-    document.getElementById('dateRight2').textContent = dateStr;
-    
-    // 生成航班号
-    const flightNum = `${fromCode.charAt(0)}${toCode.charAt(0)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
-    
-    // 设置航班号
-    document.getElementById('flightNumber').textContent = flightNum;
-    document.getElementById('flightNumRight1').textContent = flightNum;
-    document.getElementById('flightNumRight2').textContent = flightNum;
-    
-    // 生成登机口
-    const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
-    const gate = gates[Math.floor(Math.random() * gates.length)];
-    document.getElementById('gateValue').textContent = gate;
-    
-    // 生成座位号
-    const row = Math.floor(Math.random() * 35) + 10;
-    const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
-    const seat = seats[Math.floor(Math.random() * seats.length)];
-    const seatNo = `${row}${seat}`;
-    document.getElementById('seatNo').textContent = seatNo;
-    
-    // 生成序号和登机号
-    const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
-    document.getElementById('serialNo').textContent = seq;
-    const seatBdgValue = `${seatNo}/${seq}`;
-    document.getElementById('seatBdgValue1').textContent = seatBdgValue;
-    document.getElementById('seatBdgValue2').textContent = seatBdgValue;
-    
-    // 生成登机时间
-    const now = new Date();
-    const addHours = Math.floor(Math.random() * 3) + 1;
-    now.setHours(now.getHours() + addHours);
-    now.setMinutes(Math.floor(Math.random() * 60));
-    const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    document.getElementById('boardingTime').textContent = boardingTime;
-   
-}
+        function generateBoardingInfo(name, fromCode, toCode) {
+            // 生成明天日期
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateStr = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
+            
+            // 设置日期
+            document.getElementById('flightDate').textContent = dateStr;
+            document.getElementById('dateRight1').textContent = dateStr;
+            document.getElementById('dateRight2').textContent = dateStr;
+            
+            // 生成航班号
+            const flightNum = `${fromCode.charAt(0)}${toCode.charAt(0)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+            
+            // 设置航班号
+            document.getElementById('flightNumber').textContent = flightNum;
+            document.getElementById('flightNumRight1').textContent = flightNum;
+            document.getElementById('flightNumRight2').textContent = flightNum;
+            
+            // 生成登机口
+            const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
+            const gate = gates[Math.floor(Math.random() * gates.length)];
+            document.getElementById('gateValue').textContent = gate;
+            
+            // 生成座位号
+            const row = Math.floor(Math.random() * 35) + 10;
+            const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
+            const seat = seats[Math.floor(Math.random() * seats.length)];
+            const seatNo = `${row}${seat}`;
+            document.getElementById('seatNo').textContent = seatNo;
+            
+            // 生成序号和登机号
+            const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
+            document.getElementById('serialNo').textContent = seq;
+            const seatBdgValue = `${seatNo}/${seq}`;
+            document.getElementById('seatBdgValue1').textContent = seatBdgValue;
+            document.getElementById('seatBdgValue2').textContent = seatBdgValue;
+            
+            // 生成登机时间（当前时间+随机1-4小时）
+            const now = new Date();
+            const addHours = Math.floor(Math.random() * 3) + 1;
+            now.setHours(now.getHours() + addHours);
+            now.setMinutes(Math.floor(Math.random() * 60));
+            const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            document.getElementById('boardingTime').textContent = boardingTime;
+            
+            // 设置目的地
+            const toCityUpperCase = toCity.toUpperCase();
+            document.getElementById('toCityRight1').textContent = toCityUpperCase;
+            document.getElementById('toCityRight2').textContent = toCityUpperCase;
+            
+            // 生成二维码
+            generateQRCode(`${flightNum}-${dateStr}-${name}-${fromCode}-${toCode}`);
+        }
         
         // 生成二维码
-       function generateBarcode(data) {
-        const barcodeContainer = document.getElementById('barcodeContainer');
-        
-        // 创建form.html的URL（可以包含一些基本信息）
-        const formUrl = window.location.origin + '/form.html'; // 如果是同域
-        
-        // 使用二维码生成服务
-        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=${encodeURIComponent(formUrl)}`;
-        
-        barcodeContainer.innerHTML = `
-            <div class="qrcode">
-                <img src="${qrCodeUrl}"
-                     alt="Scan to fill information"
-                     style="width: 100%; height: 100%;"
-                     onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"70\" height=\"70\"><rect width=\"70\" height=\"70\" fill=\"white\"/><text x=\"35\" y=\"35\" font-size=\"6\" text-anchor=\"middle\">SCAN ME</text></svg>'">
-            </div>
-        `;
-    }
-        
-        // 跳转到表单页面
-        function goToFormPage() {
-            window.location.href = 'form.html';
+        function generateQRCode(data) {
+            const barcodeContainer = document.getElementById('barcodeContainer');
+            
+            // 创建form.html的URL（可以包含一些基本信息）
+            const formUrl = window.location.origin + '/form.html'; // 如果是同域
+            
+            // 使用二维码生成服务
+            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=${encodeURIComponent(formUrl)}`;
+            
+            barcodeContainer.innerHTML = `
+                <div class="qrcode">
+                    <img src="${qrCodeUrl}"
+                         alt="Scan to fill information"
+                         style="width: 100%; height: 100%;"
+                         onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"70\" height=\"70\"><rect width=\"70\" height=\"70\" fill=\"white\"/><text x=\"35\" y=\"35\" font-size=\"6\" text-anchor=\"middle\">SCAN ME</text></svg>'">
+                </div>
+            `;
         }
         
         // 返回首页
