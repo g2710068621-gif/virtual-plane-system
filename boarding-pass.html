@@ -173,7 +173,7 @@
             color: #000;
             font-weight: normal;
             position: relative;
-            left: -10px; /* 中文向左偏移 */
+            left: -15px; /* 中文向左偏移 */
         }
         
         .info-label-english {
@@ -183,12 +183,12 @@
             font-weight: normal;
             margin-left: 2px;
             position: relative;
-            left: -10px; /* 英文也向左偏移相同的值 */
+            left: -15px; /* 英文也向左偏移相同的值 */
         }
         
         /* 内容样式 */
         .info-content {
-            font-size: 13px; /* 从9px加大到15px */
+            font-size: 11px; /* 从9px加大到11px */
             color: #000;
             font-weight: normal; /* 去掉加粗 */
             text-align: center;
@@ -196,23 +196,23 @@
             line-height: 1; /* 调整行高，减少间距 */
             margin-top: -3px; /* 与上面标签的距离为-3px */
             position: relative;
-            left: -5px; /* 内容也向左偏移，对齐英文标签 */
+            left: 0px; /* 内容也向左偏移，对齐英文标签 */
         }
         
         /* 右侧区域样式 - 需要单独调整偏移量 */
         .right-part-1 .info-label-chinese,
         .right-part-2 .info-label-chinese {
-            left: -5px; /* 右侧区域偏移量小一些 */
+            left: -10px; /* 右侧区域偏移量小一些 */
         }
         
         .right-part-1 .info-label-english,
         .right-part-2 .info-label-english {
-            left: -5px; /* 右侧区域偏移量小一些 */
+            left: -10px; /* 右侧区域偏移量小一些 */
         }
         
         .right-part-1 .info-content,
         .right-part-2 .info-content {
-            left: -3px; /* 右侧区域偏移量小一些 */
+            left: 5px; /* 右侧区域偏移量小一些 */
         }
         
         /* 右侧单列布局样式 */
@@ -377,7 +377,7 @@
                     <span class="info-label-chinese">日期</span>
                     <span class="info-label-english">DATE</span>
                 </div>
-                <div class="info-content" id="flightDate">2024/01/01</div>
+                <div class="info-content" id="flightDate">任意</div>
             </div>
             <div class="info-item">
                 <div class="info-label">
@@ -459,7 +459,7 @@
                     <span class="info-label-chinese">票价</span>
                     <span class="info-label-english">FARE</span>
                 </div>
-                <div class="info-content">CNY 1200.00</div>
+                <div class="info-content"></div>
             </div>
         </div>
         
