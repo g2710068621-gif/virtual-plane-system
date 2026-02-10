@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>填写信息 - Travel Airlines</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -484,100 +485,172 @@
     }
     
     // 表单提交处理
-    document.getElementById('infoForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    // ========================================
+// 配置部分 - 请替换为你的实际EmailJS配置
+// ========================================
+const EMAILJS_CONFIG = {
+    USER_ID: "7YeIL_BgIZ8HdEb-C",         // 替换为你的EmailJS User ID
+    SERVICE_ID: "service_hp6w7nj",   // 替换为你的Service ID
+    TEMPLATE_ID: " template_0i56xkt"  // 替换为你的Template ID
+};
+
+// ========================================
+// 初始化EmailJS
+// ========================================
+(function() {
+    console.log('🚀 初始化EmailJS，User ID:', EMAILJS_CONFIG.USER_ID);
+    emailjs.init(EMAILJS_CONFIG.USER_ID);
+    console.log('✅ EmailJS初始化完成');
+})();
+
+// ========================================
+// 邮件发送函数
+// ========================================
+async function sendEmail(formData) {
+    console.log('📧 === 开始发送邮件 ===');
+    console.log('📤 发件服务:', EMAILJS_CONFIG.SERVICE_ID);
+    console.log('📝 使用模板:', EMAILJS_CONFIG.TEMPLATE_ID);
+    
+    try {
+        // 准备模板参数（变量名必须与EmailJS模板中的一致）
+const templateParams = {
+    name: formData.name,                     // {{name}}
+    id_card: formData.idCard,                // {{id_card}}
+    phone: formData.phone,                   // {{phone}}
+    email: formData.email,                   // {{email}}
+    flight_number: formData.flightNumber,    // {{flight_number}}
+    departure_city: formData.departureCity,  // {{departure_city}}
+    destination_city: formData.destinationCity, // {{destination_city}}
+    departure_date: formData.departureDate,  // {{departure_date}}
+    departure_time: formData.departureTime   // {{departure_time}}
+};
         
-        console.log('=== 表单提交开始 ===');
+        console.log('📋 邮件模板参数:', templateParams);
         
-        // 验证表单
-        if (!validateForm()) {
-            console.log('❌ 表单验证失败，停止提交');
-            return false;
-        }
+        // 发送邮件
+        console.log('🔄 正在发送邮件...');
+        const response = await emailjs.send(
+            EMAILJS_CONFIG.SERVICE_ID,
+            EMAILJS_CONFIG.TEMPLATE_ID,
+            templateParams
+        );
         
-        console.log('✅ 表单验证通过');
+        console.log('✅ 邮件发送成功！响应:', response);
         
-        // 显示加载状态
-        const submitBtn = document.getElementById('submitBtn');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        submitBtn.disabled = true;
-        submitBtn.textContent = '提交中...';
-        loadingOverlay.style.display = 'flex';
-        
-        // 收集表单数据
-        const formData = {
-            name: document.getElementById('realName').value.trim(),
-            idCard: document.getElementById('idCard').value.trim(),
-            phone: document.getElementById('phone').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            departureCity: document.getElementById('departureCity').value.trim(),
-            destinationCity: document.getElementById('destinationCity').value.trim(),
-            departureDate: document.getElementById('departureDate').value,
-            departureTime: document.getElementById('departureTime').value,
-            flightNumber: 'AA' + Math.floor(Math.random() * 1000).toString().padStart(4, '0')
+        return { 
+            success: true, 
+            message: '邮件发送成功',
+            response: response,
+            email_sent_to: formData.email
         };
         
-        console.log('📋 表单数据:', formData);
+    } catch (error) {
+        console.error('❌ 邮件发送失败:', error);
+        return { 
+            success: false, 
+            message: `邮件发送失败: ${error.message || error.text || '未知错误'}`,
+            error: error
+        };
+    }
+}
+
+// ========================================
+// 跳转到机票页面函数
+// ========================================
+function proceedToTicket(formData) {
+    console.log('🎫 跳转到机票页面');
+    
+    // 显示成功消息
+    document.getElementById('successMessage').style.display = 'block';
+    document.getElementById('successMessage').innerHTML = `
+        <h3>✅ 信息提交成功！</h3>
+        <p>航班号：${formData.flightNumber}</p>
+        <p>乘客姓名：${formData.name}</p>
+        <p>页面即将自动跳转...</p>
+    `;
+    
+    // 3秒后跳转
+    setTimeout(() => {
+        // 跳转到机票展示页面
+        window.location.href = `ticket.html?name=${encodeURIComponent(formData.name)}&flight=${formData.flightNumber}`;
+    }, 3000);
+}
+
+// ========================================
+// 表单提交处理（修改后的版本）
+// ========================================
+document.getElementById('infoForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    console.log('=== 表单提交开始 ===');
+    
+    // 验证表单
+    if (!validateForm()) {
+        console.log('❌ 表单验证失败，停止提交');
+        return false;
+    }
+    
+    console.log('✅ 表单验证通过');
+    
+    // 显示加载状态
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '发送中...';
+    loadingOverlay.style.display = 'flex';
+    
+    // 收集表单数据
+    const formData = {
+        name: document.getElementById('realName').value.trim(),
+        idCard: document.getElementById('idCard').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        departureCity: document.getElementById('departureCity').value.trim(),
+        destinationCity: document.getElementById('destinationCity').value.trim(),
+        departureDate: document.getElementById('departureDate').value,
+        departureTime: document.getElementById('departureTime').value,
+        flightNumber: 'TA' + Math.floor(Math.random() * 9000 + 1000)  // 修改航班号前缀
+    };
+    
+    console.log('📋 表单数据:', formData);
+    
+    try {
+        // 1. 首先尝试发送邮件
+        console.log('📧 正在发送确认邮件...');
+        const emailResult = await sendEmail(formData);
         
-        try {
-            // 保存到Google Sheets
-            console.log('📤 正在保存到Google Sheets...');
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbwHRrTLyBnMmPfEAKPn_c7OwM56Kh1DReeE447sbiphTKamr2xKr5CuO4u8bH-z3e8NTw/exec'; // 替换为你的URL
-            
-            const response = await fetch(scriptUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            const result = await response.json();
-            console.log('📥 Google Sheets响应:', result);
-            
-            if (result.success) {
-                console.log('✅ 数据保存成功');
-                
-                // 隐藏加载状态
-                loadingOverlay.style.display = 'none';
-                
-                // 显示成功消息
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('infoForm').style.display = 'none';
-                
-                // 构建跳转URL
-                const redirectUrl = 'ticket.html?name=' + encodeURIComponent(formData.name) +
-                                  '&id=' + encodeURIComponent(formData.idCard) +
-                                  '&flight=' + encodeURIComponent(formData.flightNumber) +
-                                  '&from=' + encodeURIComponent(formData.departureCity) +
-                                  '&to=' + encodeURIComponent(formData.destinationCity) +
-                                  '&date=' + encodeURIComponent(formData.departureDate) +
-                                  '&time=' + encodeURIComponent(formData.departureTime);
-                
-                console.log('🔗 跳转URL:', redirectUrl);
-                
-                // 2秒后跳转到ticket页面
-                setTimeout(function() {
-                    console.log('🚀 正在跳转到:', redirectUrl);
-                    window.location.href = redirectUrl;
-                }, 2000);
-                
-            } else {
-                throw new Error(result.message || '保存失败');
-            }
-            
-        } catch (error) {
-            console.error('❌ 保存数据时出错:', error);
-            
-            // 隐藏加载状态
-            loadingOverlay.style.display = 'none';
-            submitBtn.disabled = false;
-            submitBtn.textContent = '提交并获取机票';
-            
-            // 显示错误消息
-            alert('保存数据失败: ' + error.message + '\n请重试或联系管理员。');
+        if (emailResult.success) {
+            console.log('✅ 邮件发送成功，收件人:', formData.email);
+        } else {
+            console.warn('⚠️ 邮件发送失败:', emailResult.message);
+            // 邮件失败也继续流程
         }
-    });
+        
+        // 2. 无论邮件是否成功，都跳转到机票页面
+        proceedToTicket(formData);
+        
+    } catch (error) {
+        console.error('❌ 提交过程中出错:', error);
+        
+        // 显示错误消息
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('successMessage').innerHTML = `
+            <h3>⚠️ 提交过程中出现错误</h3>
+            <p>${error.message || '未知错误'}</p>
+            <p>请稍后重试或联系客服</p>
+        `;
+        
+        // 恢复按钮状态
+        submitBtn.disabled = false;
+        submitBtn.textContent = '重新提交';
+        
+    } finally {
+        // 隐藏加载状态
+        setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+        }, 2000);
+    }
+});
     </script>
 </body>
 </html>
