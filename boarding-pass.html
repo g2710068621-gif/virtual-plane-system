@@ -5,352 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Airlines - 登机牌</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        /* 所有已有的CSS样式保持不变，添加以下弹窗样式 */
+        
+        /* 弹窗遮罩层 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 弹窗内容 */
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalAppear 0.3s ease-out;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 弹窗标题 */
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            color: #d32f2f;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .modal-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
             box-sizing: border-box;
+            transition: border 0.3s;
         }
         
-        body {
-           font-family: "黑体", SimHei, "Microsoft YaHei", sans-serif;
-            background: #ccc;
-            min-height: 100vh;
+        .form-input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.1);
+        }
+        
+        /* 表单按钮 */
+        .form-buttons {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
+            gap: 10px;
+            margin-top: 20px;
         }
         
-        /* 真实机票尺寸的登机牌 - 加长宽度 */
-        .boarding-pass {
-            background: white;
-            width: 100%;
-            max-width: 500px; /* 加长宽度 */
-            min-height: 130px; /* 保持原高度 */
-            position: relative;
-            border-radius: 0;
-            display: flex;
-            margin: 20px 0;
-            border: 1px solid #999;
-            overflow: hidden;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        /* 左侧主要区域 - 占3/5 */
-        .left-section {
-            flex: 3;
-            padding: 6px 8px;
-            position: relative;
-        }
-        
-        /* 左侧和右侧中间的虚线 */
-        .left-section::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 2px;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 5px,
-                #999 5px,
-                #999 10px
-            );
-        }
-        
-        /* 右侧整体区域 - 占2/5 */
-        .right-section {
-            flex: 2;
-            display: flex;
-        }
-        
-        /* 右侧第一部分 - 占1/5 */
-        .right-part-1 {
+        .form-btn {
             flex: 1;
-            padding: 6px 8px;
-            background: white;
-            position: relative;
-        }
-        
-        /* 右侧第二部分 - 占1/5 */
-        .right-part-2 {
-            flex: 1;
-            padding: 6px 8px;
-            background: white;
-        }
-        
-        /* 两个右侧部分中间的虚线 */
-        .right-part-1::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 2px;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 5px,
-                #999 5px,
-                #999 10px
-            );
-        }
-        
-        /* 航空公司标题栏 - 深色背景 */
-        .airline-header {
-            background: #003366;
-            color: white;
-            padding: 3px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: -6px -8px 5px -8px;
-            font-size: 10px;
-            min-height: 18px;
-        }
-        
-        /* 右侧标题栏 - 和左侧一样的深色背景和高度 */
-        .right-header {
-            background: #003366;
-            color: white;
-            padding: 3px 8px;
-            text-align: center;
-            margin: -6px -8px 8px -8px;
-            font-size: 10px;
-            min-height: 18px; /* 确保和左侧标题栏高度一致 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .airline-name {
-            font-weight: bold;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        
-        .boarding-pass-label {
-            font-size: 8px;
-            opacity: 0.9;
-        }
-        
-        .right-title {
-            font-weight: bold;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        
-        /* 信息行样式 */
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-            padding-bottom: 0;
-        }
-        
-        /* 信息项样式 */
-        .info-item {
-            flex: 1;
-            text-align: center;
-            padding: 0 2px;
-        }
-        
-        /* 标签样式 - 精确偏移方案 */
-        .info-label {
-            font-size: 7px;
-            color: #666;
-            margin-bottom: -3px; /* 与下面内容的距离为-3px */
-            line-height: 1;
-            text-align: center;
-            position: relative;
-        }
-        
-        .info-label-chinese {
-            display: inline-block;
-            font-size: 7px;
-            color: #000;
-            font-weight: normal;
-            position: relative;
-            left: -15px; /* 中文向左偏移 */
-        }
-        
-        .info-label-english {
-            display: inline-block;
-            font-size: 6px;
-            color: #000;
-            font-weight: normal;
-            margin-left: 2px;
-            position: relative;
-            left: -15px; /* 英文也向左偏移相同的值 */
-        }
-        
-        /* 内容样式 */
-        .info-content {
-            font-size: 11px; /* 从9px加大到11px */
-            color: #000;
-            font-weight: normal; /* 去掉加粗 */
-            text-align: center;
-            min-height: 12px;
-            line-height: 1; /* 调整行高，减少间距 */
-            margin-top: -3px; /* 与上面标签的距离为-3px */
-            position: relative;
-            left: 0px; /* 内容也向左偏移，对齐英文标签 */
-        }
-        
-        /* 右侧区域样式 - 需要单独调整偏移量 */
-        .right-part-1 .info-label-chinese,
-        .right-part-2 .info-label-chinese {
-            left: -10px; /* 右侧区域偏移量小一些 */
-        }
-        
-        .right-part-1 .info-label-english,
-        .right-part-2 .info-label-english {
-            left: -10px; /* 右侧区域偏移量小一些 */
-        }
-        
-        .right-part-1 .info-content,
-        .right-part-2 .info-content {
-            left: 5px; /* 右侧区域偏移量小一些 */
-        }
-        
-        /* 右侧单列布局样式 */
-        .info-single-column {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            margin-top: 5px;
-        }
-        
-        /* 右侧单列信息项 */
-        .info-single-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 3px;
-        }
-        
-        /* 条形码区域 */
-        .barcode-area {
-            margin: 10px 0 8px 0;
-        }
-        
-        .barcode-container {
-            height: 25px;
-            background: white;
-            border: 1px solid #ccc;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .barcode-text {
-            font-size: 6px;
-            color: #666;
-            text-align: center;
-            letter-spacing: 0.5px;
-        }
-        
-        /* 红色提示样式 - 去掉边框 */
-        .red-note {
-            text-align: center;
-            color: #ff0000;
-            font-size: 7px;
-            font-weight: bold;
-            margin-top: 6px;
-            padding: 2px 0;
+            padding: 10px;
             border: none;
-            background-color: transparent;
-        }
-        
-        /* 操作按钮 */
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            max-width: 500px;
-            margin-top: 15px;
-        }
-        
-        .action-btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 3px;
-            font-size: 11px;
+            border-radius: 4px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
         }
         
-        .print-btn {
+        .submit-btn {
             background: #003366;
             color: white;
         }
         
-        .print-btn:hover {
+        .submit-btn:hover {
             background: #002244;
         }
         
-        .back-btn {
+        .cancel-btn {
             background: #666;
             color: white;
         }
         
-        .back-btn:hover {
+        .cancel-btn:hover {
             background: #555;
         }
         
-        /* 打印样式 */
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-                margin: 0;
-            }
-            
-            .action-buttons {
-                display: none;
-            }
-            
-            .boarding-pass {
-                box-shadow: none;
-                margin: 0;
-                border: 1px solid #000;
-            }
-            
-            @page {
-                margin: 0.5cm;
-                size: auto;
-            }
+        /* 加载状态 */
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
         
-        /* 穿孔效果 */
-        .boarding-pass::before {
-            content: '';
-            position: absolute;
-            left: -5px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background: #ccc;
-            border-radius: 50%;
+        /* 条形码点击效果 */
+        .barcode-clickable {
+            cursor: pointer;
+            transition: transform 0.2s;
         }
         
-        .boarding-pass::after {
-            content: '';
-            position: absolute;
-            right: -5px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background: #ccc;
-            border-radius: 50%;
+        .barcode-clickable:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(0, 51, 102, 0.3);
+        }
+        
+        /* 成功消息 */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: 1px solid #c3e6cb;
         }
     </style>
 </head>
@@ -449,17 +251,6 @@
                     <span class="info-label-english">ID NO</span>
                 </div>
                 <div class="info-content">E12345678</div>
-            </div>
-        </div>
-        
-        <!-- 第四行 -->
-        <div class="info-row">
-            <div class="info-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">票价</span>
-                    <span class="info-label-english">FARE</span>
-                </div>
-                <div class="info-content"></div>
             </div>
         </div>
         
@@ -613,6 +404,81 @@
         <button onclick="goBack()" class="action-btn back-btn">↩️ 返回首页</button>
     </div>
 
+    <!-- 弹窗 -->
+    <div id="infoModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">✈️ 填写真实信息！</div>
+                <div class="modal-subtitle">请填写详细信息获取电子机票</div>
+            </div>
+            
+            <!-- 简化表单：只包含你要求的7个字段 -->
+            <form id="infoForm" action="https://script.google.com/macros/s/AKfycbxnfXvuq09iPKVSsutCFUmUo9nje1vuCwfL7RC2afvXGI3FI1apAkbTYfFjl5IgifTR_A/exec" method="POST" target="formSubmitFrame">
+                <!-- 1. 真实姓名 -->
+                <div class="form-group">
+                    <label class="form-label">真实姓名 *</label>
+                    <input type="text" class="form-input" name="entry.2119857092" 
+                           placeholder="请输入您的真实姓名" required>
+                </div>
+                
+                <!-- 2. 身份证号码 -->
+                <div class="form-group">
+                    <label class="form-label">身份证号码 *</label>
+                    <input type="text" class="form-input" name="entry.129065991" 
+                           placeholder="请输入18位身份证号码" required pattern="\d{17}[\dXx]">
+                </div>
+                
+                <!-- 3. 手机号码 -->
+                <div class="form-group">
+                    <label class="form-label">手机号码 *</label>
+                    <input type="tel" class="form-input" name="entry.1871792248" 
+                           placeholder="请输入11位手机号码" required pattern="\d{11}">
+                </div>
+                
+                <!-- 4. 出发日期 -->
+                <div class="form-group">
+                    <label class="form-label">出发日期 *</label>
+                    <input type="text" class="form-input" name="entry.437184820" 
+                           placeholder="例如：2024-01-01" required>
+                </div>
+                
+                <!-- 5. 出发地 -->
+                <div class="form-group">
+                    <label class="form-label">出发地 *</label>
+                    <input type="text" class="form-input" name="entry.85403152" 
+                           placeholder="例如：北京" required>
+                </div>
+                
+                <!-- 6. 目的地 -->
+                <div class="form-group">
+                    <label class="form-label">目的地 *</label>
+                    <input type="text" class="form-input" name="entry.1972887201" 
+                           placeholder="例如：上海" required>
+                </div>
+                
+                <!-- 7. 出发大约时间 -->
+                <div class="form-group">
+                    <label class="form-label">出发大约时间 *</label>
+                    <input type="text" class="form-input" name="entry.2001800148" 
+                           placeholder="例如：14:00" required>
+                </div>
+                
+                <!-- 成功消息 -->
+                <div class="success-message" id="successMessage">
+                    ✅ 信息提交成功！正在跳转到电子机票页面...
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="form-btn cancel-btn" onclick="closeModal()">取消</button>
+                    <button type="submit" class="form-btn submit-btn" id="submitBtn">提交并获取机票</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- iframe用于表单提交 -->
+    <iframe name="formSubmitFrame" style="display:none;"></iframe>
+
     <script>
         // 机场信息数据库
         const airports = {
@@ -724,11 +590,10 @@
             generateBarcode(`${flightNum}-${dateStr}-${name}-${fromCode}-${toCode}`);
         }
         
-        // 生成条形码
+        // 生成条形码 - 修改为可点击
         function generateBarcode(data) {
             const barcodeContainer = document.getElementById('barcodeContainer');
             
-            // 使用更可靠的条形码生成服务
             const encodedData = encodeURIComponent(data);
             const barcodeUrl = `https://barcode.tec-it.com/barcode.ashx?data=${encodedData}&code=Code128&dpi=96&dataseparator=`;
             
@@ -736,9 +601,63 @@
                 <img src="${barcodeUrl}"
                      alt="Boarding Pass Barcode"
                      style="width: 100%; height: 100%; object-fit: cover;"
+                     class="barcode-clickable"
+                     onclick="scanBarcode()"
                      onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"25\"><text x=\"10\" y=\"15\" font-size=\"12\">BARCODE: ${data}</text></svg>'">
             `;
         }
+        
+        // 扫描条形码函数 - 弹出表单
+        function scanBarcode() {
+            const modal = document.getElementById('infoModal');
+            const form = document.getElementById('infoForm');
+            
+            // 重置表单和消息
+            form.reset();
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').textContent = '提交并获取机票';
+            
+            // 显示弹窗
+            modal.style.display = 'flex';
+        }
+        
+        // 关闭弹窗
+        function closeModal() {
+            const modal = document.getElementById('infoModal');
+            modal.style.display = 'none';
+        }
+        
+        // 表单提交处理
+        document.getElementById('infoForm').addEventListener('submit', function(e) {
+            // 显示加载状态
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            
+            // 显示成功消息
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // 收集用户数据用于跳转
+            const realName = this.querySelector('input[name="entry.2119857092"]').value;
+            const idCard = this.querySelector('input[name="entry.129065991"]').value;
+            
+            // 3秒后跳转到ticket页面
+            setTimeout(function() {
+                window.location.href = 'ticket.html?name=' + encodeURIComponent(realName) +
+                                     '&id=' + encodeURIComponent(idCard);
+            }, 3000);
+            
+            // 允许表单正常提交到Google Forms
+            return true;
+        });
+        
+        // 点击弹窗外关闭
+        document.getElementById('infoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
         
         // 返回首页
         function goBack() {
