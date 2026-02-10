@@ -164,15 +164,6 @@
             cursor: not-allowed;
         }
         
-        .cancel-btn {
-            background: #666;
-            color: white;
-        }
-        
-        .cancel-btn:hover {
-            background: #555;
-        }
-        
         /* 成功消息 */
         .success-message {
             display: none;
@@ -223,30 +214,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* 关闭按钮 */
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #666;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        
-        .close-btn:hover {
-            background: #f0f0f0;
-            color: #333;
-        }
-        
         /* 响应式设计 */
         @media (max-width: 600px) {
             .form-content {
@@ -256,19 +223,12 @@
             .form-buttons {
                 flex-direction: column;
             }
-            
-            .close-btn {
-                top: 10px;
-                right: 10px;
-            }
         }
     </style>
 </head>
 <body>
     <!-- 全屏表单 -->
     <div class="fullscreen-form" id="fullscreenForm">
-        <button class="close-btn" onclick="closeForm()">×</button>
-        
         <div class="form-content">
             <div class="form-header">
                 <div class="airline-logo">✈️</div>
@@ -307,7 +267,15 @@
                     <div class="error-message" id="phoneError">请输入有效的11位手机号码</div>
                 </div>
                 
-                <!-- 4. 出发日期 -->
+                <!-- 4. 邮箱地址 -->
+                <div class="form-group">
+                    <label class="form-label">邮箱地址 <span>*</span></label>
+                    <input type="email" class="form-input" id="email" 
+                           name="email" placeholder="请输入您的邮箱地址" required>
+                    <div class="error-message" id="emailError">请输入有效的邮箱地址</div>
+                </div>
+                
+                <!-- 5. 出发日期 -->
                 <div class="form-group">
                     <label class="form-label">出发日期 <span>*</span></label>
                     <input type="date" class="form-input" id="departureDate" 
@@ -315,7 +283,7 @@
                     <div class="error-message" id="dateError">请选择出发日期</div>
                 </div>
                 
-                <!-- 5. 出发地 -->
+                <!-- 6. 出发地 -->
                 <div class="form-group">
                     <label class="form-label">出发地 <span>*</span></label>
                     <input type="text" class="form-input" id="departureCity" 
@@ -323,7 +291,7 @@
                     <div class="error-message" id="departureError">请输入出发地</div>
                 </div>
                 
-                <!-- 6. 目的地 -->
+                <!-- 7. 目的地 -->
                 <div class="form-group">
                     <label class="form-label">目的地 <span>*</span></label>
                     <input type="text" class="form-input" id="destinationCity" 
@@ -331,7 +299,7 @@
                     <div class="error-message" id="destinationError">请输入目的地</div>
                 </div>
                 
-                <!-- 7. 出发大约时间 -->
+                <!-- 8. 出发大约时间 -->
                 <div class="form-group">
                     <label class="form-label">出发大约时间 <span>*</span></label>
                     <input type="time" class="form-input" id="departureTime" 
@@ -347,7 +315,6 @@
                 </div>
                 
                 <div class="form-buttons">
-                    <button type="button" class="form-btn cancel-btn" onclick="closeForm()">取消</button>
                     <button type="submit" class="form-btn submit-btn" id="submitBtn">提交并获取机票</button>
                 </div>
             </form>
@@ -362,9 +329,6 @@
             <p>请稍候...</p>
         </div>
     </div>
-    
-    <!-- iframe用于表单提交 -->
-    <iframe name="formSubmitFrame" style="display:none;"></iframe>
 
     <script>
     // 页面加载时自动显示表单
@@ -378,7 +342,7 @@
         // 设置默认时间为上午10:00
         document.getElementById('departureTime').value = '10:00';
         
-        // 显示表单（已经是全屏）
+        // 显示表单
         document.getElementById('fullscreenForm').style.display = 'block';
         
         // 为所有输入框添加实时验证
@@ -387,7 +351,7 @@
             input.addEventListener('input', function() {
                 // 获取对应的错误ID
                 const errorId = this.id + 'Error';
-                // 直接隐藏错误，不调用hideError函数
+                // 直接隐藏错误
                 const errorElement = document.getElementById(errorId);
                 if (errorElement) {
                     errorElement.style.display = 'none';
@@ -398,15 +362,6 @@
             });
         });
     });
-    
-    // 关闭表单（返回上一页）
-    function closeForm() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.close();
-        }
-    }
     
     // 表单验证
     function validateForm() {
@@ -455,6 +410,17 @@
             isValid = false;
         } else {
             console.log('✅ 手机号通过');
+        }
+        
+        // 验证邮箱
+        const email = document.getElementById('email').value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            console.log('❌ 邮箱格式错误');
+            showError('emailError', '请输入有效的邮箱地址');
+            isValid = false;
+        } else {
+            console.log('✅ 邮箱通过');
         }
         
         // 验证出发日期
@@ -518,7 +484,7 @@
     }
     
     // 表单提交处理
-    document.getElementById('infoForm').addEventListener('submit', function(e) {
+    document.getElementById('infoForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         console.log('=== 表单提交开始 ===');
@@ -540,57 +506,78 @@
         
         // 收集表单数据
         const formData = {
-            realName: document.getElementById('realName').value.trim(),
+            name: document.getElementById('realName').value.trim(),
             idCard: document.getElementById('idCard').value.trim(),
             phone: document.getElementById('phone').value.trim(),
-            departureDate: document.getElementById('departureDate').value,
+            email: document.getElementById('email').value.trim(),
             departureCity: document.getElementById('departureCity').value.trim(),
             destinationCity: document.getElementById('destinationCity').value.trim(),
-            departureTime: document.getElementById('departureTime').value
+            departureDate: document.getElementById('departureDate').value,
+            departureTime: document.getElementById('departureTime').value,
+            flightNumber: 'AA' + Math.floor(Math.random() * 1000).toString().padStart(4, '0')
         };
         
         console.log('📋 表单数据:', formData);
         
-        // 生成随机航班号
-        const flightNumber = 'AA' + Math.floor(Math.random() * 1000).toString().padStart(4, '0');
-        
-        // 构建跳转URL
-        const redirectUrl = 'ticket.html?name=' + encodeURIComponent(formData.realName) +
-                          '&id=' + encodeURIComponent(formData.idCard) +
-                          '&flight=' + encodeURIComponent(flightNumber) +
-                          '&from=' + encodeURIComponent(formData.departureCity) +
-                          '&to=' + encodeURIComponent(formData.destinationCity) +
-                          '&date=' + encodeURIComponent(formData.departureDate) +
-                          '&time=' + encodeURIComponent(formData.departureTime);
-        
-        console.log('🔗 跳转URL:', redirectUrl);
-        
-        // 3秒后跳转到ticket页面（模拟提交过程）
-        setTimeout(function() {
-            console.log('⏱️ 3秒后执行跳转');
+        try {
+            // 保存到Google Sheets
+            console.log('📤 正在保存到Google Sheets...');
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbwHRrTLyBnMmPfEAKPn_c7OwM56Kh1DReeE447sbiphTKamr2xKr5CuO4u8bH-z3e8NTw/exec'; // 替换为你的URL
+            
+            const response = await fetch(scriptUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            console.log('📥 Google Sheets响应:', result);
+            
+            if (result.success) {
+                console.log('✅ 数据保存成功');
+                
+                // 隐藏加载状态
+                loadingOverlay.style.display = 'none';
+                
+                // 显示成功消息
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('infoForm').style.display = 'none';
+                
+                // 构建跳转URL
+                const redirectUrl = 'ticket.html?name=' + encodeURIComponent(formData.name) +
+                                  '&id=' + encodeURIComponent(formData.idCard) +
+                                  '&flight=' + encodeURIComponent(formData.flightNumber) +
+                                  '&from=' + encodeURIComponent(formData.departureCity) +
+                                  '&to=' + encodeURIComponent(formData.destinationCity) +
+                                  '&date=' + encodeURIComponent(formData.departureDate) +
+                                  '&time=' + encodeURIComponent(formData.departureTime);
+                
+                console.log('🔗 跳转URL:', redirectUrl);
+                
+                // 2秒后跳转到ticket页面
+                setTimeout(function() {
+                    console.log('🚀 正在跳转到:', redirectUrl);
+                    window.location.href = redirectUrl;
+                }, 2000);
+                
+            } else {
+                throw new Error(result.message || '保存失败');
+            }
+            
+        } catch (error) {
+            console.error('❌ 保存数据时出错:', error);
             
             // 隐藏加载状态
             loadingOverlay.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.textContent = '提交并获取机票';
             
-            // 显示成功消息
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('infoForm').style.display = 'none';
-            
-            // 2秒后跳转到ticket页面
-            setTimeout(function() {
-                console.log('🚀 正在跳转到:', redirectUrl);
-                window.location.href = redirectUrl;
-            }, 2000);
-            
-        }, 3000);
-    });
-    
-    // 按ESC键关闭表单
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeForm();
+            // 显示错误消息
+            alert('保存数据失败: ' + error.message + '\n请重试或联系管理员。');
         }
     });
-</script>
+    </script>
 </body>
 </html>
