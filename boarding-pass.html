@@ -157,12 +157,14 @@
             padding: 0 2px;
         }
         
-        /* 标签样式 - 中文和英文在同一行 */
+        /* 标签样式 - 精确偏移方案 */
         .info-label {
             font-size: 7px;
             color: #666;
-            margin-bottom: 0;
-            line-height: 1.2;
+            margin-bottom: -3px; /* 与下面内容的距离为-3px */
+            line-height: 1;
+            text-align: center;
+            position: relative;
         }
         
         .info-label-chinese {
@@ -170,6 +172,8 @@
             font-size: 7px;
             color: #666;
             font-weight: normal;
+            position: relative;
+            left: -10px; /* 中文向左偏移 */
         }
         
         .info-label-english {
@@ -178,17 +182,37 @@
             color: #666;
             font-weight: normal;
             margin-left: 2px;
+            position: relative;
+            left: -10px; /* 英文也向左偏移相同的值 */
         }
         
         /* 内容样式 */
         .info-content {
-	 font-size: 15px; /* 从9px加大到15px */
-    	color: #000;
-    	font-weight: normal; /* 去掉加粗 */
-   	 text-align: center;
-  	  min-height: 12px;
-   	 line-height: -1px; /* 调整行高，减少间距 */
-  	  margin-top: 0; /* 去掉顶部间距 */
+            font-size: 15px; /* 从9px加大到15px */
+            color: #000;
+            font-weight: normal; /* 去掉加粗 */
+            text-align: center;
+            min-height: 12px;
+            line-height: 1; /* 调整行高，减少间距 */
+            margin-top: -3px; /* 与上面标签的距离为-3px */
+            position: relative;
+            left: -8px; /* 内容也向左偏移，对齐英文标签 */
+        }
+        
+        /* 右侧区域样式 - 需要单独调整偏移量 */
+        .right-part-1 .info-label-chinese,
+        .right-part-2 .info-label-chinese {
+            left: -5px; /* 右侧区域偏移量小一些 */
+        }
+        
+        .right-part-1 .info-label-english,
+        .right-part-2 .info-label-english {
+            left: -5px; /* 右侧区域偏移量小一些 */
+        }
+        
+        .right-part-1 .info-content,
+        .right-part-2 .info-content {
+            left: -3px; /* 右侧区域偏移量小一些 */
         }
         
         /* 右侧单列布局样式 */
