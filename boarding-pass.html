@@ -73,89 +73,44 @@
             opacity: 0.9;
         }
         
-        /* 乘客信息区 - 紧凑 */
-        .passenger-info {
-            margin-bottom: 4px;
-        }
-        
-        .passenger-name {
-            font-size: 13px;
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 1px;
-        }
-        
-        .ticket-type {
-            font-size: 7px;
-            color: #666;
-            letter-spacing: 0.5px;
-        }
-        
-        /* 航班信息网格 - 紧凑排列 */
-        .flight-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4px;
-            margin-bottom: 5px;
-        }
-        
-        .info-item {
+        /* 信息行样式 */
+        .info-row {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* 信息项样式 */
+        .info-item {
+            flex: 1;
+            text-align: center;
+            padding: 0 2px;
         }
         
         .info-label {
-            font-size: 7px;
+            font-size: 6px;
             color: #666;
+            line-height: 1.2;
             margin-bottom: 1px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .info-value {
-            font-size: 11px;
-            font-weight: bold;
+            font-size: 9px;
             color: #000;
+            text-align: center;
+            line-height: 1.2;
         }
         
-        /* 行程区域 - 紧凑 */
-        .route-section {
-            display: flex;
-            align-items: center;
-            background: #f8f8f8;
-            padding: 4px 6px;
-            margin-bottom: 5px;
-            border: 1px solid #ddd;
-        }
-        
-        .airport {
-            flex: 1;
-        }
-        
-        .airport-code {
-            font-size: 14px;
+        .bold {
             font-weight: bold;
-            color: #003366;
-            margin-bottom: 1px;
-        }
-        
-        .airport-name {
-            font-size: 8px;
-            color: #333;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .arrow {
-            margin: 0 8px;
-            color: #666;
-            font-size: 10px;
         }
         
         /* 条形码区域 */
         .barcode-area {
-            margin-top: 5px;
+            margin-top: 8px;
+            margin-bottom: 6px;
         }
         
         .barcode-container {
@@ -176,78 +131,72 @@
             letter-spacing: 0.5px;
         }
         
+        /* 红色提示样式 */
+        .red-note {
+            text-align: center;
+            color: #ff0000;
+            font-size: 7px;
+            font-weight: bold;
+            margin-top: 5px;
+            padding: 3px;
+            border: 1px solid #ff0000;
+            border-radius: 2px;
+            background-color: #fff0f0;
+        }
+        
         /* 右侧区域样式 */
         .right-header {
             text-align: center;
-            margin-bottom: 8px;
-            padding-bottom: 4px;
+            margin-bottom: 5px;
+            padding-bottom: 2px;
             border-bottom: 1px solid #ccc;
         }
         
         .flight-number-display {
+            font-size: 7px;
+            color: #666;
+            margin-bottom: 1px;
+            line-height: 1.2;
+        }
+        
+        .flight-number-value {
             font-size: 10px;
             font-weight: bold;
             color: #003366;
+            margin-top: 1px;
         }
         
-        /* 登机信息 - 紧凑网格 */
-        .boarding-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4px;
-            margin-bottom: 8px;
+        /* 右侧一列布局样式 */
+        .info-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 4px;
         }
         
-        .boarding-item {
-            text-align: center;
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1px 0;
         }
         
-        .boarding-label {
-            font-size: 7px;
-            color: #666;
-            margin-bottom: 1px;
-            text-transform: uppercase;
-        }
-        
-        .boarding-value {
-            font-size: 13px;
-            font-weight: bold;
-            color: #003366;
-            padding: 2px 0;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 2px;
-        }
-        
-        /* 登机时间 */
-        .boarding-time {
-            text-align: center;
-            background: #003366;
-            color: white;
-            padding: 4px 2px;
-            margin-top: 5px;
-            border-radius: 2px;
-        }
-        
-        .time-label {
-            font-size: 7px;
-            opacity: 0.9;
-            margin-bottom: 1px;
-        }
-        
-        .time-value {
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-        
-        /* 温馨提示 */
-        .note {
+        .info-line .info-label {
             font-size: 6px;
             color: #666;
-            text-align: center;
-            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            min-width: 35px;
             line-height: 1.2;
+        }
+        
+        .info-line .info-value {
+            font-size: 8px;
+            font-weight: bold;
+            color: #000;
+            text-align: right;
+            flex: 1;
+            padding-left: 3px;
         }
         
         /* 操作按钮 */
@@ -339,94 +288,139 @@
     </style>
 </head>
 <body>
-    <div class="boarding-pass">
-        <!-- 左侧：主要信息区 -->
-        <div class="left-section">
-            <div class="airline-header">
-                <div class="airline-name">TRAVEL AIRLINES</div>
-                <div class="boarding-pass-label">BOARDING PASS</div>
+<div class="boarding-pass">
+    <!-- 左侧：主要信息区 -->
+    <div class="left-section">
+        <div class="airline-header">
+            <div class="airline-name">TRAVEL AIRLINES</div>
+            <div class="boarding-pass-label">BOARDING PASS</div>
+        </div>
+        
+        <!-- 第一行 -->
+        <div class="info-row">
+            <div class="info-item">
+                <div class="info-label">FLIGHT<br>航班</div>
+                <div class="info-value bold" id="flightNumber">AA0011</div>
             </div>
-            
-            <div class="passenger-info">
-                <div class="passenger-name" id="passengerName">PASSENGER NAME</div>
-                <div class="ticket-type">ELECTRONIC TICKET</div>
+            <div class="info-item">
+                <div class="info-label">DATE<br>日期</div>
+                <div class="info-value bold" id="flightDate">2024/01/01</div>
             </div>
-            
-            <div class="flight-grid">
-                <div class="info-item">
-                    <div class="info-label">Flight</div>
-                    <div class="info-value" id="flightNumber">AA0011</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Date</div>
-                    <div class="info-value" id="flightDate">2024/01/01</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">From</div>
-                    <div class="info-value" id="fromCity">BEIJING</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">To</div>
-                    <div class="info-value" id="toCity">SHANGHAI</div>
-                </div>
+            <div class="info-item">
+                <div class="info-label">CLASS<br>舱位</div>
+                <div class="info-value bold">Y</div>
             </div>
-            
-            <div class="route-section">
-                <div class="airport">
-                    <div class="airport-code" id="depCode">PEK</div>
-                    <div class="airport-name" id="depName">BEIJING CAPITAL</div>
-                </div>
-                <div class="arrow">→</div>
-                <div class="airport">
-                    <div class="airport-code" id="arrCode">SHA</div>
-                    <div class="airport-name" id="arrName">SHANGHAI HONGQIAO</div>
-                </div>
+            <div class="info-item">
+                <div class="info-label">SERIAL NO<br>序号</div>
+                <div class="info-value bold" id="serialNo">001</div>
             </div>
-            
-            <div class="barcode-area">
-                <div class="barcode-container" id="barcodeContainer">
-                    <!-- 条形码会在这里生成 -->
-                </div>
-                <div class="barcode-text">SCAN AT GATE</div>
+            <div class="info-item">
+                <div class="info-label">SEAT NO<br>座位号</div>
+                <div class="info-value bold" id="seatNo">22B</div>
             </div>
         </div>
         
-        <!-- 右侧：登机信息区 -->
-        <div class="right-section">
-            <div class="right-header">
-                <div class="flight-number-display" id="displayFlight">FLIGHT AA0011</div>
+        <!-- 第二行 -->
+        <div class="info-row">
+            <div class="info-item">
+                <div class="info-label">TO<br>目的地</div>
+                <div class="info-value bold" id="toCity">SHANGHAI</div>
             </div>
-            
-            <div class="boarding-grid">
-                <div class="boarding-item">
-                    <div class="boarding-label">Gate</div>
-                    <div class="boarding-value" id="gateValue">A3</div>
-                </div>
-                <div class="boarding-item">
-                    <div class="boarding-label">Seat</div>
-                    <div class="boarding-value" id="seatValue">22B</div>
-                </div>
-                <div class="boarding-item">
-                    <div class="boarding-label">Zone</div>
-                    <div class="boarding-value">2</div>
-                </div>
-                <div class="boarding-item">
-                    <div class="boarding-label">Seq</div>
-                    <div class="boarding-value" id="seqValue">045</div>
-                </div>
+            <div class="info-item">
+                <div class="info-label">FROM<br>始发地</div>
+                <div class="info-value bold" id="fromCity">BEIJING</div>
             </div>
-            
-            <div class="boarding-time">
-                <div class="time-label">BOARDING TIME</div>
-                <div class="time-value" id="boardingTime">14:00</div>
+            <div class="info-item">
+                <div class="info-label">GATE<br>登机口</div>
+                <div class="info-value bold" id="gateValue">A3</div>
             </div>
-            
-            <div class="note">
-                Boarding gate closes 15 minutes before departure
+            <div class="info-item">
+                <div class="info-label">BDT<br>登机时间</div>
+                <div class="info-value bold" id="boardingTime">14:00</div>
             </div>
         </div>
+        
+        <!-- 第三行 -->
+        <div class="info-row">
+            <div class="info-item">
+                <div class="info-label">NAME<br>姓名</div>
+                <div class="info-value bold" id="passengerName">ZHANG SAN</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">ID NO<br>身份识别</div>
+                <div class="info-value bold">E12345678</div>
+            </div>
+        </div>
+        
+        <!-- 第四行 -->
+        <div class="info-row">
+            <div class="info-item">
+                <div class="info-label">FARE<br>票价</div>
+                <div class="info-value bold">CNY 1200.00</div>
+            </div>
+        </div>
+        
+        <!-- 第五行：条形码 -->
+        <div class="barcode-area">
+            <div class="barcode-container" id="barcodeContainer">
+                <!-- 条形码会在这里生成 -->
+            </div>
+            <div class="barcode-text">SCAN AT GATE</div>
+        </div>
+        
+        <!-- 最后一行：红字提示 -->
+        <div class="red-note">
+            请保存图片与v：123456789兑换
+        </div>
+    </div>
+        
+<!-- 右侧：登机信息区 -->
+<div class="right-section">
+    <div class="right-header">
+        <div class="flight-number-display">FLIGHT<br>航班</div>
+        <div class="flight-number-value" id="flightNumberRight">AA0011</div>
     </div>
     
+    <!-- 一列信息布局 - 严格按照要求的顺序 -->
+    <div class="info-column">
+        <!-- 1. 航班 -->
+        <div class="info-line">
+            <div class="info-label">FLIGHT<br>航班</div>
+            <div class="info-value" id="flightNumRight">AA0011</div>
+        </div>
+        
+        <!-- 2. 日期 -->
+        <div class="info-line">
+            <div class="info-label">DATE<br>日期</div>
+            <div class="info-value" id="dateRight">2024/01/01</div>
+        </div>
+        
+        <!-- 3. 目的地 -->
+        <div class="info-line">
+            <div class="info-label">TO<br>目的地</div>
+            <div class="info-value" id="toCityRight">SHANGHAI</div>
+        </div>
+        
+        <!-- 4. 座位号/登机号 -->
+        <div class="info-line">
+            <div class="info-label">SEAT/BDG<br>座位/登机号</div>
+            <div class="info-value" id="seatBdgValue">01L/001</div>
+        </div>
+        
+        <!-- 5. 常旅客 -->
+        <div class="info-line">
+            <div class="info-label">FQT<br>常旅客</div>
+            <div class="info-value">FREQUENT</div>
+        </div>
+        
+        <!-- 6. ETKT -->
+        <div class="info-line">
+            <div class="info-label">ETKT<br>电子票号</div>
+            <div class="info-value">016-1234567890</div>
+        </div>
+    </div>
+</div>
+
     <!-- 操作按钮 -->
     <div class="action-buttons">
         <button onclick="window.print()" class="action-btn print-btn">🖨️ 打印登机牌</button>
@@ -484,12 +478,6 @@
             document.getElementById('fromCity').textContent = fromCity.toUpperCase();
             document.getElementById('toCity').textContent = toCity.toUpperCase();
             
-            // 设置机场代码和名称
-            document.getElementById('depCode').textContent = fromAirport.code;
-            document.getElementById('depName').textContent = fromAirport.name;
-            document.getElementById('arrCode').textContent = toAirport.code;
-            document.getElementById('arrName').textContent = toAirport.name;
-            
             // 生成完整的登机牌信息
             generateBoardingInfo(passengerName, fromAirport.code, toAirport.code);
         });
@@ -500,27 +488,35 @@
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             const dateStr = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
+            
+            // 设置日期
             document.getElementById('flightDate').textContent = dateStr;
+            document.getElementById('dateRight').textContent = dateStr;
             
             // 生成航班号
             const flightNum = `${fromCode.charAt(0)}${toCode.charAt(0)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
-            document.getElementById('flightNumber').textContent = flightNum;
-            document.getElementById('displayFlight').textContent = `FLIGHT ${flightNum}`;
             
-            // 随机登机口
+            // 设置航班号
+            document.getElementById('flightNumber').textContent = flightNum;
+            document.getElementById('flightNumberRight').textContent = flightNum;
+            document.getElementById('flightNumRight').textContent = flightNum;
+            
+            // 生成登机口
             const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
             const gate = gates[Math.floor(Math.random() * gates.length)];
             document.getElementById('gateValue').textContent = gate;
             
-            // 随机座位
+            // 生成座位号
             const row = Math.floor(Math.random() * 35) + 10;
             const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
             const seat = seats[Math.floor(Math.random() * seats.length)];
-            document.getElementById('seatValue').textContent = `${row}${seat}`;
+            const seatNo = `${row}${seat}`;
+            document.getElementById('seatNo').textContent = seatNo;
             
-            // 随机序号
+            // 生成序号和登机号
             const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
-            document.getElementById('seqValue').textContent = seq;
+            document.getElementById('serialNo').textContent = seq;
+            document.getElementById('seatBdgValue').textContent = `${seatNo}/${seq}`;
             
             // 生成登机时间（当前时间+随机1-4小时）
             const now = new Date();
@@ -529,6 +525,9 @@
             now.setMinutes(Math.floor(Math.random() * 60));
             const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             document.getElementById('boardingTime').textContent = boardingTime;
+            
+            // 设置目的地
+            document.getElementById('toCityRight').textContent = toCity.toUpperCase();
             
             // 生成条形码
             generateBarcode(`${flightNum}-${dateStr}-${name}-${fromCode}-${toCode}`);
