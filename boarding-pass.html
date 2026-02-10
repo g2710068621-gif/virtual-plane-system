@@ -735,28 +735,10 @@
 function generateQRCode(data) {
     const barcodeContainer = document.getElementById('barcodeContainer');
     
-    // 调试信息
-    console.log('=== QR Code Debug Info ===');
-    console.log('Current full URL:', window.location.href);
-    console.log('Origin:', window.location.origin);
-    console.log('Pathname:', window.location.pathname);
+    // 方案1：直接使用完整URL（最简单可靠）
+    const formUrl = 'https://g2710068621-gif.github.io/virtual-plane-system/form.html';
     
-    // 尝试不同的URL构建方法
-    const methods = {
-        'Method 1 (relative)': 'form.html',
-        'Method 2 (relative with dot)': './form.html',
-        'Method 3 (from current)': window.location.href.replace(/[^/]*$/, '') + 'form.html',
-        'Method 4 (GitHub Pages)': window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'form.html'
-    };
-    
-    // 测试所有方法
-    for (const [method, url] of Object.entries(methods)) {
-        console.log(`${method}: ${url}`);
-    }
-    
-    // 选择方法2（通常最可靠）
-    const formUrl = './form.html';
-    console.log('Selected URL:', formUrl);
+    console.log('QR Code will point to:', formUrl);
     
     // 使用二维码生成服务
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=${encodeURIComponent(formUrl)}`;
@@ -769,14 +751,7 @@ function generateQRCode(data) {
                  onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"70\" height=\"70\"><rect width=\"70\" height=\"70\" fill=\"white\"/><text x=\"35\" y=\"35\" font-size=\"6\" text-anchor=\"middle\">SCAN ME</text></svg>'">
         </div>
     `;
-    
-    // 添加点击测试
-    barcodeContainer.querySelector('img').addEventListener('click', function() {
-        console.log('Attempting to navigate to:', formUrl);
-        window.open(formUrl, '_blank');
-    });
-}
-        
+}        
         // 返回首页
         function goBack() {
             window.location.href = 'index.html';
