@@ -128,19 +128,28 @@
             letter-spacing: 1px;
         }
         
-        /* 登机牌主体 */
+        /* 登机牌主体 - 单列布局 */
         .boarding-pass-body {
             display: flex;
             height: calc(100% - 80px);
         }
         
-        /* 左侧：航班信息 + 条码 */
+        /* 左侧：所有信息 */
         .flight-info-section {
             flex: 2;
             padding: 25px;
             border-right: 2px dashed #ccc;
             display: flex;
             flex-direction: column;
+        }
+        
+        /* 右侧：登机信息 */
+        .boarding-info-section {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         /* 乘客信息 */
@@ -160,7 +169,7 @@
             font-size: 12px;
         }
         
-        /* 航班信息 */
+        /* 航班信息网格 */
         .flight-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -219,9 +228,9 @@
             padding: 0 20px;
         }
         
-        /* 条码区域 - 在左侧底部 */
+        /* 条形码区域 - 左侧底部 */
         .barcode-section {
-            margin-top: auto; /* 推到左侧底部 */
+            margin-top: auto;
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
@@ -252,20 +261,12 @@
             margin-top: 5px;
         }
         
-        /* 右侧：登机信息 + 二维码 */
-        .boarding-section {
-            flex: 1;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        
-        /* 登机信息网格 */
+        /* 右侧登机信息网格 */
         .boarding-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-top: 20px;
         }
         
         .boarding-item {
@@ -289,24 +290,25 @@
             color: #003366;
         }
         
-        /* 二维码区域 */
-        .qrcode-container {
+        /* 登机时间大字体显示 */
+        .boarding-time-section {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #003366;
+            color: white;
+            border-radius: 8px;
         }
         
-        #qrcode {
-            display: inline-block;
-            padding: 5px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .boarding-time-label {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
         }
         
-        .qrcode-text {
-            font-size: 11px;
-            color: #666;
-            margin-top: 10px;
+        .boarding-time-value {
+            font-size: 32px;
+            font-weight: bold;
         }
         
         /* 操作按钮 */
@@ -369,8 +371,6 @@
     </style>
     <!-- 引入JsBarcode库 -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-    <!-- 二维码库 -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
     <div class="form-container">
@@ -415,7 +415,7 @@
         
         <!-- 登机牌主体 -->
         <div class="boarding-pass-body">
-            <!-- 左侧：航班信息 + 条码 -->
+            <!-- 左侧：航班信息 + 条形码 -->
             <div class="flight-info-section">
                 <!-- 乘客信息 -->
                 <div class="passenger-section">
@@ -463,12 +463,12 @@
                     <div id="barcodeContainer">
                         <!-- 条形码将在这里生成 -->
                     </div>
-                    <div class="barcode-text">扫描条码</div>
+                    <div class="barcode-text">扫描条形码</div>
                 </div>
             </div>
             
-            <!-- 右侧：登机信息 + 二维码 -->
-            <div class="boarding-section">
+            <!-- 右侧：登机信息 -->
+            <div class="boarding-info-section">
                 <!-- 登机信息网格 -->
                 <div class="boarding-grid">
                     <div class="boarding-item">
@@ -483,16 +483,12 @@
                         <div class="boarding-label">Seq / 序号</div>
                         <div class="boarding-value">01</div>
                     </div>
-                    <div class="boarding-item">
-                        <div class="boarding-label">Boarding / 登机时间</div>
-                        <div class="boarding-value">01:01</div>
-                    </div>
                 </div>
                 
-                <!-- 二维码区域 -->
-                <div class="qrcode-container">
-                    <div id="qrcode"></div>
-                    <div class="qrcode-text">扫描二维码</div>
+                <!-- 登机时间突出显示 -->
+                <div class="boarding-time-section">
+                    <div class="boarding-time-label">Boarding Time / 登机时间</div>
+                    <div class="boarding-time-value">01:01</div>
                 </div>
             </div>
         </div>
@@ -529,10 +525,12 @@
             
             // 检查JsBarcode库是否加载
             if (typeof JsBarcode === 'undefined') {
-                console.error('JsBarcode库未正确加载');
-                // 重新加载库
+                console.log('加载JsBarcode库...');
                 const script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js';
+                script.onload = function() {
+                    console.log('JsBarcode库加载完成');
+                };
                 document.head.appendChild(script);
             }
             
@@ -579,7 +577,6 @@
                 // 等待一小段时间确保DOM更新，然后生成条形码
                 setTimeout(() => {
                     generateBarcode();
-                    generateQRCode();
                     
                     // 显示登机牌
                     loadingSection.style.display = 'none';
@@ -592,84 +589,44 @@
                 }, 500);
             }
             
-            // 生成条形码 - 修正版本
+            // 生成条形码
             function generateBarcode() {
                 const barcodeContainer = document.getElementById('barcodeContainer');
                 // 清空容器并创建canvas
                 barcodeContainer.innerHTML = '<canvas id="barcodeCanvas"></canvas>';
                 
-                // 确保JsBarcode库已加载
-                if (typeof JsBarcode !== 'undefined') {
-                    try {
-                        // 生成条码，内容为"新婚快乐，玩的开心！"，扫码时会显示这段文字
-                        JsBarcode("#barcodeCanvas", "新婚快乐，玩的开心！", {
-                            format: "CODE128",
-                            width: 2,
-                            height: 50,
-                            displayValue: false, // 不显示文本在条码下方
-                            background: "#ffffff",
-                            lineColor: "#000000",
-                            margin: 10
-                        });
-                        console.log('条形码生成成功');
-                    } catch (error) {
-                        console.error('JsBarcode生成失败:', error);
-                        // 备用：创建模拟条码
-                        createFallbackBarcode();
+                // 等待库完全加载
+                const checkAndGenerate = () => {
+                    if (typeof JsBarcode !== 'undefined') {
+                        try {
+                            // 生成条形码，扫码时会显示"新婚快乐，玩的开心！"
+                            JsBarcode("#barcodeCanvas", "新婚快乐，玩的开心！", {
+                                format: "CODE128",
+                                width: 2,
+                                height: 60,
+                                displayValue: false, // 不在页面上显示文本
+                                background: "#ffffff",
+                                lineColor: "#000000",
+                                margin: 15
+                            });
+                            console.log('条形码生成成功');
+                        } catch (error) {
+                            console.error('JsBarcode生成失败:', error);
+                            createFallbackBarcode();
+                        }
+                    } else {
+                        console.log('等待JsBarcode库加载...');
+                        setTimeout(checkAndGenerate, 100);
                     }
-                } else {
-                    console.error('JsBarcode库未加载');
-                    createFallbackBarcode();
-                }
+                };
+                
+                checkAndGenerate();
             }
             
             // 备用条形码（如果JsBarcode失败）
             function createFallbackBarcode() {
-                const canvas = document.getElementById('barcodeCanvas');
-                if (!canvas) return;
-                
-                const ctx = canvas.getContext('2d');
-                canvas.width = 300;
-                canvas.height = 50;
-                
-                // 清除画布
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // 绘制白色背景
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // 绘制黑色条码线
-                ctx.fillStyle = '#000000';
-                for (let i = 0; i < 50; i++) {
-                    const lineHeight = 20 + Math.random() * 30;
-                    const lineWidth = 2 + Math.random() * 3;
-                    const x = 10 + i * 5;
-                    ctx.fillRect(x, (50 - lineHeight) / 2, lineWidth, lineHeight);
-                }
-            }
-            
-            // 生成二维码
-            function generateQRCode() {
-                const qrData = "新婚快乐，玩的开心！";
-                const qrcodeContainer = document.getElementById('qrcode');
-                qrcodeContainer.innerHTML = '';
-                
-                try {
-                    // 生成二维码，扫码会显示文字
-                    QRCode.toCanvas(qrcodeContainer, qrData, {
-                        width: 120,
-                        margin: 1,
-                        color: {
-                            dark: '#000000',
-                            light: '#FFFFFF'
-                        }
-                    });
-                    console.log('二维码生成成功');
-                } catch (error) {
-                    console.error('二维码生成失败:', error);
-                    qrcodeContainer.innerHTML = '<div style="color:#666;padding:40px;text-align:center;">二维码生成失败</div>';
-                }
+                const barcodeContainer = document.getElementById('barcodeContainer');
+                barcodeContainer.innerHTML = '<div style="padding:20px;color:#666;text-align:center;font-size:12px;">条形码生成失败<br>扫描时会显示：新婚快乐，玩的开心！</div>';
             }
             
             // 保存机票
