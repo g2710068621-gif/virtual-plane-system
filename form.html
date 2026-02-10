@@ -367,192 +367,230 @@
     <iframe name="formSubmitFrame" style="display:none;"></iframe>
 
     <script>
-        // 页面加载时自动显示表单
-        document.addEventListener('DOMContentLoaded', function() {
-            // 设置默认日期为明天
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const dateStr = tomorrow.toISOString().split('T')[0];
-            document.getElementById('departureDate').value = dateStr;
-            
-            // 设置默认时间为上午10:00
-            document.getElementById('departureTime').value = '10:00';
-            
-            // 显示表单（已经是全屏）
-            document.getElementById('fullscreenForm').style.display = 'block';
-            
-            // 为所有输入框添加实时验证
-            const inputs = document.querySelectorAll('.form-input');
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    const errorId = this.id + 'Error';
-                    if (document.getElementById(errorId)) {
-                        hideError(errorId);
-                    }
-                });
+    // 页面加载时自动显示表单
+    document.addEventListener('DOMContentLoaded', function() {
+        // 设置默认日期为明天
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dateStr = tomorrow.toISOString().split('T')[0];
+        document.getElementById('departureDate').value = dateStr;
+        
+        // 设置默认时间为上午10:00
+        document.getElementById('departureTime').value = '10:00';
+        
+        // 显示表单（已经是全屏）
+        document.getElementById('fullscreenForm').style.display = 'block';
+        
+        // 为所有输入框添加实时验证
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                // 获取对应的错误ID
+                const errorId = this.id + 'Error';
+                // 直接隐藏错误，不调用hideError函数
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                    errorElement.textContent = '';
+                }
+                // 移除错误样式
+                this.classList.remove('error');
             });
         });
+    });
+    
+    // 关闭表单（返回上一页）
+    function closeForm() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.close();
+        }
+    }
+    
+    // 表单验证
+    function validateForm() {
+        console.log('=== 开始表单验证 ===');
+        let isValid = true;
         
-        // 关闭表单（返回上一页）
-        function closeForm() {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.close();
-            }
+        // 先清除所有错误显示
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(el => {
+            el.style.display = 'none';
+            el.textContent = '';
+        });
+        
+        const errorInputs = document.querySelectorAll('.form-input.error');
+        errorInputs.forEach(el => {
+            el.classList.remove('error');
+        });
+        
+        // 验证真实姓名
+        const realName = document.getElementById('realName').value.trim();
+        if (!realName) {
+            console.log('❌ 真实姓名为空');
+            showError('nameError', '请输入真实姓名');
+            isValid = false;
+        } else {
+            console.log('✅ 真实姓名通过');
         }
         
-        // 表单验证
-        function validateForm() {
-            let isValid = true;
-            
-            // 验证真实姓名
-            const realName = document.getElementById('realName').value.trim();
-            if (!realName) {
-                showError('nameError', '请输入真实姓名');
-                isValid = false;
-            } else {
-                hideError('nameError');
-            }
-            
-            // 验证身份证
-            const idCard = document.getElementById('idCard').value.trim();
-            const idCardPattern = /^\d{17}[\dXx]$/;
-            if (!idCardPattern.test(idCard)) {
-                showError('idCardError', '请输入有效的18位身份证号码');
-                isValid = false;
-            } else {
-                hideError('idCardError');
-            }
-            
-            // 验证手机号码
-            const phone = document.getElementById('phone').value.trim();
-            const phonePattern = /^\d{11}$/;
-            if (!phonePattern.test(phone)) {
-                showError('phoneError', '请输入有效的11位手机号码');
-                isValid = false;
-            } else {
-                hideError('phoneError');
-            }
-            
-            // 验证出发日期
-            const departureDate = document.getElementById('departureDate').value;
-            if (!departureDate) {
-                showError('dateError', '请选择出发日期');
-                isValid = false;
-            } else {
-                hideError('dateError');
-            }
-            
-            // 验证出发地
-            const departureCity = document.getElementById('departureCity').value.trim();
-            if (!departureCity) {
-                showError('departureError', '请输入出发地');
-                isValid = false;
-            } else {
-                hideError('departureError');
-            }
-            
-            // 验证目的地
-            const destinationCity = document.getElementById('destinationCity').value.trim();
-            if (!destinationCity) {
-                showError('destinationError', '请输入目的地');
-                isValid = false;
-            } else {
-                hideError('destinationError');
-            }
-            
-            // 验证出发时间
-            const departureTime = document.getElementById('departureTime').value;
-            if (!departureTime) {
-                showError('timeError', '请选择出发时间');
-                isValid = false;
-            } else {
-                hideError('timeError');
-            }
-            
-            return isValid;
+        // 验证身份证
+        const idCard = document.getElementById('idCard').value.trim();
+        const idCardPattern = /^\d{17}[\dXx]$/;
+        if (!idCardPattern.test(idCard)) {
+            console.log('❌ 身份证格式错误');
+            showError('idCardError', '请输入有效的18位身份证号码');
+            isValid = false;
+        } else {
+            console.log('✅ 身份证通过');
         }
         
-        function showError(errorId, message) {
-            const errorElement = document.getElementById(errorId);
+        // 验证手机号码
+        const phone = document.getElementById('phone').value.trim();
+        const phonePattern = /^\d{11}$/;
+        if (!phonePattern.test(phone)) {
+            console.log('❌ 手机号格式错误');
+            showError('phoneError', '请输入有效的11位手机号码');
+            isValid = false;
+        } else {
+            console.log('✅ 手机号通过');
+        }
+        
+        // 验证出发日期
+        const departureDate = document.getElementById('departureDate').value;
+        if (!departureDate) {
+            console.log('❌ 出发日期为空');
+            showError('dateError', '请选择出发日期');
+            isValid = false;
+        } else {
+            console.log('✅ 出发日期通过');
+        }
+        
+        // 验证出发地
+        const departureCity = document.getElementById('departureCity').value.trim();
+        if (!departureCity) {
+            console.log('❌ 出发地为空');
+            showError('departureError', '请输入出发地');
+            isValid = false;
+        } else {
+            console.log('✅ 出发地通过');
+        }
+        
+        // 验证目的地
+        const destinationCity = document.getElementById('destinationCity').value.trim();
+        if (!destinationCity) {
+            console.log('❌ 目的地为空');
+            showError('destinationError', '请输入目的地');
+            isValid = false;
+        } else {
+            console.log('✅ 目的地通过');
+        }
+        
+        // 验证出发时间
+        const departureTime = document.getElementById('departureTime').value;
+        if (!departureTime) {
+            console.log('❌ 出发时间为空');
+            showError('timeError', '请选择出发时间');
+            isValid = false;
+        } else {
+            console.log('✅ 出发时间通过');
+        }
+        
+        console.log('表单验证结果:', isValid ? '通过' : '失败');
+        return isValid;
+    }
+    
+    function showError(errorId, message) {
+        console.log('显示错误:', errorId, message);
+        const errorElement = document.getElementById(errorId);
+        if (errorElement) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
-            const inputElement = document.getElementById(errorId.replace('Error', ''));
+        }
+        
+        // 找到对应的输入框并添加错误样式
+        const inputId = errorId.replace('Error', '');
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
             inputElement.classList.add('error');
         }
+    }
+    
+    // 表单提交处理
+    document.getElementById('infoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        function hideError(errorId) {
-            const errorElement = document.getElementById(errorId);
-            errorElement.style.display = 'none';
-            const inputElement = document.getElementById(errorId.replace('Error', ''));
-            inputElement.classList.remove('error');
+        console.log('=== 表单提交开始 ===');
+        
+        // 验证表单
+        if (!validateForm()) {
+            console.log('❌ 表单验证失败，停止提交');
+            return false;
         }
         
-        // 表单提交处理
-        document.getElementById('infoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log('=== 表单提交开始 ===');
-    
-  	  // 验证表单
-  	  if (!validateForm()) {
-      	  	console.log('❌ 表单验证失败');
-      	  	return false;
- 	   }
-    
-         console.log('✅ 表单验证通过');
-
-            // 验证表单
-            if (!validateForm()) {
-                return false;
-            }
-            
-            // 显示加载状态
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            submitBtn.disabled = true;
-            submitBtn.textContent = '提交中...';
-            loadingOverlay.style.display = 'flex';
-            
-            // 收集表单数据
-            const formData = {
-                realName: document.getElementById('realName').value.trim(),
-                idCard: document.getElementById('idCard').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                departureDate: document.getElementById('departureDate').value,
-                departureCity: document.getElementById('departureCity').value.trim(),
-                destinationCity: document.getElementById('destinationCity').value.trim(),
-                departureTime: document.getElementById('departureTime').value
-            };
-            
-            // 3秒后跳转到ticket页面（模拟提交过程）
-            setTimeout(function() {
-                // 隐藏加载状态
-                loadingOverlay.style.display = 'none';
-                
-                // 显示成功消息
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('infoForm').style.display = 'none';
-                
-                // 2秒后跳转到ticket页面
-                setTimeout(function() {
-                    window.location.href = 'ticket.html?name=' + encodeURIComponent(formData.realName) +
-                                         '&id=' + encodeURIComponent(formData.idCard) +
-                                         '&from=' + encodeURIComponent(formData.departureCity) +
-                                         '&to=' + encodeURIComponent(formData.destinationCity) +
-                                         '&date=' + encodeURIComponent(formData.departureDate) +
-                                         '&time=' + encodeURIComponent(formData.departureTime);
-                }, 2000);
-                
-            }, 3000);
-        });
+        console.log('✅ 表单验证通过');
         
-        // 按ESC键关闭表单
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeForm();
-            }
-        });
-    </script>
+        // 显示加载状态
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '提交中...';
+        loadingOverlay.style.display = 'flex';
+        
+        // 收集表单数据
+        const formData = {
+            realName: document.getElementById('realName').value.trim(),
+            idCard: document.getElementById('idCard').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            departureDate: document.getElementById('departureDate').value,
+            departureCity: document.getElementById('departureCity').value.trim(),
+            destinationCity: document.getElementById('destinationCity').value.trim(),
+            departureTime: document.getElementById('departureTime').value
+        };
+        
+        console.log('📋 表单数据:', formData);
+        
+        // 生成随机航班号
+        const flightNumber = 'AA' + Math.floor(Math.random() * 1000).toString().padStart(4, '0');
+        
+        // 构建跳转URL
+        const redirectUrl = 'ticket.html?name=' + encodeURIComponent(formData.realName) +
+                          '&id=' + encodeURIComponent(formData.idCard) +
+                          '&flight=' + encodeURIComponent(flightNumber) +
+                          '&from=' + encodeURIComponent(formData.departureCity) +
+                          '&to=' + encodeURIComponent(formData.destinationCity) +
+                          '&date=' + encodeURIComponent(formData.departureDate) +
+                          '&time=' + encodeURIComponent(formData.departureTime);
+        
+        console.log('🔗 跳转URL:', redirectUrl);
+        
+        // 3秒后跳转到ticket页面（模拟提交过程）
+        setTimeout(function() {
+            console.log('⏱️ 3秒后执行跳转');
+            
+            // 隐藏加载状态
+            loadingOverlay.style.display = 'none';
+            
+            // 显示成功消息
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('infoForm').style.display = 'none';
+            
+            // 2秒后跳转到ticket页面
+            setTimeout(function() {
+                console.log('🚀 正在跳转到:', redirectUrl);
+                window.location.href = redirectUrl;
+            }, 2000);
+            
+        }, 3000);
+    });
+    
+    // 按ESC键关闭表单
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeForm();
+        }
+    });
+</script>
 </body>
 </html>
