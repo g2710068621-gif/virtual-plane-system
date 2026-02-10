@@ -46,10 +46,10 @@
         .right-section {
             flex: 1;
             padding: 6px 8px;
-            background: #f0f0f0;
+            background: white; /* 白色背景 */
         }
         
-        /* 航空公司标题栏 - 深色背景 */
+        /* 左侧航空公司标题栏 - 深色背景 */
         .airline-header {
             background: #003366;
             color: white;
@@ -58,6 +58,16 @@
             justify-content: space-between;
             align-items: center;
             margin: -6px -8px 5px -8px;
+            font-size: 10px;
+        }
+        
+        /* 右侧标题栏 - 和左侧一样的深色背景 */
+        .right-header {
+            background: #003366;
+            color: white;
+            padding: 3px 8px;
+            text-align: center;
+            margin: -6px -8px 8px -8px;
             font-size: 10px;
         }
         
@@ -70,6 +80,12 @@
         .boarding-pass-label {
             font-size: 8px;
             opacity: 0.9;
+        }
+        
+        .right-title {
+            font-weight: bold;
+            font-size: 11px;
+            letter-spacing: 0.5px;
         }
         
         /* 信息行样式 */
@@ -87,7 +103,7 @@
             padding: 0 2px;
         }
         
-        /* 左侧标签样式 - 中文和英文在同一行 */
+        /* 标签样式 - 中文和英文在同一行 */
         .info-label {
             font-size: 7px;
             color: #666;
@@ -110,13 +126,34 @@
             margin-left: 2px;
         }
         
-        /* 左侧内容样式 */
+        /* 内容样式 */
         .info-content {
             font-size: 9px;
             color: #000;
             font-weight: bold;
             text-align: center;
             min-height: 12px;
+        }
+        
+        /* 右侧一列布局样式 - 和左侧一样的布局 */
+        .info-column {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 5px;
+        }
+        
+        /* 右侧信息行 - 改为和左侧一样的垂直布局 */
+        .info-column-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .info-column-item {
+            flex: 1;
+            text-align: center;
+            padding: 0 2px;
         }
         
         /* 条形码区域 */
@@ -153,77 +190,6 @@
             border: 1px solid #ff0000;
             border-radius: 2px;
             background-color: #fff0f0;
-        }
-        
-        /* 右侧区域样式 */
-        .right-header {
-            text-align: center;
-            margin-bottom: 6px;
-            padding-bottom: 3px;
-            border-bottom: 1px solid #ccc;
-        }
-        
-        .flight-number-display {
-            font-size: 7px;
-            color: #666;
-            margin-bottom: 2px;
-            line-height: 1.2;
-        }
-        
-        .flight-number-value {
-            font-size: 10px;
-            font-weight: bold;
-            color: #003366;
-            margin-top: 2px;
-        }
-        
-        /* 右侧一列布局样式 */
-        .info-column {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            margin-top: 5px;
-        }
-        
-        .info-line {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 1px 0;
-        }
-        
-        /* 右侧标签样式 - 中文和英文在同一行 */
-        .info-line-label {
-            font-size: 7px;
-            color: #666;
-            min-width: 40px;
-            line-height: 1.2;
-        }
-        
-        .info-line-chinese {
-            display: inline-block;
-            font-size: 7px;
-            color: #666;
-            font-weight: normal;
-        }
-        
-        .info-line-english {
-            display: inline-block;
-            font-size: 6px;
-            color: #666;
-            font-weight: normal;
-            margin-left: 2px;
-        }
-        
-        /* 右侧内容样式 */
-        .info-line-content {
-            font-size: 9px;
-            font-weight: bold;
-            color: #000;
-            text-align: right;
-            flex: 1;
-            padding-left: 4px;
-            line-height: 1.2;
         }
         
         /* 操作按钮 */
@@ -439,68 +405,65 @@
         
     <!-- 右侧：登机信息区 -->
     <div class="right-section">
+        <!-- 右侧标题栏 - 和左侧一样的深蓝色背景 -->
         <div class="right-header">
-            <div class="flight-number-display">
-                <span class="info-line-chinese">航班</span>
-                <span class="info-line-english">FLIGHT</span>
-            </div>
-            <div class="flight-number-value" id="flightNumberRight">AA0011</div>
+            <div class="right-title">登机牌</div>
         </div>
         
-        <!-- 一列信息布局 -->
+        <!-- 右侧信息列 - 使用和左侧相同的布局 -->
         <div class="info-column">
-            <!-- 1. 航班 -->
-            <div class="info-line">
-                <div class="info-line-label">
-                    <span class="info-line-chinese">航班</span>
-                    <span class="info-line-english">FLIGHT</span>
+            <!-- 第一行 -->
+            <div class="info-column-row">
+                <div class="info-column-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">航班</span>
+                        <span class="info-label-english">FLIGHT</span>
+                    </div>
+                    <div class="info-content" id="flightNumRight">AA0011</div>
                 </div>
-                <div class="info-line-content" id="flightNumRight">AA0011</div>
+                <div class="info-column-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">日期</span>
+                        <span class="info-label-english">DATE</span>
+                    </div>
+                    <div class="info-content" id="dateRight">2024/01/01</div>
+                </div>
             </div>
             
-            <!-- 2. 日期 -->
-            <div class="info-line">
-                <div class="info-line-label">
-                    <span class="info-line-chinese">日期</span>
-                    <span class="info-line-english">DATE</span>
+            <!-- 第二行 -->
+            <div class="info-column-row">
+                <div class="info-column-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">目的地</span>
+                        <span class="info-label-english">TO</span>
+                    </div>
+                    <div class="info-content" id="toCityRight">SHANGHAI</div>
                 </div>
-                <div class="info-line-content" id="dateRight">2024/01/01</div>
+                <div class="info-column-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">座位/登机号</span>
+                        <span class="info-label-english">SEAT/BDG</span>
+                    </div>
+                    <div class="info-content" id="seatBdgValue">01L/001</div>
+                </div>
             </div>
             
-            <!-- 3. 目的地 -->
-            <div class="info-line">
-                <div class="info-line-label">
-                    <span class="info-line-chinese">目的地</span>
-                    <span class="info-line-english">TO</span>
+            <!-- 第三行 -->
+            <div class="info-column-row">
+                <div class="info-column-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">常旅客</span>
+                        <span class="info-label-english">FQT</span>
+                    </div>
+                    <div class="info-content">FREQUENT</div>
                 </div>
-                <div class="info-line-content" id="toCityRight">SHANGHAI</div>
-            </div>
-            
-            <!-- 4. 座位号/登机号 -->
-            <div class="info-line">
-                <div class="info-line-label">
-                    <span class="info-line-chinese">座位/登机号</span>
-                    <span class="info-line-english">SEAT/BDG</span>
+                <div class="info-column-item">
+                    <div class="info-label">
+                        <span class="info-label-chinese">电子票号</span>
+                        <span class="info-label-english">ETKT</span>
+                    </div>
+                    <div class="info-content">016-1234567890</div>
                 </div>
-                <div class="info-line-content" id="seatBdgValue">01L/001</div>
-            </div>
-            
-            <!-- 5. 常旅客 -->
-            <div class="info-line">
-                <div class="info-line-label">
-                    <span class="info-line-chinese">常旅客</span>
-                    <span class="info-line-english">FQT</span>
-                </div>
-                <div class="info-line-content">FREQUENT</div>
-            </div>
-            
-            <!-- 6. ETKT -->
-            <div class="info-line">
-                <div class="info-line-label">
-                    <span class="info-line-chinese">电子票号</span>
-                    <span class="info-line-english">ETKT</span>
-                </div>
-                <div class="info-line-content">016-1234567890</div>
             </div>
         </div>
     </div>
@@ -583,7 +546,6 @@
             
             // 设置航班号
             document.getElementById('flightNumber').textContent = flightNum;
-            document.getElementById('flightNumberRight').textContent = flightNum;
             document.getElementById('flightNumRight').textContent = flightNum;
             
             // 生成登机口
