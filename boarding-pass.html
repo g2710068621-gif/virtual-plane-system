@@ -531,11 +531,17 @@
             document.getElementById('toCity').textContent = toCity.toUpperCase();
             
             // 生成完整的登机牌信息
-            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code);
+            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code, toCity);
         });
         
         // 生成登机牌信息
-        function generateBoardingInfo(name, fromCode, toCode) {
+        function generateBoardingInfo(name, fromCode, toCode, toCityName) {
+
+	// 设置目的地 - 使用传入的参数
+    	 const toCityUpperCase = toCityName.toUpperCase();
+    	 document.getElementById('toCityRight1').textContent = toCityUpperCase;
+   	 document.getElementById('toCityRight2').textContent = toCityUpperCase;
+
             // 生成明天日期
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
