@@ -6,21 +6,22 @@
 <title>Travel Airlines - 登机牌</title>
 
 <style>
+/* Reset basic styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ========== 页面基础 ========== */
+/* ========== Basic Page Styles ========== */
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #000;
-    overflow: hidden;
+    overflow: hidden; /* Prevent body scroll, handled by landscape-stage */
     -webkit-text-size-adjust: 100%;
 }
 
-/* 表单（竖屏正常显示） */
+/* Form Container (Vertical view) */
 .form-container {
     background: white;
     padding: 20px;
@@ -68,7 +69,7 @@ input {
     cursor: pointer;
 }
 
-/* 加载 */
+/* Loading state */
 .loading {
     display: none;
     text-align: center;
@@ -76,59 +77,71 @@ input {
     margin-top: 40px;
 }
 
-/* ========== 强制横屏舞台（核心） ========== */
+/* ========== Forced Landscape Stage (Core) ========== */
+/* This container rotates the content to simulate landscape mode */
 .landscape-stage {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vh;
-    height: 100vw;
+    width: 100vh; /* Takes full viewport height */
+    height: 100vw; /* Takes full viewport width */
     transform: rotate(-90deg);
     transform-origin: top left;
     background: #000;
     display: none;
     justify-content: center;
     align-items: center;
+    /* overflow-y: auto; Uncomment if content might still exceed rotated height and needs scrolling */
 }
 
-/* 横向容器 */
+/* Inner container for centering the boarding pass within the landscape stage */
 .boarding-container {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px; /* Add some padding around the boarding pass */
 }
 
-/* ========== 登机牌本体 ========== */
+/* ========== Boarding Pass Itself ========== */
 .boarding-pass {
-    width: 750px;
-    height: 300px;
+    /* Responsive sizing: */
+    width: 95%; /* Take 95% of the available width in the landscape stage */
+    max-width: 750px; /* Cap the max width to maintain design on larger screens */
+    aspect-ratio: 2.5 / 1; /* Maintain aspect ratio (750px width / 300px height = 2.5) */
+    height: auto; /* Height will adjust automatically based on width and aspect-ratio */
+
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    display: none;
+    display: none; /* Hidden by default, shown by JS */
     box-shadow: 0 3px 12px rgba(0,0,0,0.4);
     font-family: "Courier New", monospace;
-}
-
-.boarding-pass * {
-    line-height: 1.15;
+    /* Use flexbox for internal layout to make height adjustment easier */
+    display: flex;
+    flex-direction: column; /* Stack header and body vertically */
 }
 
 .boarding-pass.show {
-    display: block;
+    display: flex; /* Display as flex when shown */
 }
 
-/* 头部 */
+/* Reduced line-height for all text within the boarding pass */
+.boarding-pass * {
+    line-height: 1.1; /* Reduced from 1.15 for tighter spacing */
+}
+
+/* Header Section */
 .boarding-pass-header {
     background: #003366;
     color: white;
-    height: 60px;
+    height: 60px; /* Fixed height for the header */
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0; /* Prevent header from shrinking when space is limited */
 }
 
 .airline-text h2 {
@@ -140,42 +153,44 @@ input {
     opacity: 0.9;
 }
 
-/* 主体 */
+/* Main Body Section */
 .boarding-pass-body {
     display: flex;
-    height: calc(100% - 60px);
+    flex-grow: 1; /* Allows the body to take up all remaining vertical space */
 }
 
-/* 左 */
+/* Left Section (Flight Info) */
 .flight-info-section {
-    flex: 2.5;
+    flex: 2.5; /* Takes 2.5 parts of the width */
     padding: 15px 20px;
     border-right: 2px dashed #ccc;
     display: flex;
     flex-direction: column;
+    justify-content: space-between; /* Distribute content vertically */
 }
 
-/* 右 */
+/* Right Section (Boarding Info) */
 .boarding-info-section {
-    flex: 1;
+    flex: 1; /* Takes 1 part of the width */
     padding: 15px 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-/* 乘客 */
+/* Passenger Name */
 .passenger-name {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 8px; /* Added margin for better separation */
 }
 
-/* 信息 */
+/* Flight Details Grid */
 .flight-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin: 15px 0;
+    gap: 8px; /* Reduced gap from 12px for tighter spacing */
+    margin: 10px 0; /* Reduced vertical margin from 15px */
 }
 
 .info-label {
@@ -188,13 +203,14 @@ input {
     font-weight: bold;
 }
 
-/* 行程 */
+/* Route Section */
 .route-section {
     display: flex;
     justify-content: space-between;
     background: #f5f5f5;
     padding: 10px;
     border-radius: 6px;
+    margin: 8px 0; /* Reduced vertical margin from 15px */
 }
 
 .airport-code {
@@ -203,9 +219,9 @@ input {
     color: #003366;
 }
 
-/* 条码 */
+/* Barcode Section */
 .barcode-section {
-    margin-top: auto;
+    margin-top: auto; /* Pushes barcode to the bottom of its flex container */
     text-align: center;
     background: #f5f5f5;
     padding: 8px;
@@ -215,18 +231,19 @@ input {
 #barcodeContainer img {
     width: 100%;
     height: 40px;
+    object-fit: contain; /* Ensure barcode image scales appropriately */
 }
 
-/* 登机信息 */
+/* Boarding Grid (Right Section) */
 .boarding-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 6px; /* Slightly reduced from 8px */
 }
 
 .boarding-item {
     background: #f5f5f5;
-    padding: 8px;
+    padding: 6px; /* Slightly reduced from 8px */
     border-radius: 5px;
     text-align: center;
 }
@@ -237,13 +254,13 @@ input {
     color: #003366;
 }
 
-
 .boarding-time-section {
     background: #003366;
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 8px; /* Slightly reduced from 10px */
     border-radius: 6px;
+    margin-top: 8px; /* Added margin to separate from the grid above */
 }
 </style>
 </head>
@@ -269,7 +286,7 @@ input {
 
 <div class="loading" id="loading">正在生成登机牌...</div>
 
-<!-- 强制横屏舞台 -->
+<!-- Forced Landscape Stage -->
 <div class="landscape-stage" id="stage">
     <div class="boarding-container">
         <div class="boarding-pass" id="pass">
@@ -309,13 +326,13 @@ input {
 
                 <div class="boarding-info-section">
                     <div class="boarding-grid">
-                        <div class="boarding-item"><div class="boarding-value">01</div></div>
-                        <div class="boarding-item"><div class="boarding-value">01</div></div>
-                        <div class="boarding-item"><div class="boarding-value">01</div></div>
+                        <div class="boarding-item"><div class="boarding-value">A1</div></div>
+                        <div class="boarding-item"><div class="boarding-value">15A</div></div>
+                        <div class="boarding-item"><div class="boarding-value">07:30</div></div>
                     </div>
 
                     <div class="boarding-time-section">
-                        01:01
+                        07:00 PM
                     </div>
                 </div>
             </div>
@@ -345,11 +362,22 @@ function generate() {
         document.getElementById("pName").innerText = name;
         document.getElementById("from").innerText = from;
         document.getElementById("to").innerText = to;
-        document.getElementById("fromCode").innerText = from.slice(0,3).toUpperCase();
-        document.getElementById("toCode").innerText = to.slice(0,3).toUpperCase();
+        // Slice the first 3 characters and convert to uppercase for airport codes, with a safety check
+        document.getElementById("fromCode").innerText = from.length >= 3 ? from.slice(0,3).toUpperCase() : from.toUpperCase();
+        document.getElementById("toCode").innerText = to.length >= 3 ? to.slice(0,3).toUpperCase() : to.toUpperCase();
 
+        // Update boarding grid and time with more realistic placeholders
+        const boardingGridItems = document.querySelectorAll('.boarding-grid .boarding-value');
+        boardingGridItems[0].innerText = 'A1'; // Gate
+        boardingGridItems[1].innerText = '15A'; // Seat
+        boardingGridItems[2].innerText = '07:30'; // Flight Time (Placeholder)
+
+        document.querySelector('.boarding-time-section').innerText = '07:00 PM'; // Boarding Time (Placeholder)
+
+
+        // Barcode text now includes passenger name and route
         document.getElementById("barcodeContainer").innerHTML =
-            `<img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=Have%20a%20nice%20flight&height=40">`;
+            `<img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(name + ' ' + from + ' to ' + to)}&height=40">`;
     }, 600);
 }
 </script>
