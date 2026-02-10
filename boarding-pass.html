@@ -679,59 +679,63 @@
         
         // 生成登机牌信息
         function generateBoardingInfo(name, fromCode, toCode, toCityName) {
-            // 设置目的地
-            const toCityUpperCase = toCityName.toUpperCase();
-            document.getElementById('toCityRight1').textContent = toCityUpperCase;
-            document.getElementById('toCityRight2').textContent = toCityUpperCase;
-
-            // 生成明天日期
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const dateStr = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
-            
-            // 设置日期
-            document.getElementById('flightDate').textContent = dateStr;
-            document.getElementById('dateRight1').textContent = dateStr;
-            document.getElementById('dateRight2').textContent = dateStr;
-            
-            // 生成航班号
-            const flightNum = `${fromCode.charAt(0)}${toCode.charAt(0)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
-            
-            // 设置航班号
-            document.getElementById('flightNumber').textContent = flightNum;
-            document.getElementById('flightNumRight1').textContent = flightNum;
-            document.getElementById('flightNumRight2').textContent = flightNum;
-            
-            // 生成登机口
-            const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
-            const gate = gates[Math.floor(Math.random() * gates.length)];
-            document.getElementById('gateValue').textContent = gate;
-            
-            // 生成座位号
-            const row = Math.floor(Math.random() * 35) + 10;
-            const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
-            const seat = seats[Math.floor(Math.random() * seats.length)];
-            const seatNo = `${row}${seat}`;
-            document.getElementById('seatNo').textContent = seatNo;
-            
-            // 生成序号和登机号
-            const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
-            document.getElementById('serialNo').textContent = seq;
-            const seatBdgValue = `${seatNo}/${seq}`;
-            document.getElementById('seatBdgValue1').textContent = seatBdgValue;
-            document.getElementById('seatBdgValue2').textContent = seatBdgValue;
-            
-            // 生成登机时间（当前时间+随机1-4小时）
-            const now = new Date();
-            const addHours = Math.floor(Math.random() * 3) + 1;
-            now.setHours(now.getHours() + addHours);
-            now.setMinutes(Math.floor(Math.random() * 60));
-            const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            document.getElementById('boardingTime').textContent = boardingTime;
-            
-            // 生成条形码
-            generateBarcode(`${flightNum}-${dateStr}-${name}-${fromCode}-${toCode}`);
-        }
+    // 参数安全检查
+    name = String(name || 'ZHANG SAN');
+    fromCode = String(fromCode || 'PEK');
+    toCode = String(toCode || 'SHA');
+    toCityName = String(toCityName || 'SHANGHAI');
+    
+    // 设置目的地
+    const toCityUpperCase = toCityName.toUpperCase();
+    document.getElementById('toCityRight1').textContent = toCityUpperCase;
+    document.getElementById('toCityRight2').textContent = toCityUpperCase;
+    
+    // 生成明天日期
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateStr = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
+    
+    // 设置日期
+    document.getElementById('flightDate').textContent = dateStr;
+    document.getElementById('dateRight1').textContent = dateStr;
+    document.getElementById('dateRight2').textContent = dateStr;
+    
+    // 生成航班号
+    const flightNum = `${fromCode.charAt(0)}${toCode.charAt(0)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+    
+    // 设置航班号
+    document.getElementById('flightNumber').textContent = flightNum;
+    document.getElementById('flightNumRight1').textContent = flightNum;
+    document.getElementById('flightNumRight2').textContent = flightNum;
+    
+    // 生成登机口
+    const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
+    const gate = gates[Math.floor(Math.random() * gates.length)];
+    document.getElementById('gateValue').textContent = gate;
+    
+    // 生成座位号
+    const row = Math.floor(Math.random() * 35) + 10;
+    const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const seat = seats[Math.floor(Math.random() * seats.length)];
+    const seatNo = `${row}${seat}`;
+    document.getElementById('seatNo').textContent = seatNo;
+    
+    // 生成序号和登机号
+    const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
+    document.getElementById('serialNo').textContent = seq;
+    const seatBdgValue = `${seatNo}/${seq}`;
+    document.getElementById('seatBdgValue1').textContent = seatBdgValue;
+    document.getElementById('seatBdgValue2').textContent = seatBdgValue;
+    
+    // 生成登机时间
+    const now = new Date();
+    const addHours = Math.floor(Math.random() * 3) + 1;
+    now.setHours(now.getHours() + addHours);
+    now.setMinutes(Math.floor(Math.random() * 60));
+    const boardingTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    document.getElementById('boardingTime').textContent = boardingTime;
+   
+}
         
         // 生成二维码
        function generateBarcode(data) {
