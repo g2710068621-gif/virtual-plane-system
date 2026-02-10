@@ -732,32 +732,31 @@
             generateQRCode(`${flightNum}-${dateStr}-${name}-${fromCode}-${toCode}`);
         }
         
-        // 生成二维码
-        function generateQRCode(data) {
+function generateQRCode(data) {
     const barcodeContainer = document.getElementById('barcodeContainer');
     
-    // 获取当前页面的完整URL
-    const currentUrl = window.location.href;
+    // 调试信息
+    console.log('=== QR Code Debug Info ===');
+    console.log('Current full URL:', window.location.href);
+    console.log('Origin:', window.location.origin);
+    console.log('Pathname:', window.location.pathname);
     
-    // 构建form.html的URL
-    let formUrl;
+    // 尝试不同的URL构建方法
+    const methods = {
+        'Method 1 (relative)': 'form.html',
+        'Method 2 (relative with dot)': './form.html',
+        'Method 3 (from current)': window.location.href.replace(/[^/]*$/, '') + 'form.html',
+        'Method 4 (GitHub Pages)': window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'form.html'
+    };
     
-    // 方法1：替换当前文件名
-    if (currentUrl.includes('boarding-pass.html')) {
-        // 如果当前页面是boarding-pass.html，替换为form.html
-        formUrl = currentUrl.replace('boarding-pass.html', 'form.html');
-    } else if (currentUrl.includes('.html')) {
-        // 如果当前页面是其他html文件，替换文件名
-        const lastSlashIndex = currentUrl.lastIndexOf('/');
-        const baseUrl = currentUrl.substring(0, lastSlashIndex + 1);
-        formUrl = baseUrl + 'form.html';
-    } else {
-        // 如果当前页面没有.html扩展名，直接添加form.html
-        const baseUrl = currentUrl.endsWith('/') ? currentUrl : currentUrl + '/';
-        formUrl = baseUrl + 'form.html';
+    // 测试所有方法
+    for (const [method, url] of Object.entries(methods)) {
+        console.log(`${method}: ${url}`);
     }
     
-    console.log('Form URL for QR code:', formUrl); // 调试用
+    // 选择方法2（通常最可靠）
+    const formUrl = './form.html';
+    console.log('Selected URL:', formUrl);
     
     // 使用二维码生成服务
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=${encodeURIComponent(formUrl)}`;
@@ -770,6 +769,12 @@
                  onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"70\" height=\"70\"><rect width=\"70\" height=\"70\" fill=\"white\"/><text x=\"35\" y=\"35\" font-size=\"6\" text-anchor=\"middle\">SCAN ME</text></svg>'">
         </div>
     `;
+    
+    // 添加点击测试
+    barcodeContainer.querySelector('img').addEventListener('click', function() {
+        console.log('Attempting to navigate to:', formUrl);
+        window.open(formUrl, '_blank');
+    });
 }
         
         // 返回首页
