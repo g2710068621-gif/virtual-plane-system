@@ -683,11 +683,11 @@
             document.getElementById('toCity').textContent = toCity.toUpperCase();
             
             // 生成完整的登机牌信息
-            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code);
+            generateBoardingInfo(passengerName, fromAirport.code, toAirport.code, toCity);
         });
         
         // 生成登机牌信息
-        function generateBoardingInfo(name, fromCode, toCode) {
+        function generateBoardingInfo(name, fromCode, toCode, toCity) {
             // 生成明天日期
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
