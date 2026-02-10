@@ -12,7 +12,7 @@
         }
         
         body {
-            font-family: 'Arial Narrow', 'Helvetica Condensed', sans-serif;
+           font-family: "黑体", SimHei, "Microsoft YaHei", sans-serif;
             background: #ccc;
             min-height: 100vh;
             display: flex;
@@ -161,7 +161,7 @@
         .info-label {
             font-size: 7px;
             color: #666;
-            margin-bottom: 2px;
+            margin-bottom: 0;
             line-height: 1.2;
         }
         
@@ -182,18 +182,20 @@
         
         /* 内容样式 */
         .info-content {
-            font-size: 9px;
-            color: #000;
-            font-weight: bold;
-            text-align: center;
-            min-height: 12px;
+	 font-size: 10px; /* 从9px加大到10px */
+    	color: #000;
+    	font-weight: normal; /* 去掉加粗 */
+   	 text-align: center;
+  	  min-height: 12px;
+   	 line-height: 1.2; /* 调整行高，减少间距 */
+  	  margin-top: 0; /* 去掉顶部间距 */
         }
         
         /* 右侧单列布局样式 */
         .info-single-column {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 0;
             margin-top: 5px;
         }
         
