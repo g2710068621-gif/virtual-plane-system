@@ -27,7 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 500px;
+            max-width: 300px;
             animation: fadeIn 0.6s ease-out;
         }
         
@@ -132,24 +132,12 @@
             
             <div class="form-group">
                 <label for="fromCity">📍 出发地</label>
-                <input type="text" id="fromCity" name="from" list="cities" placeholder="例如：北京" required>
-                <datalist id="cities">
-                    <option value="北京">北京</option>
-                    <option value="上海">上海</option>
-                    <option value="广州">广州</option>
-                    <option value="深圳">深圳</option>
-                    <option value="成都">成都</option>
-                    <option value="重庆">重庆</option>
-                    <option value="杭州">杭州</option>
-                    <option value="南京">南京</option>
-                    <option value="武汉">武汉</option>
-                    <option value="西安">西安</option>
-                </datalist>
+                <input type="text" id="fromCity" name="from" placeholder="例如：北京" required>
             </div>
             
             <div class="form-group">
                 <label for="toCity">🎯 目的地</label>
-                <input type="text" id="toCity" name="to" list="cities" placeholder="例如：上海" required>
+                <input type="text" id="toCity" name="to" placeholder="例如：上海" required>
             </div>
             
             <button type="submit" class="submit-btn">生成登机牌</button>
