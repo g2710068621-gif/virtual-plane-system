@@ -1,187 +1,530 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Airlines - 首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎁 惊喜礼物掉落 · 登机口</title>
     <style>
+        /* -----------------------------------------------
+           全局浪漫惊喜氛围 · 动态礼物雨 + 登机按钮
+        ----------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #003366 0%, #004080 100%);
-            min-height: 60vh;
+            background: radial-gradient(circle at 20% 30%, #1e1a3a, #0e0b1f);
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;          /* 隐藏滚动条，全屏飘落 */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* ----- 主卡片：惊喜标题 + 按钮（通往boarding-pass）----- */
+        .surprise-card {
+            background: rgba(20, 15, 45, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 56px 24px 56px 24px;
+            border: 2px solid rgba(255, 215, 150, 0.5);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 200, 80, 0.4);
+            padding: 3rem 3.5rem;
+            text-align: center;
+            z-index: 30;              /* 浮在礼物上方，但半透明背景不遮挡视线 */
+            max-width: 750px;
+            margin: 0 24px;
+            animation: cardBreath 3.2s infinite alternate ease-in-out;
+        }
+
+        @keyframes cardBreath {
+            0%   { box-shadow: 0 25px 45px rgba(0,0,0,0.7), 0 0 30px rgba(255,180,60,0.3); border-color: rgba(255, 220, 150, 0.5); }
+            100% { box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 55px rgba(255, 200, 0, 0.7); border-color: rgba(255, 245, 200, 0.9); }
+        }
+
+        h1 {
+            font-size: 4.8rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            margin-bottom: 0.6rem;
+            text-shadow: 0 0 20px #ffb347, 0 0 40px #ff8800, 0 0 80px #ff5500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h1 span {
+            background: rgba(255, 200, 0, 0.18);
+            padding: 0 16px;
+            border-radius: 120px;
+            backdrop-filter: blur(5px);
+        }
+
+        .dynamic-tagline {
+            font-size: 2.1rem;
+            font-weight: 300;
+            margin-bottom: 1.8rem;
+            color: #ffebc2;
+            min-height: 4.2rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            gap: 12px;
+            text-shadow: 0 0 6px #ffaa33;
         }
-        
-        .form-container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 500px;
-            animation: fadeIn 0.6s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo-section h1 {
-            color: #003366;
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        
-        .logo-section p {
-            color: #666;
-            font-size: 16px;
-        }
-        
-        .plane-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #003366;
-        }
-        
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            background: #003366;
-            color: white;
+
+        /* ---------- 登机按钮 · 打开 -> boarding-pass.html ---------- */
+        .btn-boarding {
+            background: radial-gradient(circle at 35% 25%, #ffdb7c, #ffb347);
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            padding: 1.4rem 3.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            border-radius: 80px;
+            color: #1f1307;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            box-shadow: 0 12px 0 #9e5816, 0 18px 45px rgba(255, 140, 0, 0.6);
+            transition: all 0.14s ease;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
+            border: 3px solid #fff1cf;
+            margin-top: 1.2rem;
+            letter-spacing: 5px;
+            text-decoration: none;    /* 用于链接 */
         }
-        
-        .submit-btn:hover {
-            background: #002244;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+
+        .btn-boarding:hover {
+            transform: translateY(8px);
+            box-shadow: 0 4px 0 #9e5816, 0 28px 50px rgba(255, 160, 0, 0.8);
+            background: radial-gradient(circle at 35% 25%, #ffe9a0, #ffb85c);
         }
-        
-        .submit-btn:active {
-            transform: translateY(0);
+
+        .btn-boarding:active {
+            transform: translateY(14px);
+            box-shadow: 0 0 0 #9e5816, 0 30px 55px rgba(255, 120, 0, 0.9);
         }
-        
-        .instructions {
-            margin-top: 25px;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            line-height: 1.5;
+
+        /* 为了让a标签和按钮样式完美融合 */
+        .btn-link {
+            text-decoration: none;
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        /* 实时飘落计数器 */
+        .gift-stats {
+            margin-top: 2rem;
+            font-size: 1.35rem;
+            background: rgba(10, 5, 20, 0.6);
+            padding: 0.7rem 2rem;
+            border-radius: 60px;
+            display: inline-block;
+            backdrop-filter: blur(6px);
+            border: 1px dashed rgba(255, 245, 150, 0.8);
+            color: #ffefc0;
+        }
+
+        /* ---------- 动态礼物掉落画布 ---------- */
+        .gift-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;      /* 点击穿透，按钮可点 */
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* 每个掉落礼物 —— 活泼的动画 */
+        .gift-item {
+            position: absolute;
+            top: -80px;
+            font-size: 2.8rem;
+            will-change: transform;
+            pointer-events: none;
+            filter: drop-shadow(0 12px 10px rgba(0,0,0,0.5));
+            animation: floatSide 5s infinite ease-in-out;
+            white-space: nowrap;
+            z-index: 15;
+            opacity: 0.96;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        /* 左右漂浮动画 */
+        @keyframes floatSide {
+            0%   { transform: translateX(0px) rotate(0deg); }
+            30%  { transform: translateX(14px) rotate(6deg); }
+            70%  { transform: translateX(-10px) rotate(-4deg); }
+            100% { transform: translateX(0px) rotate(0deg); }
+        }
+
+        /* 不同尺寸 */
+        .gift-item.size-xs    { font-size: 1.6rem; }
+        .gift-item.size-small { font-size: 2.2rem; }
+        .gift-item.size-medium{ font-size: 3.0rem; }
+        .gift-item.size-large { font-size: 4.0rem; }
+        .gift-item.shimmer    { filter: drop-shadow(0 0 15px gold); }
+
+        /* 闪烁星星 —— 浪漫背景 */
+        .star-twinkle {
+            position: absolute;
+            color: rgba(255, 255, 200, 0.9);
+            font-size: 1.5rem;
+            animation: twinkle 2.4s infinite alternate;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes twinkle {
+            0%   { opacity: 0.2; transform: scale(0.7); text-shadow: 0 0 5px #fff0b0; }
+            100% { opacity: 1; transform: scale(1.3); text-shadow: 0 0 18px #fffde7; }
+        }
+
+        /* 署名 */
+        .credit {
+            position: absolute;
+            bottom: 18px;
+            right: 28px;
+            color: rgba(255, 240, 200, 0.55);
+            font-size: 0.95rem;
+            z-index: 50;
+            backdrop-filter: blur(4px);
+            padding: 6px 18px;
+            border-radius: 40px;
+            background: rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 560px) {
+            h1 { font-size: 3.2rem; }
+            .dynamic-tagline { font-size: 1.6rem; }
+            .surprise-card { padding: 2rem 1.8rem; }
+            .btn-boarding { font-size: 1.6rem; padding: 1.1rem 2.2rem; }
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <div class="logo-section">
-            <div class="plane-icon">✈️</div>
-            <h1>TRAVEL AIRLINES</h1>
-            <p>请填写信息生成您的电子登机牌</p>
+
+    <!-- ******** 主视觉卡片：惊喜礼物掉落 + “打开”按钮（登机牌入口） ******** -->
+    <div class="surprise-card">
+        <h1>
+            <span>🎁</span> 惊喜 <span>✈️</span>
+        </h1>
+        <!-- 动态文案：呼应礼物掉落与旅程 -->
+        <div class="dynamic-tagline" id="dynamicPhrase">
+            🎫 礼物正在飘落 · 准备登机 🎫
         </div>
-        
-        <form id="boardingForm" action="boarding-pass.html" method="GET">
-            <div class="form-group">
-                <label for="name">👤 乘客姓名</label>
-                <input type="text" id="name" name="name" placeholder="请输入姓名" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="fromCity">📍 出发地</label>
-                <input type="text" id="fromCity" name="from" placeholder="例如：北京" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="toCity">🎯 目的地</label>
-                <input type="text" id="toCity" name="to" placeholder="例如：上海" required>
-            </div>
-            
-            <button type="submit" class="submit-btn">生成登机牌</button>
-        </form>
-        
-        <div class="instructions">
-            <p>✈️ 填写后点击按钮将跳转到横版登机牌页面</p>
+
+        <!-- 
+            “打开” 按钮 —— 连接到 boarding-pass.html 
+            真正的链接，点击即跳转。保留完整按钮样式。
+        -->
+        <div class="btn-boarding">
+            <a href="boarding-pass.html" class="btn-link" id="boardingLink">
+                <span>🧾</span> 打开 <span>🎟️</span>
+            </a>
+        </div>
+
+        <!-- 实时显示当前飘落的礼物数量，增加动态感 -->
+        <div class="gift-stats">
+            🎁 已掉落 <span id="giftCountDisplay">0</span> 件惊喜
         </div>
     </div>
 
+    <!-- ******** 动态礼物画布：所有飘落礼物 & 闪烁星星 ******** -->
+    <div class="gift-canvas" id="giftCanvas">
+        <!-- 预设几颗闪烁星，增加层次 -->
+        <div class="star-twinkle" style="top: 15%; left: 6%;">✨</div>
+        <div class="star-twinkle" style="top: 72%; left: 20%;">🌟</div>
+        <div class="star-twinkle" style="top: 40%; left: 86%;">💫</div>
+        <div class="star-twinkle" style="top: 83%; left: 68%;">⭐</div>
+        <div class="star-twinkle" style="top: 27%; left: 44%;">✨</div>
+    </div>
+
+    <div class="credit">
+        🎁 掉落不停 · 即刻登机 🎫
+    </div>
+
     <script>
-        // 表单验证
-        document.getElementById('boardingForm').addEventListener('submit', function(e) {
-            const name = document.getElementById('name').value.trim();
-            const fromCity = document.getElementById('fromCity').value.trim();
-            const toCity = document.getElementById('toCity').value.trim();
-            
-            if (!name || !fromCity || !toCity) {
-                e.preventDefault();
-                alert('请填写所有信息！');
-                return;
+        (function() {
+            "use strict";
+
+            // ---------- 惊喜礼物掉落核心引擎 ----------
+            const canvas = document.getElementById('giftCanvas');
+            // 存储当前所有礼物元素
+            let giftElements = [];
+
+            // 丰富礼物图标 —— 加入旅行/登机小元素，呼应“boarding-pass”
+            const giftIcons = [
+                '🎁', '📦', '🎀', '🧸', '🍬', '🍭', '🎈', '🧧', 
+                '💝', '🎄', '🌟', '✨', '🎂', '🍫', '🏆', '👑',
+                '💎', '🔮', '🧁', '🥂', '🎨', '🪅', '🪆', '💌',
+                // 增加登机/旅行相关惊喜
+                '✈️', '🧾', '🎫', '🧳', '🗺️', '🧭', '🚂', '🛳️'
+            ];
+
+            // 动态文案 (加入登机/旅行的氛围)
+            const phraseList = [
+                '🎁 礼物与机票一同飘落', 
+                '✨ 前方登机口 · 惊喜不断', 
+                '🪄 拾取你的登机牌', 
+                '💖 专属航班即将出发', 
+                '🍀 幸运礼物伴你飞行',
+                '🌟 今日惊喜已就绪',
+                '🎈 叮！礼物与登机信',
+                '🧸 小熊机长送你礼物',
+                '🍭 甜蜜旅途掉落',
+                '🎀 头等舱惊喜',
+                '✈️  boarding-pass 等候',
+                '🧾 打开登机牌出发'
+            ];
+
+            // 显示礼物数量的span
+            const giftCountSpan = document.getElementById('giftCountDisplay');
+            const dynamicPhraseEl = document.getElementById('dynamicPhrase');
+
+            // 掉落速度控制 (基础: 每秒约2.3个)
+            let dropRate = 2.3;         
+            const BASE_DROP_RATE = 2.3;
+            // 没有任何加速干扰，保持平稳掉落即可
+
+            // ---------- 星星生成器 (浪漫氛围) ----------
+            function initStars() {
+                // 额外生成12颗星星散落各处
+                for (let i = 0; i < 14; i++) {
+                    createStar();
+                }
+                // 每3.5秒补充一颗新的闪烁星星
+                setInterval(() => {
+                    createStar();
+                    // 避免星星无限增加，保留最多35颗
+                    const allStars = document.querySelectorAll('.star-twinkle');
+                    if (allStars.length > 40) {
+                        for (let i = 0; i < 10; i++) {
+                            if (allStars[i]) allStars[i].remove();
+                        }
+                    }
+                }, 3500);
             }
-            
-            if (fromCity === toCity) {
-                e.preventDefault();
-                alert('出发地和目的地不能相同！');
-                return;
+
+            // 创造一颗闪烁星星
+            function createStar() {
+                if (!canvas) return;
+                const star = document.createElement('div');
+                star.className = 'star-twinkle';
+                const emojiSet = ['✨', '🌟', '⭐', '💫', '✨', '⚡', '❄️', '🍃', '🕊️'];
+                star.textContent = emojiSet[Math.floor(Math.random() * emojiSet.length)];
+                star.style.left = Math.random() * 96 + '%';
+                star.style.top = Math.random() * 94 + '%';
+                star.style.fontSize = (1.2 + Math.random() * 2) + 'rem';
+                star.style.animationDelay = (Math.random() * 4) + 's';
+                star.style.opacity = 0.5 + Math.random() * 0.5;
+                canvas.appendChild(star);
+                // 星星生命周期：12秒后优雅消失
+                setTimeout(() => {
+                    if (star.parentNode) star.remove();
+                }, 12000);
             }
-            
-            // 可以在这里添加加载动画
-            document.querySelector('.submit-btn').textContent = '跳转中...';
-            document.querySelector('.submit-btn').disabled = true;
-        });
-        
-        // 回车键提交
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const focused = document.activeElement;
-                if (focused.tagName === 'INPUT') {
-                    e.preventDefault();
-                    document.getElementById('boardingForm').submit();
+
+            // ---------- 生成一个新礼物 ----------
+            function createGift() {
+                if (!canvas) return;
+                const gift = document.createElement('div');
+                gift.className = 'gift-item';
+
+                // 随机图标
+                const randomIcon = giftIcons[Math.floor(Math.random() * giftIcons.length)];
+                gift.textContent = randomIcon;
+
+                // 随机尺寸
+                const sizeRand = Math.random();
+                if (sizeRand < 0.2) {
+                    gift.classList.add('size-xs');
+                } else if (sizeRand < 0.5) {
+                    gift.classList.add('size-small');
+                } else if (sizeRand < 0.8) {
+                    gift.classList.add('size-medium');
+                } else {
+                    gift.classList.add('size-large');
+                }
+
+                // 偶尔闪烁金色光芒
+                if (Math.random() > 0.55) {
+                    gift.classList.add('shimmer');
+                }
+
+                // 水平位置随机 (0~95%)
+                gift.style.left = Math.random() * 92 + '%';
+                // 起始垂直位置: 不同负值，错落入场
+                gift.style.top = `-${60 + Math.random() * 80}px`;
+                // 下落速度 (像素/帧)  0.6 ~ 2.1
+                const speed = 0.65 + Math.random() * 1.5;
+                gift.dataset.speed = speed;
+
+                // 记录当前Y (px)
+                let initialTop = parseFloat(gift.style.top);
+                gift.currentY = isNaN(initialTop) ? -70 : initialTop;
+
+                canvas.appendChild(gift);
+                giftElements.push(gift);
+
+                // 更新计数器
+                updateGiftCounter();
+            }
+
+            // ---------- 移除超出屏幕的礼物 ----------
+            function removeOffscreenGifts() {
+                giftElements = giftElements.filter(gift => {
+                    if (!gift || !gift.parentNode) return false;
+                    let topStr = gift.style.top;
+                    let topVal = parseFloat(topStr);
+                    if (isNaN(topVal)) {
+                        const computed = window.getComputedStyle(gift).top;
+                        topVal = parseFloat(computed);
+                    }
+                    const winHeight = window.innerHeight;
+                    if (topVal > winHeight + 130) {
+                        if (gift.parentNode) gift.remove();
+                        return false;
+                    }
+                    return true;
+                });
+            }
+
+            // ---------- 移动所有礼物 (每帧) ----------
+            function moveGifts() {
+                for (let gift of giftElements) {
+                    if (!gift) continue;
+                    let currentTop = parseFloat(gift.style.top);
+                    if (isNaN(currentTop)) currentTop = -50;
+                    const sp = parseFloat(gift.dataset.speed) || 0.9;
+                    let newTop = currentTop + sp;
+                    gift.style.top = newTop + 'px';
+                }
+                removeOffscreenGifts();
+                updateGiftCounter();
+            }
+
+            // 更新屏幕上的礼物数量显示
+            function updateGiftCounter() {
+                if (giftCountSpan) {
+                    giftCountSpan.textContent = giftElements.length;
                 }
             }
-        });
+
+            // 切换动态短语
+            function rotatePhrase() {
+                if (!dynamicPhraseEl) return;
+                const idx = Math.floor(Math.random() * phraseList.length);
+                dynamicPhraseEl.textContent = phraseList[idx];
+            }
+
+            // ---------- 礼物生成循环(基于dropRate概率) ----------
+            function generatorLoop() {
+                // 每秒生成 dropRate 个 => 每帧概率 ≈ dropRate / 60
+                if (Math.random() < dropRate / 60) {
+                    createGift();
+                }
+                // 随机更新短语 (概率0.025/帧 ≈ 每秒1.5次)
+                if (Math.random() < 0.025) {
+                    rotatePhrase();
+                }
+                requestAnimationFrame(generatorLoop);
+            }
+
+            // ---------- 位置更新循环 ----------
+            function animationLoop() {
+                moveGifts();
+                requestAnimationFrame(animationLoop);
+            }
+
+            // ---------- 初始化一切 ----------
+            function initApp() {
+                // 清空可能残留礼物（保留星星）
+                const existingGifts = document.querySelectorAll('.gift-item');
+                existingGifts.forEach(g => g.remove());
+                giftElements = [];
+
+                // 设定掉落速率
+                dropRate = BASE_DROP_RATE;
+
+                // 预生成20个礼物，让画面立刻丰富
+                for (let i = 0; i < 22; i++) {
+                    setTimeout(() => { createGift(); }, i * 20);
+                }
+
+                // 初始文案随机
+                rotatePhrase();
+
+                // 启动星星背景
+                initStars();
+
+                // 启动两大循环
+                requestAnimationFrame(generatorLoop);
+                requestAnimationFrame(animationLoop);
+            }
+
+            // 页面加载启动
+            window.addEventListener('load', initApp);
+
+            // 确保按钮链接正常：保留a标签的href="boarding-pass.html"，无干扰
+            // 同时为了更好的体验，当点击按钮时也会触发轻微的触感（无法haptic但正常跳转）
+            // 无需额外代码，链接真实有效。
+
+            // 清理潜在定时器 (setInterval在initStars里)
+            window.addEventListener('beforeunload', function() {
+                // 没有保留重要定时器变量，但页面卸载时会自动清除。
+            });
+
+        })();
     </script>
+
+    <!-- 保证gift-item位置更新准确，无样式冲突 -->
+    <style>
+        .gift-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .gift-item {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            transition: none;
+        }
+        .btn-link {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+        /* 确保a标签占满按钮 */
+        .btn-boarding {
+            padding: 0;           
+        }
+        .btn-link {
+            padding: 1.4rem 3.5rem;
+            border-radius: 80px;
+            text-decoration: none;
+            color: #1f1307;
+            font-weight: 700;
+        }
+        @media (max-width: 560px) {
+            .btn-link { padding: 1.1rem 2.2rem; }
+        }
+    </style>
 </body>
 </html>
