@@ -42,77 +42,77 @@
             position: relative;
         }
 
-        /* 诗文卡片 · 整体缩小30% */
+        /* 诗文卡片 · 整体缩小50% */
         .poem-card {
-            width: 60%; /* 从70%缩小到60% */
-            max-width: 400px; /* 从550px缩小到400px */
-            padding: 2rem 1.8rem; /* 从2.8rem 2.5rem缩小 */
+            width: 45%; /* 从60%缩小到45% */
+            max-width: 280px; /* 从400px缩小到280px */
+            padding: 1.5rem 1.2rem; /* 大幅缩小内边距 */
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border: none;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
             display: flex;
             flex-direction: column;
             border-radius: 0;
         }
 
-        /* 正文诗意排版 · 缩小 */
+        /* 正文诗意排版 · 精致小巧 */
         .poem {
             color: #2c3e4e;
-            font-size: 1rem; /* 从1.2rem缩小 */
-            line-height: 1.9; /* 从2.1缩小 */
-            letter-spacing: 0.05em;
-            margin-bottom: 1.5rem; /* 从2rem缩小 */
+            font-size: 0.85rem; /* 从1rem缩小到0.85rem */
+            line-height: 1.7; /* 从1.9缩小到1.7 */
+            letter-spacing: 0.04em;
+            margin-bottom: 1rem; /* 从1.5rem缩小 */
         }
 
         .poem p {
-            margin: 0.7rem 0; /* 从0.9rem缩小 */
+            margin: 0.5rem 0; /* 从0.7rem缩小 */
             text-align: left;
             font-weight: 380;
         }
 
-        /* 首句独立样式 · 缩小 */
+        /* 首句独立样式 · 小巧精致 */
         .poem-first {
-            font-size: 1.2rem; /* 从1.45rem缩小 */
+            font-size: 1rem; /* 从1.2rem缩小到1rem */
             font-weight: 450;
-            margin-bottom: 1.2rem !important; /* 从1.5rem缩小 */
+            margin-bottom: 0.9rem !important; /* 从1.2rem缩小 */
             color: #1e2f35;
-            border-left: 2.5px solid #d4b08c; /* 从3px缩小 */
-            padding-left: 1rem; /* 从1.2rem缩小 */
-            letter-spacing: 0.08em;
+            border-left: 2px solid #d4b08c; /* 从2.5px缩小 */
+            padding-left: 0.8rem; /* 从1rem缩小 */
+            letter-spacing: 0.06em;
         }
 
-        /* 署名区域 · 缩小 */
+        /* 署名区域 · 紧凑 */
         .signature {
-            margin-top: 0.3rem;
+            margin-top: 0.2rem;
             text-align: right;
-            border-top: 1px solid rgba(44, 62, 78, 0.15);
-            padding-top: 1.2rem; /* 从1.5rem缩小 */
+            border-top: 1px solid rgba(44, 62, 78, 0.12);
+            padding-top: 0.8rem; /* 从1.2rem缩小 */
         }
 
         .signature-name {
-            font-size: 1.2rem; /* 从1.5rem缩小 */
+            font-size: 1rem; /* 从1.2rem缩小到1rem */
             font-weight: 400;
             color: #5f4c3b;
-            letter-spacing: 5px; /* 从6px缩小 */
-            margin-bottom: 0.2rem;
+            letter-spacing: 4px; /* 从5px缩小 */
+            margin-bottom: 0.1rem;
         }
 
         .signature-date {
-            font-size: 0.7rem; /* 从0.85rem缩小 */
+            font-size: 0.6rem; /* 从0.7rem缩小到0.6rem */
             color: #8b7a6b;
-            letter-spacing: 2.5px; /* 从3px缩小 */
+            letter-spacing: 2px; /* 从2.5px缩小 */
             font-style: italic;
         }
 
-        /* 进入按钮 · 缩小 */
+        /* 进入按钮 · 小巧 */
         .btn-enter {
             display: inline-block;
             border: none;
             background: transparent;
             padding: 0;
-            margin-top: 0.5rem; /* 从0.8rem缩小 */
+            margin-top: 0.3rem; /* 从0.5rem缩小 */
             cursor: pointer;
             align-self: flex-end;
         }
@@ -121,12 +121,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px; /* 从8px缩小 */
-            padding: 0.4rem 1.4rem; /* 从0.5rem 1.8rem缩小 */
+            gap: 4px; /* 从6px缩小 */
+            padding: 0.25rem 1rem; /* 从0.4rem 1.4rem缩小 */
             text-decoration: none;
             color: #5f4c3b;
-            font-size: 0.95rem; /* 从1.15rem缩小 */
-            letter-spacing: 5px; /* 从6px缩小 */
+            font-size: 0.8rem; /* 从0.95rem缩小到0.8rem */
+            letter-spacing: 4px; /* 从5px缩小 */
             border: none;
             background: transparent;
             transition: all 0.2s;
@@ -134,7 +134,7 @@
         }
 
         .btn-link span {
-            font-size: 1.1rem; /* 从1.35rem缩小 */
+            font-size: 0.95rem; /* 从1.1rem缩小 */
             transition: transform 0.2s;
             color: #8b7a6b;
         }
@@ -144,46 +144,57 @@
         }
 
         .btn-enter:hover .btn-link span:last-child {
-            transform: translateX(4px); /* 从5px缩小 */
+            transform: translateX(3px); /* 从4px缩小 */
             color: #5f4c3b;
         }
 
-        /* 右下角极简水印 · 缩小 */
+        /* 右下角极简水印 · 几乎不可见 */
         .credit {
             position: absolute;
-            bottom: 18px; /* 从24px缩小 */
-            right: 22px; /* 从30px缩小 */
-            color: rgba(95, 76, 59, 0.18);
-            font-size: 0.55rem; /* 从0.65rem缩小 */
-            letter-spacing: 3px; /* 从4px缩小 */
+            bottom: 12px; /* 从18px缩小 */
+            right: 16px; /* 从22px缩小 */
+            color: rgba(95, 76, 59, 0.15);
+            font-size: 0.5rem; /* 从0.55rem缩小 */
+            letter-spacing: 2.5px; /* 从3px缩小 */
             z-index: 10;
             text-transform: uppercase;
         }
 
         @media (max-width: 800px) {
             body { flex-direction: column; }
-            .left-image { flex: 0 0 45vh; width: 100%; } /* 从50vh缩小 */
-            .right-content { flex: 1; width: 100%; }
+            .left-image { 
+                flex: 0 0 40vh; /* 从45vh缩小 */
+                width: 100%; 
+            }
+            .right-content { 
+                flex: 1; 
+                width: 100%; 
+            }
             .poem-card { 
-                width: 75%; 
-                padding: 1.8rem; /* 从2rem缩小 */
+                width: 65%; /* 手机适配 */
+                max-width: 260px;
+                padding: 1.4rem 1.1rem; 
             }
             .poem {
-                font-size: 0.95rem; /* 手机进一步缩小 */
+                font-size: 0.8rem; /* 手机进一步缩小 */
+                line-height: 1.6;
             }
             .poem-first {
-                font-size: 1.1rem;
+                font-size: 0.95rem;
+            }
+            .signature-name {
+                font-size: 0.95rem;
             }
         }
 
-        /* 淡入动画 */
+        /* 淡入动画 · 更轻 */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .poem-card {
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
