@@ -28,28 +28,26 @@
             color: #ffffff;
         }
 
-        /* 柔和动态渐变背景 —— 非常低调，呼吸感 */
-        .atmosphere {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 40% 50%, #2d2742 0%, #0f0d1a 100%);
-            z-index: 1;
-            opacity: 0.9;
-        }
+       .atmosphere {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 先设置图片，再设置渐变叠加（颜色在前/图片在后需用多重背景） */
+    background: 
+        linear-gradient(145deg, rgba(13, 10, 22, 0.65), rgba(26, 20, 40, 0.75)),
+        url('test1.jpg');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    z-index: 1;
+}
 
-        /* 极其细微的杂讯纹理 (高级感) */
-        .atmosphere::after {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
-            opacity: 0.15;
-            pointer-events: none;
-        }
+/* 如果想要保留微纹理，可以保留 .atmosphere::after 或也调低透明度 */
+.atmosphere::after {
+    opacity: 0.08; /* 更淡一些 */
+}
 
         /* ----- 主卡片：彻底简化，半透明玻璃，极致干净 ----- */
         .surprise-card {
