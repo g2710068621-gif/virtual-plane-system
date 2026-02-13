@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>您的专属图片 · 完整显示(contain)</title>
+    <title>温柔光晕 · 粒子氛围</title>
     <style>
         * {
             margin: 0;
@@ -16,11 +16,11 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background-color: #000;
+            background-color: #0b0f14;
             font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         }
 
-        /* 图片容器 - 使用img标签 */
+        /* 图片容器 - 完整显示图片，深色背景衬托光晕 */
         .image-container {
             position: absolute;
             top: 0;
@@ -29,22 +29,70 @@
             height: 100%;
             z-index: 1;
             overflow: hidden;
-            background-color: #1e2a36; /* 深蓝灰色背景，当图片留有空白时显示 */
+            background: linear-gradient(145deg, #1a1a24 0%, #231f2b 100%);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* img元素样式 - contain确保图片完整显示，不留白边 */
         .image-container img {
             width: 100%;
             height: 100%;
-            object-fit: contain;        /* 图片完整显示，可能有背景色 */
-            object-position: center;    /* 居中显示 */
+            object-fit: contain;
+            object-position: center;
             display: block;
+            filter: drop-shadow(0 0 15px rgba(255, 200, 230, 0.25));
         }
 
-        /* 按钮容器 */
+        /* 动态光晕层 - 柔和呼吸 (无心跳, 只留宁静光晕) */
+        .glow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 190, 220, 0.2) 0%, rgba(170, 200, 255, 0.08) 40%, transparent 70%);
+            z-index: 5;
+            pointer-events: none;
+            animation: gentleBreath 7s infinite alternate ease-in-out;
+        }
+
+        @keyframes gentleBreath {
+            0% { opacity: 0.4; transform: scale(1); }
+            100% { opacity: 0.9; transform: scale(1.15); }
+        }
+
+        /* 漂浮粒子 (浪漫星尘) */
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 220, 240, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffb0d0, 0 0 40px #ffc0e0;
+            width: 6px;
+            height: 6px;
+            filter: blur(2px);
+            animation: floatParticle 12s infinite linear;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 0.9; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) translateX(30px) scale(0.5); opacity: 0; }
+        }
+
+        /* 按钮容器 - 保留极简光晕 (但按钮本身不再有心跳动画) */
         .button-wrapper {
             position: absolute;
             bottom: 15%;
@@ -53,63 +101,66 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 20;
+            z-index: 30;
             pointer-events: none;
+            filter: drop-shadow(0 0 20px rgba(255, 140, 200, 0.4));
         }
 
-        /* 按钮样式 */
-        .btn-down {
+        /* 按钮样式 - 干净、无心跳、只有微微光泽 */
+        .btn-calm {
             pointer-events: auto;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: white;
+            background: rgba(20, 20, 30, 0.45);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 2px solid rgba(255, 220, 240, 0.8);
+            color: #fff9fc;
             font-size: 2rem;
-            font-weight: 350;
-            letter-spacing: 6px;
+            font-weight: 380;
+            letter-spacing: 5px;
             padding: 1rem 3rem;
             border-radius: 70px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px rgba(255, 150, 200, 0.5), 0 0 25px #ffb0c0, inset 0 0 8px #ffe2f0;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            transition: all 0.25s ease;
+            text-shadow: 0 2px 12px #ffb0d0, 0 0 15px #ffffffb0;
             line-height: 1.2;
             min-width: 260px;
             text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.7);
             -webkit-touch-callout: none;
             user-select: none;
             z-index: 30;
+            /* 没有任何心跳动画，只有静态美 */
         }
 
-        .btn-down:active {
+        /* 点击态 - 轻微缩放反馈 */
+        .btn-calm:active {
             transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 210, 230, 0.25);
+            border-color: #ffc0d5;
+            box-shadow: 0 0 45px #ffa5c0;
         }
 
-        @media (max-width: 400px) {
-            .btn-down {
+        /* 移动端优化 */
+        @media (max-width: 480px) {
+            .btn-calm {
                 font-size: 1.8rem;
-                padding: 0.9rem 2.5rem;
+                padding: 0.9rem 2.4rem;
                 min-width: 230px;
+                letter-spacing: 4px;
             }
         }
 
         @media (orientation: landscape) and (max-height: 500px) {
-            .button-wrapper {
-                bottom: 18%;
-            }
-            .btn-down {
-                font-size: 1.8rem;
-                padding: 0.7rem 2.8rem;
-            }
+            .button-wrapper { bottom: 18%; }
+            .btn-calm { padding: 0.7rem 2.6rem; font-size: 1.7rem; }
         }
+
+        /* 干净字体，不加花哨装饰 */
     </style>
 </head>
 <body>
 
-    <!-- 直接使用您的图片，最简单的img标签 -->
+    <!-- 图片主体 -->
     <div class="image-container">
         <img id="mainImage" 
              src="https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg" 
@@ -117,58 +168,100 @@
              onerror="this.onerror=null; this.src='https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true';">
     </div>
 
-    <!-- 按钮 -->
+    <!-- 呼吸光晕 (仅氛围) -->
+    <div class="glow-overlay"></div>
+
+    <!-- 漂浮粒子 (仅氛围) -->
+    <div class="floating-particles" id="particleContainer"></div>
+
+    <!-- 按钮 (无心跳，简洁) -->
     <div class="button-wrapper">
-        <button class="btn-down" id="magicButton">点一下我</button>
+        <button class="btn-calm" id="magicButton">点一下我</button>
     </div>
 
     <script>
         (function() {
             const btn = document.getElementById('magicButton');
             const img = document.getElementById('mainImage');
-            
-            // 图片加载状态
-            img.onload = function() {
-                console.log('图片加载成功');
-            };
-            
-            img.onerror = function() {
-                console.log('图片加载失败，但已尝试备用地址');
-                // 备用地址已经在onerror中设置
-            };
-            
-            // ========== 按钮点击跳转 ==========
+
+            // --- 生成漂浮粒子 (保留，仅氛围) ---
+            function createParticles() {
+                const container = document.getElementById('particleContainer');
+                if (!container) return;
+                const particleCount = 24;  // 适量粒子
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    const size = 3 + Math.random() * 10;
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    
+                    // 柔和色系 紫粉/淡蓝
+                    const hue = 300 + Math.random() * 40; // 300-340 粉紫
+                    const sat = 60 + Math.random() * 30;
+                    const light = 70 + Math.random() * 20;
+                    particle.style.background = `hsla(${hue}, ${sat}%, ${light}%, 0.65)`;
+                    particle.style.boxShadow = `0 0 ${10 + size}px hsla(${hue}, 85%, 75%, 0.7)`;
+                    
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.bottom = '-10px';
+                    
+                    const duration = 10 + Math.random() * 18;
+                    particle.style.animation = `floatParticle ${duration}s infinite linear`;
+                    particle.style.animationDelay = Math.random() * 6 + 's';
+                    
+                    container.appendChild(particle);
+                }
+            }
+            createParticles();
+
+            // 图片加载反馈 (无干扰)
+            img.onload = () => console.log('图片加载成功，光晕粒子已就绪');
+            img.onerror = () => console.log('图片加载备用地址');
+
+            // ========== 按钮跳转 (干净利落，保留点击微效) ==========
             const targetUrl = 'boarding-pass.html';
             
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('按钮被点击');
+                console.log('按钮点击 — 跳转');
                 
-                // 微缩动画
+                // 只保留最简单的点击反馈 (无心跳，只有瞬间按下的感觉)
                 btn.style.transform = 'scale(0.94)';
-                btn.style.background = 'rgba(255, 255, 255, 0.4)';
+                btn.style.background = 'rgba(255, 200, 230, 0.35)';
                 
-                // 动画完成后跳转
+                // 150ms后跳转，很轻快
                 setTimeout(() => {
                     window.location.href = targetUrl;
-                    console.log('正在跳转到 ' + targetUrl);
                 }, 150);
             });
             
-            // 移动端触摸事件优化
-            btn.addEventListener('touchstart', function(e) {
+            // 触摸优化 (避免双击缩放干扰)
+            btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
+                btn.style.transform = 'scale(0.96)';
             }, { passive: false });
             
-            // 额外保险：touchend 直接跳转
-            btn.addEventListener('touchend', function(e) {
+            btn.addEventListener('touchend', (e) => {
                 e.preventDefault();
-                window.location.href = targetUrl;
+                // 极少数情况下click不触发，这里做保险
+                setTimeout(() => {
+                    if (!window.location.href.includes(targetUrl)) {
+                        window.location.href = targetUrl;
+                    }
+                }, 100);
             });
             
-            console.log('页面加载完成');
+            // 鼠标离开重置 (非必须)
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+                btn.style.background = ''; // 恢复默认
+            });
+
+            console.log('页面载入完成，仅光晕+粒子氛围');
         })();
     </script>
 </body>

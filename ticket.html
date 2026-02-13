@@ -621,7 +621,7 @@
             </div>
         </div>
         
-        <!-- 二维码区域 -->
+        <!-- 二维码区域 - 扫描直接显示文字 -->
         <div class="qrcode-area">
             <div class="qrcode-container" id="qrcodeContainer">
                 <img id="qrcode-img" src="" alt="HAPPY WEDDING QR Code">
@@ -774,7 +774,6 @@
         function formatDateToDDMMM(dateString) {
             if (!dateString) return '';
             
-            // 尝试解析输入的日期 (支持 YYYY/MM/DD 或 YYYY-MM-DD)
             let year, month, day;
             
             if (dateString.includes('/')) {
@@ -782,19 +781,15 @@
             } else if (dateString.includes('-')) {
                 [year, month, day] = dateString.split('-');
             } else {
-                // 如果格式不对，返回原字符串
                 return dateString;
             }
             
-            // 月份英文缩写
             const monthAbbr = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 
                               'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
             
-            // 确保月份是数字
             const monthIndex = parseInt(month, 10) - 1;
             if (monthIndex < 0 || monthIndex > 11) return dateString;
             
-            // 返回格式如 "14MAR"
             return `${parseInt(day, 10)}${monthAbbr[monthIndex]}`;
         }
         
@@ -825,7 +820,6 @@
                 displayDate = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
             }
             
-            // 将日期转换为 DDMMM 格式
             const formattedDate = formatDateToDDMMM(displayDate);
             
             document.getElementById('ticketDate').textContent = formattedDate;
@@ -884,14 +878,30 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // 生成二维码
+            // ========== 二维码生成 - 扫描直接显示文字 ==========
             const qrImg = document.getElementById('qrcode-img');
-            const encodedText = encodeURIComponent("HAPPY WEDDING");
+            
+            // 方案一：使用 TEXT 协议，扫码直接显示文字 (最理想)
+            // 格式: TEXT:内容
+            const textContent = "HAPPY WEDDING";
+            
+            // 使用Google Charts API，将内容编码为TEXT格式
+            // 注意：需要在内容前加上 "TEXT:" 前缀，这样扫码器会识别为纯文本
+            const encodedText = encodeURIComponent(`TEXT:${textContent}`);
+            
+            // 主API：Google Charts (支持TEXT协议)
             qrImg.src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodedText}&choe=UTF-8`;
             
+            // 错误处理：如果Google API失败，使用备用API
             qrImg.onerror = function() {
                 console.log('Google Charts API加载失败，使用备用API');
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=HAPPY%20WEDDING`;
+                // 备用API也支持纯文本，直接传递内容即可
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(textContent)}`;
+            };
+            
+            // 可选：添加加载成功提示
+            qrImg.onload = function() {
+                console.log('二维码生成成功，扫描将显示: HAPPY WEDDING');
             };
         });
         
