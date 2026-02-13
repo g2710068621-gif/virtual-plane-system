@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>左图 · 右内容 · 手动选图</title>
+    <title>左图 · 右内容 · GitHub图片版</title>
     <style>
         * {
             margin: 0;
@@ -12,12 +12,11 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
             display: flex;
-            background-color: #1a1a1a;
         }
 
         .left-image {
@@ -26,11 +25,8 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #1e2f35;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            /* ★★★ 改成您的GitHub图片Raw地址 ★★★ */
+            background-image: url('https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg');
         }
 
         .right-content {
@@ -44,22 +40,24 @@
 
         .content-rect {
             width: 80%;
-            max-width: 320px;
-            padding: 2.5rem 1.8rem;
+            max-width: 280px;
+            padding: 2rem 1.5rem;
             background: rgba(10, 25, 30, 0.15);
             backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            border: none;
         }
 
         .hero-text {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 320;
-            letter-spacing: 0.2em;
-            margin-bottom: 2.8rem;
-            color: rgba(255, 255, 255, 0.88);
+            letter-spacing: 6px;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
             text-align: center;
         }
 
@@ -75,55 +73,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            padding: 0.8rem 2.8rem;
+            gap: 8px;
+            padding: 0.6rem 2rem;
             text-decoration: none;
             color: rgba(255, 255, 255, 0.95);
-            font-size: 1.6rem;
-            letter-spacing: 8px;
-            background: transparent;
+            font-size: 1.4rem;
+            letter-spacing: 6px;
             border: none;
+            background: transparent;
         }
 
         .btn-link span {
-            font-size: 1.9rem;
-            transition: transform 0.25s ease;
+            font-size: 1.6rem;
+            transition: transform 0.2s;
         }
 
         .btn-enter:hover .btn-link span:last-child {
-            transform: translateX(7px);
-        }
-
-        .upload-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px dashed rgba(255, 255, 255, 0.3);
-            padding: 12px 24px;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 0;
-            backdrop-filter: blur(4px);
-            transition: all 0.3s;
-        }
-
-        .upload-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-
-        .image-tip {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            letter-spacing: 3px;
+            transform: translateX(5px);
         }
 
         .credit {
             position: absolute;
-            bottom: 24px;
-            right: 30px;
-            color: rgba(200, 220, 230, 0.25);
-            font-size: 0.75rem;
-            letter-spacing: 5px;
+            bottom: 20px;
+            right: 25px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.65rem;
+            letter-spacing: 4px;
             z-index: 10;
         }
 
@@ -135,20 +110,12 @@
     </style>
 </head>
 <body>
-
-    <div class="left-image" id="leftImage">
-        <div id="uploadContainer" style="text-align: center;">
-            <div class="image-tip" style="margin-bottom: 16px;">⬆️ 点击上传您的图片</div>
-            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-            <button class="upload-btn" id="uploadBtn">选择图片</button>
-        </div>
-    </div>
-
+    <div class="left-image"></div>
     <div class="right-content">
         <div class="content-rect">
             <div class="hero-text">
-                <span style="letter-spacing: 10px;">••••••••••••••••</span>
-                <span style="animation: breatheDots 2.2s infinite;">•••</span>
+                <span style="letter-spacing: 8px;">••••••••••</span>
+                <span style="opacity:0.7;">•••</span>
             </div>
             <div class="btn-enter">
                 <a href="#" class="btn-link">
@@ -157,38 +124,6 @@
             </div>
         </div>
     </div>
-
     <div class="credit">右 · 内 · 容</div>
-
-    <style>
-        @keyframes breatheDots {
-            0% { opacity: 0.35; }
-            50% { opacity: 1; }
-            100% { opacity: 0.35; }
-        }
-    </style>
-
-    <script>
-        const uploadBtn = document.getElementById('uploadBtn');
-        const fileInput = document.getElementById('imageUpload');
-        const leftDiv = document.getElementById('leftImage');
-        const uploadContainer = document.getElementById('uploadContainer');
-
-        uploadBtn.addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    leftDiv.style.backgroundImage = `url('${event.target.result}')`;
-                    uploadContainer.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
 </body>
 </html>
