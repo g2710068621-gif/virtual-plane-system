@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>左图 · 右内容 · GitHub图片版</title>
+    <title>左图 · 右诗 · 静妹妹</title>
     <style>
         * {
             margin: 0;
@@ -12,61 +12,109 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: "Georgia", "Times New Roman", "Songti SC", "SimSun", "宋体", system-ui, serif;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
             display: flex;
         }
 
+        /* ---------- 左侧：图片占1/3 ---------- */
         .left-image {
-            flex: 0 0 66.666%;
+            flex: 0 0 33.333%;
             height: 100vh;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            /* ★★★ 改成您的GitHub图片Raw地址 ★★★ */
+            /* 您的GitHub图片地址 */
             background-image: url('https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true');
+            background-color: #f5efe6; /* 后备色 */
         }
 
+        /* ---------- 右侧：内容占2/3 · 乳白背景 ---------- */
         .right-content {
-            flex: 0 0 33.333%;
+            flex: 0 0 66.666%;
             height: 100vh;
-            background-color: #1e2f35;
+            background-color: #fdf8f0;  /* 乳白色 */
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
-        .content-rect {
-            width: 80%;
-            max-width: 280px;
-            padding: 2rem 1.5rem;
-            background: rgba(10, 25, 30, 0.15);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
+        /* 诗文卡片 · 暖白极简 */
+        .poem-card {
+            width: 70%;
+            max-width: 550px;
+            padding: 2.8rem 2.5rem;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: none;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: none;
+            border-radius: 0; /* 无圆角，极致简约 */
         }
 
-        .hero-text {
+        /* 正文诗意排版 */
+        .poem {
+            color: #2c3e4e;
             font-size: 1.2rem;
-            font-weight: 320;
-            letter-spacing: 6px;
+            line-height: 2.1;
+            letter-spacing: 0.06em;
             margin-bottom: 2rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-align: center;
         }
 
+        .poem p {
+            margin: 0.9rem 0;
+            text-align: left;
+            font-weight: 380;
+        }
+
+        /* 首句独立样式 */
+        .poem-first {
+            font-size: 1.45rem;
+            font-weight: 450;
+            margin-bottom: 1.5rem !important;
+            color: #1e2f35;
+            border-left: 3px solid #d4b08c;
+            padding-left: 1.2rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* 署名区域 */
+        .signature {
+            margin-top: 0.5rem;
+            text-align: right;
+            border-top: 1px solid rgba(44, 62, 78, 0.15);
+            padding-top: 1.5rem;
+        }
+
+        .signature-name {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #5f4c3b;
+            letter-spacing: 6px;
+            margin-bottom: 0.3rem;
+        }
+
+        .signature-date {
+            font-size: 0.85rem;
+            color: #8b7a6b;
+            letter-spacing: 3px;
+            font-style: italic;
+        }
+
+        /* 进入按钮 · 简约温润 */
         .btn-enter {
             display: inline-block;
             border: none;
             background: transparent;
             padding: 0;
+            margin-top: 0.8rem;
             cursor: pointer;
+            align-self: flex-end;
         }
 
         .btn-link {
@@ -74,56 +122,110 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 0.6rem 2rem;
+            padding: 0.5rem 1.8rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 1.4rem;
+            color: #5f4c3b;
+            font-size: 1.15rem;
             letter-spacing: 6px;
             border: none;
             background: transparent;
+            transition: all 0.2s;
+            font-family: inherit;
         }
 
         .btn-link span {
-            font-size: 1.6rem;
+            font-size: 1.35rem;
             transition: transform 0.2s;
+            color: #8b7a6b;
+        }
+
+        .btn-enter:hover .btn-link {
+            color: #3a2e27;
         }
 
         .btn-enter:hover .btn-link span:last-child {
             transform: translateX(5px);
+            color: #5f4c3b;
         }
 
+        /* 右下角极简水印 */
         .credit {
             position: absolute;
-            bottom: 20px;
-            right: 25px;
-            color: rgba(255, 255, 255, 0.3);
+            bottom: 24px;
+            right: 30px;
+            color: rgba(95, 76, 59, 0.2);
             font-size: 0.65rem;
             letter-spacing: 4px;
             z-index: 10;
+            text-transform: uppercase;
         }
 
         @media (max-width: 800px) {
             body { flex-direction: column; }
-            .left-image { flex: 0 0 60vh; width: 100%; }
+            .left-image { flex: 0 0 50vh; width: 100%; }
             .right-content { flex: 1; width: 100%; }
+            .poem-card { width: 85%; padding: 2rem; }
+        }
+
+        /* 淡入动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .poem-card {
+            animation: fadeIn 0.8s ease;
         }
     </style>
 </head>
 <body>
+
+    <!-- 左侧：图片占1/3 -->
     <div class="left-image"></div>
+
+    <!-- 右侧：内容占2/3 · 乳白背景 -->
     <div class="right-content">
-        <div class="content-rect">
-            <div class="hero-text">
-                <span style="letter-spacing: 8px;">••••••••••</span>
-                <span style="opacity:0.7;">•••</span>
+        <div class="poem-card">
+            
+            <!-- 诗文内容 · 静妹妹 -->
+            <div class="poem">
+                <p class="poem-first">今启新程，愿你行稳致远。</p>
+                <p>烟火人间，自有繁杂，<br>但愿你心有主见，不失所爱；<br>岁月渐长，仍怀热忱。</p>
+                <p>既能与人并肩，<br>亦能独立从容。</p>
+                <p>此去山高水长，<br>愿你圆满，<br>更愿你始终是你。</p>
             </div>
+            
+            <!-- 署名：静妹妹 -->
+            <div class="signature">
+                <div class="signature-name">静妹妹</div>
+                <div class="signature-date">——— 乙巳年 · 春</div>
+            </div>
+
+            <!-- 进入按钮 -->
             <div class="btn-enter">
                 <a href="#" class="btn-link">
                     <span>→</span> 进入
                 </a>
             </div>
+
         </div>
     </div>
-    <div class="credit">右 · 内 · 容</div>
+
+    <!-- 水印 -->
+    <div class="credit">右 · 诗</div>
+
+    <script>
+        // 图片加载失败时显示后备色
+        const leftDiv = document.querySelector('.left-image');
+        const bgImage = window.getComputedStyle(leftDiv).backgroundImage;
+        if (bgImage && bgImage !== 'none') {
+            const imgUrl = bgImage.slice(5, -2);
+            const img = new Image();
+            img.src = imgUrl;
+            img.onerror = function() {
+                leftDiv.style.backgroundColor = '#f5efe6';
+            };
+        }
+    </script>
 </body>
 </html>
