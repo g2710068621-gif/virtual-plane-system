@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎁 惊喜礼物掉落 · 登机口</title>
+    <title>登机口 · 礼遇</title>
     <style>
-        /* -----------------------------------------------
-           全局浪漫惊喜氛围 · 动态礼物雨 + 登机按钮
-        ----------------------------------------------- */
+        /* --------------------------------------------------------------
+           高级 · 简约 · 漂亮 
+           静谧灰紫基调，克制光影，细腻动效 —— 保留礼物雨与登机牌入口
+        -------------------------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -15,515 +16,498 @@
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #1e1a3a, #0e0b1f);
-            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0b0a14;  /* 深邃基底 */
+            font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
             height: 100vh;
             width: 100vw;
-            overflow: hidden;          /* 隐藏滚动条，全屏飘落 */
+            overflow: hidden;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #ffffff;
         }
 
-        /* ----- 主卡片：惊喜标题 + 按钮（通往boarding-pass）----- */
+        /* 柔和动态渐变背景 —— 非常低调，呼吸感 */
+        .atmosphere {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 40% 50%, #2d2742 0%, #0f0d1a 100%);
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        /* 极其细微的杂讯纹理 (高级感) */
+        .atmosphere::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* ----- 主卡片：彻底简化，半透明玻璃，极致干净 ----- */
         .surprise-card {
-            background: rgba(20, 15, 45, 0.55);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-radius: 56px 24px 56px 24px;
-            border: 2px solid rgba(255, 215, 150, 0.5);
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 200, 80, 0.4);
-            padding: 3rem 3.5rem;
+            position: relative;
+            z-index: 40;            /* 浮于礼物之上 */
+            background: rgba(22, 20, 30, 0.6);
+            backdrop-filter: blur(36px);
+            -webkit-backdrop-filter: blur(36px);
+            border-radius: 48px;
+            border: 1px solid rgba(230, 225, 255, 0.15);
+            box-shadow: 0 40px 70px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            padding: 3.2rem 4rem;
             text-align: center;
-            z-index: 30;              /* 浮在礼物上方，但半透明背景不遮挡视线 */
-            max-width: 750px;
+            max-width: 700px;
             margin: 0 24px;
-            animation: cardBreath 3.2s infinite alternate ease-in-out;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes cardBreath {
-            0%   { box-shadow: 0 25px 45px rgba(0,0,0,0.7), 0 0 30px rgba(255,180,60,0.3); border-color: rgba(255, 220, 150, 0.5); }
-            100% { box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 55px rgba(255, 200, 0, 0.7); border-color: rgba(255, 245, 200, 0.9); }
+        /* 卡片内部柔和发光 —— 极简 */
+        .surprise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 48px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 230, 140, 0.06), transparent 80%);
+            pointer-events: none;
         }
 
         h1 {
-            font-size: 4.8rem;
-            font-weight: 700;
-            letter-spacing: 6px;
-            margin-bottom: 0.6rem;
-            text-shadow: 0 0 20px #ffb347, 0 0 40px #ff8800, 0 0 80px #ff5500;
+            font-size: 4rem;
+            font-weight: 500;       /* 更轻盈 */
+            letter-spacing: -0.01em;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 0.75rem;
+            color: #fffcf0;
+            line-height: 1.1;
         }
 
         h1 span {
-            background: rgba(255, 200, 0, 0.18);
-            padding: 0 16px;
-            border-radius: 120px;
-            backdrop-filter: blur(5px);
+            font-size: 4.2rem;
+            font-weight: 300;
+            opacity: 0.9;
         }
 
+        /* 副文案 —— 极淡，克制动效 */
         .dynamic-tagline {
-            font-size: 2.1rem;
-            font-weight: 300;
-            margin-bottom: 1.8rem;
-            color: #ffebc2;
-            min-height: 4.2rem;
+            font-size: 1.45rem;
+            font-weight: 350;
+            letter-spacing: 0.5px;
+            color: rgba(255, 245, 220, 0.7);
+            margin-bottom: 2.6rem;
+            min-height: 3rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            text-shadow: 0 0 6px #ffaa33;
+            gap: 0.8rem;
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s;
         }
 
-        /* ---------- 登机按钮 · 打开 -> boarding-pass.html ---------- */
+        /* ---------- 登机按钮 · 磨砂玻璃质感，极简边框 ---------- */
         .btn-boarding {
-            background: radial-gradient(circle at 35% 25%, #ffdb7c, #ffb347);
-            border: none;
-            padding: 1.4rem 3.5rem;
-            font-size: 2rem;
-            font-weight: 700;
-            border-radius: 80px;
-            color: #1f1307;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 240, 200, 0.25);
+            padding: 0;             /* 交给内部链接 */
+            border-radius: 100px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 18px;
-            box-shadow: 0 12px 0 #9e5816, 0 18px 45px rgba(255, 140, 0, 0.6);
-            transition: all 0.14s ease;
+            transition: all 0.22s ease;
             cursor: pointer;
-            border: 3px solid #fff1cf;
-            margin-top: 1.2rem;
-            letter-spacing: 5px;
-            text-decoration: none;    /* 用于链接 */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
         }
 
+        .btn-link {
+            text-decoration: none;
+            color: #fffdf2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 1.2rem 3.8rem;
+            font-size: 1.8rem;
+            font-weight: 450;
+            letter-spacing: 2px;
+            border-radius: 100px;
+            transition: background 0.2s;
+        }
+
+        .btn-link span {
+            font-size: 2rem;
+            opacity: 0.85;
+        }
+
+        /* 微光悬浮效果 —— 非常安静 */
         .btn-boarding:hover {
-            transform: translateY(8px);
-            box-shadow: 0 4px 0 #9e5816, 0 28px 50px rgba(255, 160, 0, 0.8);
-            background: radial-gradient(circle at 35% 25%, #ffe9a0, #ffb85c);
+            background: rgba(255, 245, 210, 0.12);
+            border-color: rgba(255, 235, 170, 0.45);
+            box-shadow: 0 14px 30px -8px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,230,150,0.1) inset;
+            transform: translateY(-2px);
         }
 
         .btn-boarding:active {
-            transform: translateY(14px);
-            box-shadow: 0 0 0 #9e5816, 0 30px 55px rgba(255, 120, 0, 0.9);
+            transform: translateY(2px);
+            box-shadow: 0 8px 20px -6px black;
+            background: rgba(255, 245, 210, 0.08);
         }
 
-        /* 为了让a标签和按钮样式完美融合 */
-        .btn-link {
-            text-decoration: none;
-            color: inherit;
-            display: inline-flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        /* 实时飘落计数器 */
+        /* 礼物计数器 —— 极细，几乎隐身的优雅 */
         .gift-stats {
-            margin-top: 2rem;
-            font-size: 1.35rem;
-            background: rgba(10, 5, 20, 0.6);
-            padding: 0.7rem 2rem;
+            margin-top: 2.2rem;
+            font-size: 1rem;
+            font-weight: 350;
+            background: rgba(8, 6, 14, 0.4);
+            padding: 0.6rem 1.8rem;
             border-radius: 60px;
             display: inline-block;
-            backdrop-filter: blur(6px);
-            border: 1px dashed rgba(255, 245, 150, 0.8);
-            color: #ffefc0;
+            backdrop-filter: blur(10px);
+            border: 0.5px solid rgba(255, 245, 200, 0.15);
+            color: rgba(255, 250, 230, 0.7);
+            letter-spacing: 1.5px;
         }
 
-        /* ---------- 动态礼物掉落画布 ---------- */
+        /* ---------- 礼物雨画布 ---------- */
         .gift-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;      /* 点击穿透，按钮可点 */
-            z-index: 10;
+            pointer-events: none;
+            z-index: 20;
             overflow: hidden;
         }
 
-        /* 每个掉落礼物 —— 活泼的动画 */
+        /* 单个礼物 —— 低饱和，更显质感，阴影极柔 */
         .gift-item {
             position: absolute;
-            top: -80px;
-            font-size: 2.8rem;
+            top: -100px;
+            font-size: 2.5rem;
             will-change: transform;
             pointer-events: none;
-            filter: drop-shadow(0 12px 10px rgba(0,0,0,0.5));
-            animation: floatSide 5s infinite ease-in-out;
+            filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.3));
+            opacity: 0.75;
             white-space: nowrap;
-            z-index: 15;
-            opacity: 0.96;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            z-index: 25;
+            color: #fff8e7;
+            transition: opacity 0.2s;
+            animation: subtleFloat 6s infinite ease-in-out;
         }
 
-        /* 左右漂浮动画 */
-        @keyframes floatSide {
+        /* 漂浮极其克制，只有微微的摆动 */
+        @keyframes subtleFloat {
             0%   { transform: translateX(0px) rotate(0deg); }
-            30%  { transform: translateX(14px) rotate(6deg); }
-            70%  { transform: translateX(-10px) rotate(-4deg); }
+            30%  { transform: translateX(6px) rotate(3deg); }
+            70%  { transform: translateX(-5px) rotate(-2deg); }
             100% { transform: translateX(0px) rotate(0deg); }
         }
 
-        /* 不同尺寸 */
-        .gift-item.size-xs    { font-size: 1.6rem; }
-        .gift-item.size-small { font-size: 2.2rem; }
-        .gift-item.size-medium{ font-size: 3.0rem; }
-        .gift-item.size-large { font-size: 4.0rem; }
-        .gift-item.shimmer    { filter: drop-shadow(0 0 15px gold); }
+        .gift-item.size-xs    { font-size: 1.5rem; opacity: 0.5; }
+        .gift-item.size-small { font-size: 2rem; opacity: 0.6; }
+        .gift-item.size-medium{ font-size: 2.8rem; opacity: 0.7; }
+        .gift-item.size-large { font-size: 3.6rem; opacity: 0.8; }
 
-        /* 闪烁星星 —— 浪漫背景 */
+        /* 取消过分的 shimmer, 只保留极少光影 */
+        .gift-item.shimmer {
+            filter: drop-shadow(0 0 8px rgba(255, 220, 150, 0.5));
+        }
+
+        /* 星星 —— 低调闪烁，几乎不可见，但增加深度 */
         .star-twinkle {
             position: absolute;
-            color: rgba(255, 255, 200, 0.9);
-            font-size: 1.5rem;
-            animation: twinkle 2.4s infinite alternate;
+            color: rgba(255, 250, 210, 0.4);
+            font-size: 1.2rem;
+            animation: starBreath 5s infinite alternate;
             pointer-events: none;
-            z-index: 5;
+            z-index: 15;
+            user-select: none;
         }
 
-        @keyframes twinkle {
-            0%   { opacity: 0.2; transform: scale(0.7); text-shadow: 0 0 5px #fff0b0; }
-            100% { opacity: 1; transform: scale(1.3); text-shadow: 0 0 18px #fffde7; }
+        @keyframes starBreath {
+            0%   { opacity: 0.1; transform: scale(0.9); }
+            100% { opacity: 0.45; transform: scale(1.2); }
         }
 
-        /* 署名 */
+        /* 右下署名 — 极简 */
         .credit {
             position: absolute;
-            bottom: 18px;
-            right: 28px;
-            color: rgba(255, 240, 200, 0.55);
-            font-size: 0.95rem;
+            bottom: 24px;
+            right: 30px;
+            color: rgba(200, 195, 220, 0.35);
+            font-size: 0.8rem;
             z-index: 50;
-            backdrop-filter: blur(4px);
-            padding: 6px 18px;
+            backdrop-filter: blur(2px);
+            padding: 5px 16px;
             border-radius: 40px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(8, 6, 14, 0.2);
+            border: 0.5px solid rgba(255, 255, 255, 0.06);
             letter-spacing: 2px;
+            font-weight: 300;
         }
 
-        /* 响应式 */
+        /* 响应式细调 */
         @media (max-width: 560px) {
+            .surprise-card { padding: 2.4rem 1.8rem; }
             h1 { font-size: 3.2rem; }
-            .dynamic-tagline { font-size: 1.6rem; }
-            .surprise-card { padding: 2rem 1.8rem; }
-            .btn-boarding { font-size: 1.6rem; padding: 1.1rem 2.2rem; }
+            .btn-link { padding: 1rem 2.4rem; font-size: 1.5rem; }
+        }
+
+        /* 链接完全撑满按钮 */
+        .btn-boarding {
+            padding: 0;
+        }
+
+        /* 移除所有强阴影/浓重发光，保留干净线条 */
+        .gift-canvas {
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
+    <!-- 背景氛围层 -->
+    <div class="atmosphere"></div>
 
-    <!-- ******** 主视觉卡片：惊喜礼物掉落 + “打开”按钮（登机牌入口） ******** -->
+    <!-- 主视觉卡片：极致简约，毛玻璃质感，安静高级 -->
     <div class="surprise-card">
         <h1>
-            <span>🎁</span> 惊喜 <span>✈️</span>
+            <span>🎁</span> 礼遇 <span>✈️</span>
         </h1>
-        <!-- 动态文案：呼应礼物掉落与旅程 -->
+        <!-- 动态短语 —— 节奏舒缓 -->
         <div class="dynamic-tagline" id="dynamicPhrase">
-            🎫 礼物正在飘落 · 准备登机 🎫
+            🎫 礼物正在飘落
         </div>
 
         <!-- 
-            “打开” 按钮 —— 连接到 boarding-pass.html 
-            真正的链接，点击即跳转。保留完整按钮样式。
+            登机牌入口 —— 干净，唯一的行动点 
+            链接指向boarding-pass.html
         -->
         <div class="btn-boarding">
             <a href="boarding-pass.html" class="btn-link" id="boardingLink">
-                <span>🧾</span> 打开 <span>🎟️</span>
+                <span>🧾</span> 登机 <span>🎟️</span>
             </a>
         </div>
 
-        <!-- 实时显示当前飘落的礼物数量，增加动态感 -->
+        <!-- 飘落计数，褪到背景里 -->
         <div class="gift-stats">
-            🎁 已掉落 <span id="giftCountDisplay">0</span> 件惊喜
+            <span id="giftCountDisplay">0</span> 件空中礼物
         </div>
     </div>
 
-    <!-- ******** 动态礼物画布：所有飘落礼物 & 闪烁星星 ******** -->
+    <!-- 礼物掉落画布 & 点缀星尘 -->
     <div class="gift-canvas" id="giftCanvas">
-        <!-- 预设几颗闪烁星，增加层次 -->
-        <div class="star-twinkle" style="top: 15%; left: 6%;">✨</div>
-        <div class="star-twinkle" style="top: 72%; left: 20%;">🌟</div>
-        <div class="star-twinkle" style="top: 40%; left: 86%;">💫</div>
-        <div class="star-twinkle" style="top: 83%; left: 68%;">⭐</div>
-        <div class="star-twinkle" style="top: 27%; left: 44%;">✨</div>
+        <!-- 仅保留几颗静态极简星，几乎不可见，纯粹层次 -->
+        <div class="star-twinkle" style="top: 18%; left: 12%;">✨</div>
+        <div class="star-twinkle" style="top: 70%; left: 85%;">✨</div>
+        <div class="star-twinkle" style="top: 55%; left: 30%;">🌟</div>
+        <div class="star-twinkle" style="top: 30%; left: 68%;">✨</div>
     </div>
 
     <div class="credit">
-        🎁 掉落不停 · 即刻登机 🎫
+        BOARDING · 礼遇
     </div>
 
     <script>
         (function() {
             "use strict";
 
-            // ---------- 惊喜礼物掉落核心引擎 ----------
+            // ---------- 高级礼物雨 · 去繁就简 · 匀速飘落 ----------
             const canvas = document.getElementById('giftCanvas');
-            // 存储当前所有礼物元素
             let giftElements = [];
 
-            // 丰富礼物图标 —— 加入旅行/登机小元素，呼应“boarding-pass”
+            // 精选礼物图标 —— 去除过于卡通、饱和度高的，保留优雅简洁符号
             const giftIcons = [
-                '🎁', '📦', '🎀', '🧸', '🍬', '🍭', '🎈', '🧧', 
-                '💝', '🎄', '🌟', '✨', '🎂', '🍫', '🏆', '👑',
-                '💎', '🔮', '🧁', '🥂', '🎨', '🪅', '🪆', '💌',
-                // 增加登机/旅行相关惊喜
-                '✈️', '🧾', '🎫', '🧳', '🗺️', '🧭', '🚂', '🛳️'
+                '🎁', '📦', '🎀', '🧸', '🍂', '🍁', '🎐', '🧳',
+                '✈️', '🎫', '🧾', '🗺️', '🕊️', '🍃', '✨', '🌟',
+                '💫', '🪐', '🌙', '☕', '🍂', '🥂', '🔹', '▫️'
             ];
 
-            // 动态文案 (加入登机/旅行的氛围)
+            // 动态短语 —— 更安静的文字
             const phraseList = [
-                '🎁 礼物与机票一同飘落', 
-                '✨ 前方登机口 · 惊喜不断', 
-                '🪄 拾取你的登机牌', 
-                '💖 专属航班即将出发', 
-                '🍀 幸运礼物伴你飞行',
-                '🌟 今日惊喜已就绪',
-                '🎈 叮！礼物与登机信',
-                '🧸 小熊机长送你礼物',
-                '🍭 甜蜜旅途掉落',
-                '🎀 头等舱惊喜',
-                '✈️  boarding-pass 等候',
-                '🧾 打开登机牌出发'
+                '🎁 零星礼物 · 静谧旅途', 
+                '✨ 登机口备好惊喜', 
+                '🧳 请拾取您的登机牌', 
+                '🍂 礼物与风一同飘落',
+                '🕊️ 专属航班 · 轻盈启程',
+                '🎫 今日礼遇 · 正在降落',
+                '🌟 一件礼物，一份宁静'
             ];
 
-            // 显示礼物数量的span
             const giftCountSpan = document.getElementById('giftCountDisplay');
             const dynamicPhraseEl = document.getElementById('dynamicPhrase');
 
-            // 掉落速度控制 (基础: 每秒约2.3个)
-            let dropRate = 2.3;         
-            const BASE_DROP_RATE = 2.3;
-            // 没有任何加速干扰，保持平稳掉落即可
+            // 控制掉落密度——少而精致，不干扰视觉
+            const DROP_RATE = 1.7;        // 每秒约1.7个
 
-            // ---------- 星星生成器 (浪漫氛围) ----------
+            // ---------- 星星偶尔呼吸感 (极少) ----------
             function initStars() {
-                // 额外生成12颗星星散落各处
-                for (let i = 0; i < 14; i++) {
-                    createStar();
-                }
-                // 每3.5秒补充一颗新的闪烁星星
+                // 仅补充少许星星，保持干净
                 setInterval(() => {
-                    createStar();
-                    // 避免星星无限增加，保留最多35颗
-                    const allStars = document.querySelectorAll('.star-twinkle');
-                    if (allStars.length > 40) {
-                        for (let i = 0; i < 10; i++) {
-                            if (allStars[i]) allStars[i].remove();
-                        }
+                    if (document.querySelectorAll('.star-twinkle').length < 16) {
+                        createStar();
                     }
-                }, 3500);
+                }, 5000);
             }
 
-            // 创造一颗闪烁星星
             function createStar() {
                 if (!canvas) return;
                 const star = document.createElement('div');
                 star.className = 'star-twinkle';
-                const emojiSet = ['✨', '🌟', '⭐', '💫', '✨', '⚡', '❄️', '🍃', '🕊️'];
-                star.textContent = emojiSet[Math.floor(Math.random() * emojiSet.length)];
+                star.textContent = '✨';
                 star.style.left = Math.random() * 96 + '%';
                 star.style.top = Math.random() * 94 + '%';
-                star.style.fontSize = (1.2 + Math.random() * 2) + 'rem';
-                star.style.animationDelay = (Math.random() * 4) + 's';
-                star.style.opacity = 0.5 + Math.random() * 0.5;
+                star.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
+                star.style.animationDelay = (Math.random() * 5) + 's';
+                star.style.opacity = 0.2 + Math.random() * 0.25;
                 canvas.appendChild(star);
-                // 星星生命周期：12秒后优雅消失
-                setTimeout(() => {
-                    if (star.parentNode) star.remove();
-                }, 12000);
+                setTimeout(() => { star.remove(); }, 18000);
             }
 
-            // ---------- 生成一个新礼物 ----------
+            // ---------- 生成礼物 ----------
             function createGift() {
                 if (!canvas) return;
                 const gift = document.createElement('div');
                 gift.className = 'gift-item';
 
-                // 随机图标
-                const randomIcon = giftIcons[Math.floor(Math.random() * giftIcons.length)];
-                gift.textContent = randomIcon;
+                const icon = giftIcons[Math.floor(Math.random() * giftIcons.length)];
+                gift.textContent = icon;
 
-                // 随机尺寸
-                const sizeRand = Math.random();
-                if (sizeRand < 0.2) {
-                    gift.classList.add('size-xs');
-                } else if (sizeRand < 0.5) {
-                    gift.classList.add('size-small');
-                } else if (sizeRand < 0.8) {
-                    gift.classList.add('size-medium');
-                } else {
-                    gift.classList.add('size-large');
-                }
+                // 尺寸分布更倾向中小号，保持低调
+                const rand = Math.random();
+                if (rand < 0.35) gift.classList.add('size-xs');
+                else if (rand < 0.7) gift.classList.add('size-small');
+                else if (rand < 0.9) gift.classList.add('size-medium');
+                else gift.classList.add('size-large');
 
-                // 偶尔闪烁金色光芒
-                if (Math.random() > 0.55) {
-                    gift.classList.add('shimmer');
-                }
+                if (Math.random() > 0.7) gift.classList.add('shimmer');
 
-                // 水平位置随机 (0~95%)
                 gift.style.left = Math.random() * 92 + '%';
-                // 起始垂直位置: 不同负值，错落入场
-                gift.style.top = `-${60 + Math.random() * 80}px`;
-                // 下落速度 (像素/帧)  0.6 ~ 2.1
-                const speed = 0.65 + Math.random() * 1.5;
+                gift.style.top = `-${50 + Math.random() * 90}px`;
+
+                // 下落速度 (更舒缓)
+                const speed = 0.45 + Math.random() * 1.0;
                 gift.dataset.speed = speed;
 
-                // 记录当前Y (px)
+                // 存储当前y
                 let initialTop = parseFloat(gift.style.top);
                 gift.currentY = isNaN(initialTop) ? -70 : initialTop;
 
                 canvas.appendChild(gift);
                 giftElements.push(gift);
-
-                // 更新计数器
-                updateGiftCounter();
+                updateCounter();
             }
 
-            // ---------- 移除超出屏幕的礼物 ----------
             function removeOffscreenGifts() {
-                giftElements = giftElements.filter(gift => {
-                    if (!gift || !gift.parentNode) return false;
-                    let topStr = gift.style.top;
-                    let topVal = parseFloat(topStr);
-                    if (isNaN(topVal)) {
-                        const computed = window.getComputedStyle(gift).top;
-                        topVal = parseFloat(computed);
-                    }
-                    const winHeight = window.innerHeight;
-                    if (topVal > winHeight + 130) {
-                        if (gift.parentNode) gift.remove();
+                giftElements = giftElements.filter(g => {
+                    if (!g || !g.parentNode) return false;
+                    let top = parseFloat(g.style.top);
+                    if (isNaN(top)) top = -100;
+                    if (top > window.innerHeight + 150) {
+                        g.remove();
                         return false;
                     }
                     return true;
                 });
             }
 
-            // ---------- 移动所有礼物 (每帧) ----------
             function moveGifts() {
-                for (let gift of giftElements) {
-                    if (!gift) continue;
-                    let currentTop = parseFloat(gift.style.top);
-                    if (isNaN(currentTop)) currentTop = -50;
-                    const sp = parseFloat(gift.dataset.speed) || 0.9;
-                    let newTop = currentTop + sp;
-                    gift.style.top = newTop + 'px';
+                for (let g of giftElements) {
+                    if (!g) continue;
+                    let current = parseFloat(g.style.top);
+                    if (isNaN(current)) current = -60;
+                    let sp = parseFloat(g.dataset.speed) || 0.7;
+                    g.style.top = (current + sp) + 'px';
                 }
                 removeOffscreenGifts();
-                updateGiftCounter();
+                updateCounter();
             }
 
-            // 更新屏幕上的礼物数量显示
-            function updateGiftCounter() {
+            function updateCounter() {
                 if (giftCountSpan) {
                     giftCountSpan.textContent = giftElements.length;
                 }
             }
 
-            // 切换动态短语
             function rotatePhrase() {
                 if (!dynamicPhraseEl) return;
                 const idx = Math.floor(Math.random() * phraseList.length);
                 dynamicPhraseEl.textContent = phraseList[idx];
             }
 
-            // ---------- 礼物生成循环(基于dropRate概率) ----------
+            // ---------- 生成循环 (柔和) ----------
             function generatorLoop() {
-                // 每秒生成 dropRate 个 => 每帧概率 ≈ dropRate / 60
-                if (Math.random() < dropRate / 60) {
+                if (Math.random() < DROP_RATE / 60) {
                     createGift();
                 }
-                // 随机更新短语 (概率0.025/帧 ≈ 每秒1.5次)
-                if (Math.random() < 0.025) {
+                if (Math.random() < 0.018) {
                     rotatePhrase();
                 }
                 requestAnimationFrame(generatorLoop);
             }
 
-            // ---------- 位置更新循环 ----------
             function animationLoop() {
                 moveGifts();
                 requestAnimationFrame(animationLoop);
             }
 
-            // ---------- 初始化一切 ----------
+            // ---------- 初始化 ----------
             function initApp() {
-                // 清空可能残留礼物（保留星星）
-                const existingGifts = document.querySelectorAll('.gift-item');
-                existingGifts.forEach(g => g.remove());
+                // 清空旧礼物
+                document.querySelectorAll('.gift-item').forEach(g => g.remove());
                 giftElements = [];
 
-                // 设定掉落速率
-                dropRate = BASE_DROP_RATE;
-
-                // 预生成20个礼物，让画面立刻丰富
-                for (let i = 0; i < 22; i++) {
-                    setTimeout(() => { createGift(); }, i * 20);
+                // 预生成少量礼物，不拥挤
+                for (let i = 0; i < 12; i++) {
+                    setTimeout(() => { createGift(); }, i * 25);
                 }
 
-                // 初始文案随机
                 rotatePhrase();
-
-                // 启动星星背景
                 initStars();
 
-                // 启动两大循环
                 requestAnimationFrame(generatorLoop);
                 requestAnimationFrame(animationLoop);
             }
 
-            // 页面加载启动
             window.addEventListener('load', initApp);
-
-            // 确保按钮链接正常：保留a标签的href="boarding-pass.html"，无干扰
-            // 同时为了更好的体验，当点击按钮时也会触发轻微的触感（无法haptic但正常跳转）
-            // 无需额外代码，链接真实有效。
-
-            // 清理潜在定时器 (setInterval在initStars里)
-            window.addEventListener('beforeunload', function() {
-                // 没有保留重要定时器变量，但页面卸载时会自动清除。
-            });
-
         })();
     </script>
 
-    <!-- 保证gift-item位置更新准确，无样式冲突 -->
+    <!-- 确保按钮链接与高级风格一致 -->
     <style>
-        .gift-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .gift-item {
-            position: absolute;
-            user-select: none;
-            pointer-events: none;
-            transition: none;
-        }
+        /* 无额外修饰，干净 */
         .btn-link {
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-        }
-        /* 确保a标签占满按钮 */
-        .btn-boarding {
-            padding: 0;           
-        }
-        .btn-link {
-            padding: 1.4rem 3.5rem;
-            border-radius: 80px;
             text-decoration: none;
-            color: #1f1307;
-            font-weight: 700;
+            background: transparent;
+            width: 100%;
         }
-        @media (max-width: 560px) {
-            .btn-link { padding: 1.1rem 2.2rem; }
+        .btn-boarding {
+            background: rgba(28, 26, 40, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .gift-canvas {
+            pointer-events: none;
+        }
+        /* 完全无边框跳跃 */
+        body {
+            background: #0a0812;
+        }
+        /* 确保卡片内部间距完美 */
+        .surprise-card {
+            box-sizing: border-box;
         }
     </style>
 </body>
