@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>登机票 · Travel Airlines</title>
     <style>
         * {
@@ -18,7 +18,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 10px;  /* 减小整体内边距 */
         }
         
         /* 真实机票尺寸的登机牌 - 加长宽度 */
@@ -26,13 +26,13 @@
             background: white;
             width: 100%;
             max-width: 500px; /* 加长宽度 */
-            min-height: 130px; /* 保持原高度 */
+            min-height: auto;  /* 改为自动高度 */
             position: relative;
             border-radius: 0;
             display: flex;
-            margin: 20px 0;
+            margin: 10px 0;
             border: 1px solid #999;
-            overflow: hidden;
+            overflow: visible; /* 改为visible确保内容不被裁剪 */
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
         
@@ -41,7 +41,7 @@
             flex: 3;
             padding: 6px 8px;
             position: relative;
-            background: white; /* 保持左侧纯白背景 */
+            background: white;
         }
         
         /* 左侧和右侧中间的虚线 */
@@ -66,21 +66,15 @@
             flex: 2;
             display: flex;
             /* ===== 右侧背景图片设置为 test3.jpg ===== */
-            /* 默认背景色（如果图片加载失败或未设置，显示浅灰） */
             background-color: #f5f5f5;
-            /* 设置背景图片为同目录下的 test3.jpg */
             background-image: url('test3.jpg');
-            /* 背景图片铺放方式：cover 保证铺满整个右侧区域，不会变形裁剪 */
             background-size: cover;
-            /* 背景图片位置：居中显示 */
             background-position: center center;
-            /* 背景图片不重复 */
             background-repeat: no-repeat;
-            /* 为了让上面的文字清晰可见，添加半透明遮罩层，后面通过伪元素实现 */
             position: relative;
         }
         
-        /* 右侧整体半透明遮罩层 —— 确保文字在任何背景下都清晰可读 */
+        /* 右侧整体半透明遮罩层 */
         .right-section::before {
             content: '';
             position: absolute;
@@ -88,23 +82,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* 半透明白色遮罩，可根据背景图片亮度调整，如改成黑色半透明 background: rgba(0,0,0,0.2) */
             background: rgba(255, 255, 255, 0.7);
-            pointer-events: none; /* 让鼠标事件穿透，不影响点击右侧内部元素 */
+            pointer-events: none;
             z-index: 1;
         }
         
-        /* 右侧两个part也要调整层级，让文字显示在遮罩上方，并保留半透明背景 */
+        /* 右侧两个part */
         .right-part-1,
         .right-part-2 {
             flex: 1;
             padding: 6px 8px;
-            position: relative;  /* 保证内部的绝对定位相对于各自part */
-            background: transparent; /* 完全透明，显示父级的背景图片 */
-            z-index: 2; /* 文字层在遮罩之上 */
+            position: relative;
+            background: transparent;
+            z-index: 2;
         }
         
-        /* 两个右侧部分中间的虚线（确保在遮罩上层显示） */
+        /* 两个右侧部分中间的虚线 */
         .right-part-1::after {
             content: '';
             position: absolute;
@@ -122,7 +115,7 @@
             z-index: 3;
         }
         
-        /* 航空公司标题栏 - 深色背景 */
+        /* 航空公司标题栏 */
         .airline-header {
             background: #003366;
             color: white;
@@ -135,9 +128,9 @@
             min-height: 18px;
         }
         
-        /* 右侧标题栏 - 半透明深色背景，保证可读性同时透出背景图 */
+        /* 右侧标题栏 */
         .right-header {
-            background: rgba(0, 51, 102, 0.85); /* 半透明深蓝色，透出背景 */
+            background: rgba(0, 51, 102, 0.85);
             color: white;
             padding: 3px 8px;
             text-align: center;
@@ -147,7 +140,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(1px); /* 轻微模糊效果，增加文字可读性 */
+            backdrop-filter: blur(1px);
         }
         
         .airline-name {
@@ -167,9 +160,10 @@
             letter-spacing: 0.5px;
         }
         
-        /* 信息行样式 */
+        /* 信息行样式 - 改为flex-wrap确保小屏幕不溢出 */
         .info-row {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin-bottom: 4px;
             padding-bottom: 0;
@@ -177,16 +171,17 @@
         
         /* 信息项样式 */
         .info-item {
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 45px; /* 设置最小宽度避免挤压太厉害 */
             text-align: center;
             padding: 0 2px;
         }
         
-        /* 标签样式 - 精确偏移方案 */
+        /* 标签样式 */
         .info-label {
             font-size: 7px;
             color: #666;
-            margin-bottom: -3px; /* 与下面内容的距离为-3px */
+            margin-bottom: -3px;
             line-height: 1;
             text-align: center;
             position: relative;
@@ -198,7 +193,7 @@
             color: #000;
             font-weight: normal;
             position: relative;
-            left: -15px; /* 中文向左偏移 */
+            left: -15px;
         }
         
         .info-label-english {
@@ -208,45 +203,45 @@
             font-weight: normal;
             margin-left: 2px;
             position: relative;
-            left: -15px; /* 英文也向左偏移相同的值 */
+            left: -15px;
         }
         
         /* 内容样式 */
         .info-content {
-            font-size: 11px; /* 从9px加大到11px */
+            font-size: 11px;
             color: #000;
-            font-weight: normal; /* 去掉加粗 */
+            font-weight: normal;
             text-align: center;
             min-height: 12px;
-            line-height: 1; /* 调整行高，减少间距 */
-            margin-top: -3px; /* 与上面标签的距离为-3px */
+            line-height: 1;
+            margin-top: -3px;
             position: relative;
-            left: 0px; /* 内容也向左偏移，对齐英文标签 */
+            left: 0px;
         }
         
-        /* 右侧区域样式 - 需要单独调整偏移量，同时因为背景变化，文字颜色加深确保可见 */
+        /* 右侧区域样式调整 */
         .right-part-1 .info-label-chinese,
         .right-part-2 .info-label-chinese {
-            left: -10px; /* 右侧区域偏移量小一些 */
-            color: #111; /* 颜色加深 */
+            left: -10px;
+            color: #111;
             font-weight: 500;
         }
         
         .right-part-1 .info-label-english,
         .right-part-2 .info-label-english {
-            left: -10px; /* 右侧区域偏移量小一些 */
+            left: -10px;
             color: #222;
         }
         
         .right-part-1 .info-content,
         .right-part-2 .info-content {
-            left: 5px; /* 右侧区域偏移量小一些 */
+            left: 5px;
             color: #000;
-            font-weight: 500; /* 稍微加粗一点应对背景图 */
-            text-shadow: 0 0 3px rgba(255,255,255,0.8); /* 白色文字阴影增强可读性 */
+            font-weight: 500;
+            text-shadow: 0 0 3px rgba(255,255,255,0.8);
         }
         
-        /* 右侧单列布局样式 */
+        /* 右侧单列布局 */
         .info-single-column {
             display: flex;
             flex-direction: column;
@@ -254,7 +249,6 @@
             margin-top: 5px;
         }
         
-        /* 右侧单列信息项 */
         .info-single-item {
             display: flex;
             flex-direction: column;
@@ -262,16 +256,16 @@
             margin-bottom: 3px;
         }
         
-        /* 条形码区域 - 调整以容纳新婚快乐条形码 */
+        /* 条形码区域 */
         .barcode-area {
-            margin: 8px 0 8px 0;
+            margin: 8px 0 4px 0;
         }
         
         .barcode-container {
-            height: 32px;           /* 稍微加高，让条形码更清晰 */
+            height: 22px;
             background: white;
             border: 1px solid #ccc;
-            margin-bottom: 2px;
+            margin-bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -279,17 +273,10 @@
         }
         
         .barcode-text {
-            font-size: 7px;
-            color: #a05050;          /* 喜庆的暗红色 */
-            text-align: center;
-            letter-spacing: 1px;
-            font-weight: 500;
-            background: #fef6f6;
-            padding: 2px 0;
-            border-radius: 0 0 4px 4px;
+            display: none;
         }
         
-        /* 红色提示样式 - 去掉边框 */
+        /* 红色提示 */
         .red-note {
             text-align: center;
             color: #ff0000;
@@ -346,17 +333,14 @@
                 padding: 0;
                 margin: 0;
             }
-            
             .action-buttons {
                 display: none;
             }
-            
             .boarding-pass {
                 box-shadow: none;
                 margin: 0;
                 border: 1px solid #000;
             }
-            
             @page {
                 margin: 0.5cm;
                 size: auto;
@@ -387,17 +371,177 @@
             background: #ccc;
             border-radius: 50%;
         }
+        
+        /* ========== 重点：移动端优化 ========== */
+        @media (max-width: 500px) {
+            body {
+                padding: 5px;  /* 进一步减小body内边距 */
+            }
+            
+            .boarding-pass {
+                max-width: 100%;
+                min-width: 300px; /* 确保最小宽度 */
+                margin: 5px 0;
+            }
+            
+            /* 确保左右区域都能显示 */
+            .left-section,
+            .right-section {
+                flex: 1;  /* 让左右区域根据内容自适应 */
+            }
+            
+            .left-section {
+                min-width: 180px; /* 左侧最小宽度 */
+            }
+            
+            .right-section {
+                min-width: 120px; /* 右侧最小宽度 */
+            }
+            
+            /* 调整内边距 */
+            .left-section,
+            .right-part-1,
+            .right-part-2 {
+                padding: 4px 4px;
+            }
+            
+            /* 调整字体大小 */
+            .info-content {
+                font-size: 9px;
+                min-height: 10px;
+            }
+            
+            .info-label {
+                font-size: 6px;
+            }
+            
+            .info-label-chinese,
+            .info-label-english {
+                font-size: 6px;
+            }
+            
+            /* 调整偏移量，避免文字被切割 */
+            .info-label-chinese {
+                left: -8px;
+            }
+            
+            .info-label-english {
+                left: -8px;
+            }
+            
+            .right-part-1 .info-label-chinese,
+            .right-part-2 .info-label-chinese {
+                left: -6px;
+            }
+            
+            .right-part-1 .info-label-english,
+            .right-part-2 .info-label-english {
+                left: -6px;
+            }
+            
+            .right-part-1 .info-content,
+            .right-part-2 .info-content {
+                left: 3px;
+                font-size: 9px;
+            }
+            
+            /* 信息行调整 */
+            .info-row {
+                margin-bottom: 2px;
+            }
+            
+            .info-item {
+                min-width: 35px; /* 进一步减小最小宽度 */
+            }
+            
+            /* 标题栏调整 */
+            .airline-header {
+                margin: -4px -4px 3px -4px;
+                padding: 2px 4px;
+            }
+            
+            .right-header {
+                margin: -4px -4px 5px -4px;
+                padding: 2px 4px;
+            }
+            
+            .airline-name {
+                font-size: 9px;
+            }
+            
+            .boarding-pass-label {
+                font-size: 7px;
+            }
+            
+            .right-title {
+                font-size: 9px;
+            }
+            
+            /* 条形码区域 */
+            .barcode-container {
+                height: 18px;
+            }
+            
+            .barcode-container svg {
+                max-width: 100%;
+                height: 100%;
+            }
+            
+            /* 红字提示 */
+            .red-note {
+                font-size: 6px;
+                margin-top: 3px;
+            }
+            
+            /* 右侧单列项目 */
+            .info-single-item {
+                margin-bottom: 2px;
+            }
+            
+            .info-single-column {
+                margin-top: 3px;
+            }
+        }
+        
+        /* 超小屏幕额外优化 */
+        @media (max-width: 380px) {
+            .info-content {
+                font-size: 8px;
+            }
+            
+            .info-label {
+                font-size: 5px;
+            }
+            
+            .info-label-chinese,
+            .info-label-english {
+                font-size: 5px;
+            }
+            
+            .info-item {
+                min-width: 30px;
+            }
+            
+            .right-part-1 .info-content,
+            .right-part-2 .info-content {
+                font-size: 8px;
+            }
+            
+            .barcode-container {
+                height: 16px;
+            }
+        }
     </style>
-    <!-- 加载 JsBarcode 库生成英文新婚条形码 -->
+    <!-- 加载 JsBarcode 库 -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
 <div class="boarding-pass">
-    <!-- 左侧：主要信息区 - 占3/5 -->
+    <!-- 左侧：主要信息区 -->
     <div class="left-section">
         <div class="airline-header">
             <div class="airline-name">TRAVEL AIRLINES</div>
-            <div class="boarding-pass-label">BOARDING PASS</div>   <!-- 电子机票 → 登机票 -->
+            <div class="boarding-pass-label">BOARDING PASS</div>
         </div>
         
         <!-- 第一行 -->
@@ -480,45 +624,30 @@
                 </div>
                 <div class="info-content" id="ticketPassengerName">ZHANG SAN</div>
             </div>
-            <div class="info-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">身份识别</span>
-                    <span class="info-label-english">ID NO</span>
-                </div>
-                <div class="info-content" id="ticketIdNo">E12345678</div>
-            </div>
         </div>
         
-        <!-- 第四行：原票价行已删除（FARE整行移除） -->
-        <!-- 此处留白，减少一行，让条形码更靠上一些 -->
-        
-        <!-- 第五行：条形码区域（原SCAN AT GATE替换为“新婚快乐”英文条形码） -->
+        <!-- 条形码区域 -->
         <div class="barcode-area">
             <div class="barcode-container" id="barcodeContainer">
-                <!-- JsBarcode 会在此处生成svg条形码，内容 "HAPPY WEDDING" -->
                 <svg id="barcode-svg" style="width:100%; height:100%; background:white;"></svg>
             </div>
-            <div class="barcode-text">❤️ HAPPY WEDDING ❤️</div>   <!-- 喜庆提示替代SCAN AT GATE -->
         </div>
         
-        <!-- 最后一行：红字提示（保留） -->
+        <!-- 红字提示 -->
         <div class="red-note">
             登机票 - 请妥善保管
         </div>
     </div>
         
-    <!-- 右侧：登机信息区 - 占2/5，分成两个1/5部分，背景图片设置为 test3.jpg -->
+    <!-- 右侧：登机信息区 -->
     <div class="right-section">
-        <!-- 右侧第一部分 - 占1/5 -->
+        <!-- 右侧第一部分 -->
         <div class="right-part-1">
-            <!-- 右侧标题栏：电子机票 → 登机票 -->
             <div class="right-header">
                 <div class="right-title">登机票</div>
             </div>
             
-            <!-- 右侧单列信息布局 -->
             <div class="info-single-column">
-                <!-- 航班 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">航班</span>
@@ -527,7 +656,6 @@
                     <div class="info-content" id="ticketFlightRight1">AA0011</div>
                 </div>
                 
-                <!-- 日期 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">日期</span>
@@ -536,7 +664,6 @@
                     <div class="info-content" id="ticketDateRight1">2024/01/01</div>
                 </div>
                 
-                <!-- 目的地 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">目的地</span>
@@ -545,7 +672,6 @@
                     <div class="info-content" id="ticketToCityRight1">SHANGHAI</div>
                 </div>
                 
-                <!-- 座位/登机号 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">座位/登机号</span>
@@ -554,7 +680,6 @@
                     <div class="info-content" id="ticketSeatBdg1">22B/001</div>
                 </div>
                 
-                <!-- 两行纯文字 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">常旅客</span>
@@ -572,16 +697,13 @@
             </div>
         </div>
         
-        <!-- 右侧第二部分 - 占1/5 -->
+        <!-- 右侧第二部分 -->
         <div class="right-part-2">
-            <!-- 右侧标题栏：电子机票 → 登机票 -->
             <div class="right-header">
                 <div class="right-title">登机票</div>
             </div>
             
-            <!-- 右侧单列信息布局 -->
             <div class="info-single-column">
-                <!-- 航班 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">航班</span>
@@ -590,7 +712,6 @@
                     <div class="info-content" id="ticketFlightRight2">AA0011</div>
                 </div>
                 
-                <!-- 日期 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">日期</span>
@@ -599,7 +720,6 @@
                     <div class="info-content" id="ticketDateRight2">2024/01/01</div>
                 </div>
                 
-                <!-- 目的地 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">目的地</span>
@@ -608,7 +728,6 @@
                     <div class="info-content" id="ticketToCityRight2">SHANGHAI</div>
                 </div>
                 
-                <!-- 座位/登机号 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">座位/登机号</span>
@@ -617,7 +736,6 @@
                     <div class="info-content" id="ticketSeatBdg2">22B/001</div>
                 </div>
                 
-                <!-- 两行纯文字 -->
                 <div class="info-single-item">
                     <div class="info-label">
                         <span class="info-label-chinese">常旅客</span>
@@ -644,11 +762,8 @@
     </div>
 
     <script>
-        // 获取URL参数 - 完全适配form.html传递的参数
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
-            console.log('从form.html接收到的参数:', Object.fromEntries(params));
-            
             return {
                 name: params.get('name') || '未填写姓名',
                 id: params.get('id') || '未填写身份证号',
@@ -659,61 +774,43 @@
             };
         }
         
-        // 页面加载时设置登机票信息
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('ticket.html 页面加载完成');
-            
             const params = getUrlParams();
             
-            // 设置乘客信息
             const passengerName = params.name.toUpperCase();
             const idNo = params.id;
             
-            console.log('设置乘客姓名:', passengerName);
-            console.log('设置身份证号:', idNo);
-            
-            // 设置姓名和ID
             document.getElementById('ticketPassengerName').textContent = passengerName;
             document.getElementById('ticketIdNo').textContent = idNo;
             
-            // 使用form.html传递的出发城市和目的城市
             const fromCity = params.from;
             const toCity = params.to;
-            
-            console.log('出发城市:', fromCity);
-            console.log('目的城市:', toCity);
             
             document.getElementById('ticketFromCity').textContent = fromCity.toUpperCase();
             document.getElementById('ticketToCity').textContent = toCity.toUpperCase();
             document.getElementById('ticketToCityRight1').textContent = toCity.toUpperCase();
             document.getElementById('ticketToCityRight2').textContent = toCity.toUpperCase();
             
-            // 使用form.html传递的日期和时间
             let displayDate, displayTime;
             
             if (params.date) {
                 displayDate = params.date;
-                console.log('使用表单日期:', displayDate);
             } else {
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 displayDate = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
-                console.log('使用默认日期:', displayDate);
             }
             
             if (params.time) {
                 displayTime = params.time;
-                console.log('使用表单时间:', displayTime);
             } else {
                 displayTime = '10:00';
-                console.log('使用默认时间:', displayTime);
             }
             
             document.getElementById('ticketDate').textContent = displayDate;
             document.getElementById('ticketDateRight1').textContent = displayDate;
             document.getElementById('ticketDateRight2').textContent = displayDate;
             
-            // 根据出发城市和目的城市生成航班号
             const generateFlightNumber = (from, to) => {
                 if (!from || !to) return 'AA0011';
                 const fromCode = from.charAt(0).toUpperCase();
@@ -723,34 +820,28 @@
             };
             
             const flightNumber = generateFlightNumber(fromCity, toCity);
-            console.log('生成的航班号:', flightNumber);
             
             document.getElementById('ticketFlight').textContent = flightNumber;
             document.getElementById('ticketFlightRight1').textContent = flightNumber;
             document.getElementById('ticketFlightRight2').textContent = flightNumber;
             
-            // 生成随机座位号
             const row = Math.floor(Math.random() * 35) + 10;
             const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
             const seat = seats[Math.floor(Math.random() * seats.length)];
             const seatNo = `${row}${seat}`;
             document.getElementById('ticketSeatNo').textContent = seatNo;
             
-            // 生成序号
             const seq = Math.floor(Math.random() * 200).toString().padStart(3, '0');
             document.getElementById('ticketSerialNo').textContent = seq;
             
-            // 设置座位/登机号
             const seatBdgValue = `${seatNo}/${seq}`;
             document.getElementById('ticketSeatBdg1').textContent = seatBdgValue;
             document.getElementById('ticketSeatBdg2').textContent = seatBdgValue;
             
-            // 生成登机口
             const gates = ['A3', 'B12', 'C7', 'D5', 'E9'];
             const gate = gates[Math.floor(Math.random() * gates.length)];
             document.getElementById('ticketGate').textContent = gate;
             
-            // 生成登机时间（基于form的时间+1-2小时）
             let boardingTime;
             if (params.time) {
                 const [hours, minutes] = params.time.split(':').map(Number);
@@ -766,37 +857,24 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // ———— 票价相关代码已全部删除 ————
-            
-            // ★ 生成新婚快乐英文条形码 (替换原来的条形码图片)
             const svg = document.getElementById('barcode-svg');
             if (svg) {
                 JsBarcode(svg, "HAPPY WEDDING", {
                     format: "CODE128",
-                    width: 2.2,
-                    height: 30,
-                    displayValue: false,      // 不重复显示文字，因为下面有barcode-text显示
+                    width: 1.4,              // 进一步减小条宽，让条形码更短
+                    height: 18,               // 高度适当
+                    displayValue: false,
                     background: "#ffffff",
                     lineColor: "#2c1e1e",
-                    margin: 2
+                    margin: 0,                // 边距设为0，充分利用宽度
                 });
-            } else {
-                // 降级处理：如果svg不存在，则用图片方式显示备用条形码
-                const barcodeContainer = document.getElementById('barcodeContainer');
-                if (barcodeContainer) {
-                    barcodeContainer.innerHTML = `<img src="https://barcode.tec-it.com/barcode.ashx?data=HAPPY%20WEDDING&code=Code128&dpi=96" style="width:100%; height:100%; object-fit:cover;" alt="barcode">`;
-                }
             }
-            
-            console.log('登机票生成完成，条形码祝福：HAPPY WEDDING');
         });
         
-        // 返回首页
         function goBack() {
             window.location.href = 'index.html';
         }
         
-        // 打印提示
         window.addEventListener('afterprint', function() {
             alert('登机票打印完成！请妥善保管。');
         });
