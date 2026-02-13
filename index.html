@@ -28,25 +28,24 @@
             color: #ffffff;
         }
 
-       .atmosphere {
+   /* 柔和动态渐变背景 —— 替换为 test1.png 背景图片 */
+.atmosphere {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* 先设置图片，再设置渐变叠加（颜色在前/图片在后需用多重背景） */
-    background: 
-        linear-gradient(145deg, rgba(13, 10, 22, 0.65), rgba(26, 20, 40, 0.75)),
-        url('test1.jpg');
-    background-size: cover, cover;
-    background-position: center, center;
-    background-repeat: no-repeat, no-repeat;
+    background-image: url('./test1.jpg');
+    background-size: cover;        /* 覆盖整个区域，不变形裁剪 */
+    background-position: center;   /* 图片居中 */
+    background-repeat: no-repeat;  /* 不重复平铺 */
     z-index: 1;
+    opacity: 0.9;                 /* 可调整透明度，0.7~0.9 让卡片更清晰 */
 }
 
-/* 如果想要保留微纹理，可以保留 .atmosphere::after 或也调低透明度 */
+/* 删除或注释掉原有的 .atmosphere::after 杂讯纹理（如果要更干净） */
 .atmosphere::after {
-    opacity: 0.08; /* 更淡一些 */
+    display: none;
 }
 
         /* ----- 主卡片：彻底简化，半透明玻璃，极致干净 ----- */
