@@ -180,7 +180,7 @@
         .info-label {
             font-size: 7px;
             color: #666;
-            margin-bottom: -3px;
+            margin-bottom: -3px;  /* 左侧保持原样 */
             line-height: 1;
             text-align: center;
             position: relative;
@@ -213,12 +213,12 @@
             text-align: center;
             min-height: 12px;
             line-height: 1;
-            margin-top: -3px;
+            margin-top: -3px;  /* 左侧保持原样 */
             position: relative;
             left: 0px;
         }
         
-        /* 右侧区域样式调整 */
+        /* 右侧区域样式调整 - 重点：增加标签和内容的间距 */
         .right-part-1 .info-label-chinese,
         .right-part-2 .info-label-chinese {
             left: -10px;
@@ -240,7 +240,7 @@
             text-shadow: 0 0 3px rgba(255,255,255,0.8);
         }
         
-        /* 右侧单列布局 */
+        /* 右侧单列布局 - 调整间距 */
         .info-single-column {
             display: flex;
             flex-direction: column;
@@ -252,7 +252,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 3px;
+            margin-bottom: 4px;  /* 从3px增加到4px，增加项目间距 */
+        }
+        
+        /* ===== 重要修改：右侧标签与内容间距增加1px ===== */
+        .right-part-1 .info-label,
+        .right-part-2 .info-label {
+            margin-bottom: -2px;  /* 从-3px改为-2px，增加1px间距 */
+        }
+        
+        .right-part-1 .info-content,
+        .right-part-2 .info-content {
+            margin-top: -2px;     /* 从-3px改为-2px，增加1px间距 */
         }
         
         /* 二维码区域 */
@@ -264,8 +275,8 @@
         }
         
         .qrcode-container {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background: white;
             border: 1px solid #ccc;
             display: flex;
@@ -273,14 +284,17 @@
             justify-content: center;
             overflow: hidden;
             margin: 0 auto;
+            padding: 3px;
         }
         
         .qrcode-container img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            display: block;
         }
         
+        /* 二维码下方文字改为 SCAN GATE */
         .qrcode-text {
             font-size: 6px;
             color: #a05050;
@@ -454,6 +468,17 @@
                 font-size: 9px;
             }
             
+            /* 移动端右侧标签内容间距调整 */
+            .right-part-1 .info-label,
+            .right-part-2 .info-label {
+                margin-bottom: -1px;  /* 移动端保持增加1px间距 */
+            }
+            
+            .right-part-1 .info-content,
+            .right-part-2 .info-content {
+                margin-top: -1px;     /* 移动端保持增加1px间距 */
+            }
+            
             .info-row {
                 margin-bottom: 2px;
             }
@@ -485,8 +510,8 @@
             }
             
             .qrcode-container {
-                width: 60px;
-                height: 60px;
+                width: 70px;
+                height: 70px;
             }
             
             .red-note {
@@ -495,7 +520,7 @@
             }
             
             .info-single-item {
-                margin-bottom: 2px;
+                margin-bottom: 3px;  /* 移动端项目间距调整 */
             }
             
             .info-single-column {
@@ -527,11 +552,13 @@
             }
             
             .qrcode-container {
-                width: 50px;
-                height: 50px;
+                width: 60px;
+                height: 60px;
             }
         }
     </style>
+    <!-- 引入QRCode库 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div class="boarding-pass">
@@ -621,12 +648,12 @@
             </div>
         </div>
         
-        <!-- 二维码区域 - 扫描直接显示文字 -->
+        <!-- 二维码区域 - 下方文字改为 SCAN GATE -->
         <div class="qrcode-area">
             <div class="qrcode-container" id="qrcodeContainer">
-                <img id="qrcode-img" src="" alt="HAPPY WEDDING QR Code">
+                <div id="qrcode"></div>
             </div>
-            <div class="qrcode-text">❤️ HAPPY WEDDING ❤️</div>
+            <div class="qrcode-text">SCAN GATE</div>  <!-- 修改为 SCAN GATE -->
         </div>
         
         <!-- 红字提示 -->
@@ -756,7 +783,7 @@
         <button onclick="window.print()" class="action-btn print-btn">🖨️ 打印登机票</button>
         <button onclick="goBack()" class="action-btn back-btn">↩️ 返回首页</button>
     </div>
-
+    
     <script>
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
@@ -878,31 +905,15 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // ========== 二维码生成 - 扫描直接显示文字 ==========
-            const qrImg = document.getElementById('qrcode-img');
-            
-            // 方案一：使用 TEXT 协议，扫码直接显示文字 (最理想)
-            // 格式: TEXT:内容
-            const textContent = "HAPPY WEDDING";
-            
-            // 使用Google Charts API，将内容编码为TEXT格式
-            // 注意：需要在内容前加上 "TEXT:" 前缀，这样扫码器会识别为纯文本
-            const encodedText = encodeURIComponent(`TEXT:${textContent}`);
-            
-            // 主API：Google Charts (支持TEXT协议)
-            qrImg.src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodedText}&choe=UTF-8`;
-            
-            // 错误处理：如果Google API失败，使用备用API
-            qrImg.onerror = function() {
-                console.log('Google Charts API加载失败，使用备用API');
-                // 备用API也支持纯文本，直接传递内容即可
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(textContent)}`;
-            };
-            
-            // 可选：添加加载成功提示
-            qrImg.onload = function() {
-                console.log('二维码生成成功，扫描将显示: HAPPY WEDDING');
-            };
+            // 生成二维码 - 内容为 HAPPY WEDDING
+            new QRCode(document.getElementById("qrcode"), {
+                text: "HAPPY WEDDING",
+                width: 74,
+                height: 74,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
         });
         
         function goBack() {
