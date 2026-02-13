@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>手机全显 · 点一下我</title>
+    <title>手机全显 · 点一下我（跳转 boarding-pass）</title>
     <style>
         /* 极致精简 · 完美适配手机 */
         * {
@@ -21,9 +21,7 @@
             font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         }
 
-        /* ----- 图片容器：手机全屏显示，保证图片完整（cover 铺满但不裁剪主体，配合 object-fit 理念） 
-             但用户说“手机上显示不了”，我们确保在各种屏幕比例下图片至少填满且不丢失重要部分。
-             使用 cover 保证无黑边，但如果图片边缘很重要？ 通过调试 background-position 让核心内容可见 */
+        /* ----- 图片容器：手机全屏显示，保证图片完整 ----- */
         .full-image {
             position: absolute;
             top: 0;
@@ -117,7 +115,7 @@
     <!-- 单图背景：专门针对手机优化，保证显示 -->
     <div class="full-image" id="mainImage"></div>
 
-    <!-- 唯一按钮：点一下我，触手可及 -->
+    <!-- 唯一按钮：点一下我，触手可及，点击后跳转到 boarding-pass.html -->
     <div class="button-wrapper">
         <button class="btn-down" id="magicButton">点一下我</button>
     </div>
@@ -152,22 +150,23 @@
             
             loadImage(primaryURL);
 
-            // 按钮点击反馈（适合手机，无弹窗无文字）
+            // 按钮点击跳转 - 跳转到同一目录下的 boarding-pass.html
             const btn = document.getElementById('magicButton');
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // 微缩动画
+                // 微缩动画（提升用户体验）
                 btn.style.transform = 'scale(0.94)';
                 btn.style.background = 'rgba(255, 255, 255, 0.4)';
                 
+                // 动画完成后跳转到 boarding-pass.html（同一目录）
                 setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                    btn.style.background = 'rgba(255, 255, 255, 0.18)';  // 恢复
+                    // 使用相对路径跳转到同一目录下的 boarding-pass.html
+                    window.location.href = 'boarding-pass.html';
+                    // 如果文件在子文件夹中，可以使用类似 'folder/boarding-pass.html' 的路径
                 }, 120);
                 
-                // 如需跳转，可在这里添加，例如 window.location.href = 'next.html';
-                // 没有任何文字提示，完美
+                // 注意：上面的延时给了按钮动画时间，让体验更顺滑
             });
 
             // 防止双击缩放（不影响单击）
