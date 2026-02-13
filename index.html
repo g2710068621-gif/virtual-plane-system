@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>登机口 · 礼遇</title>
+    <title>左图 · 右内容</title>
     <style>
-        /* --------------------------------------------------------------
-           高级 · 简约 · 漂亮 
-           静谧灰紫基调，克制光影，细腻动效 —— 保留礼物雨与登机牌入口
-        -------------------------------------------------------------- */
+        /* -----------------------------------------------
+           极致简约 · 左2/3图片 · 右1/3内容
+           背景微透明矩形 · 无边框 · 单按钮“进入”
+        ----------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -16,495 +16,266 @@
         }
 
         body {
-            background: #0b0a14;  /* 深邃基底 */
-            font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            position: relative;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
+            background-color: #1e1e1e;  /* 备用色 */
         }
 
-   /* 柔和动态渐变背景 —— 替换为 test1.png 背景图片 */
-.atmosphere {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('./test1.jpg');
-    background-size: cover;        /* 覆盖整个区域，不变形裁剪 */
-    background-position: center;   /* 图片居中 */
-    background-repeat: no-repeat;  /* 不重复平铺 */
-    z-index: 1;
-    opacity: 0.9;                 /* 可调整透明度，0.7~0.9 让卡片更清晰 */
-}
-
-/* 删除或注释掉原有的 .atmosphere::after 杂讯纹理（如果要更干净） */
-.atmosphere::after {
-    display: none;
-}
-
-        /* ----- 主卡片：彻底简化，半透明玻璃，极致干净 ----- */
-        .surprise-card {
+        /* ---------- 左侧：图片占2/3 ---------- */
+        .left-image {
+            flex: 0 0 66.666%;          /* 精确2/3 */
+            height: 100vh;
+            background-image: url('test1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
-            z-index: 40;            /* 浮于礼物之上 */
-            background: rgba(22, 20, 30, 0.6);
-            backdrop-filter: blur(36px);
-            -webkit-backdrop-filter: blur(36px);
-            border-radius: 48px;
-            border: 1px solid rgba(230, 225, 255, 0.15);
-            box-shadow: 0 40px 70px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-            padding: 3.2rem 4rem;
-            text-align: center;
-            max-width: 700px;
-            margin: 0 24px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2;
         }
 
-        /* 卡片内部柔和发光 —— 极简 */
-        .surprise-card::before {
+        /* 图片加载失败时的备用色 */
+        .left-image::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 48px;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 230, 140, 0.06), transparent 80%);
-            pointer-events: none;
+            background: #2a2a2a;
+            z-index: -1;
         }
 
-        h1 {
-            font-size: 4rem;
-            font-weight: 500;       /* 更轻盈 */
-            letter-spacing: -0.01em;
-            margin-bottom: 0.8rem;
+        /* ---------- 右侧：内容区域占1/3 ---------- */
+        .right-content {
+            flex: 0 0 33.333%;          /* 精确1/3 */
+            height: 100vh;
+            background-color: #2a2a2a;  /* 与左图协调的深灰色，实际使用时请根据图片调整 */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.75rem;
-            color: #fffcf0;
-            line-height: 1.1;
+            position: relative;
+            z-index: 3;
         }
 
-        h1 span {
-            font-size: 4.2rem;
+        /* ---------- 微透明矩形 · 无边框 · 无背景色 ---------- */
+        .content-rect {
+            width: 80%;
+            max-width: 320px;
+            padding: 2.5rem 1.8rem;
+            background: rgba(255, 255, 255, 0.04);  /* 极淡微透明，几乎不可见 */
+            backdrop-filter: blur(2px);             /* 极其克制的模糊 */
+            -webkit-backdrop-filter: blur(2px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        /* 占位文案 —— 干净、轻盈 */
+        .hero-text {
+            font-size: 1.4rem;
+            font-weight: 320;
+            line-height: 1.7;
+            letter-spacing: 0.03em;
+            margin-bottom: 2.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            word-break: break-word;
+        }
+
+        /* 占位符省略号 —— 轻柔闪烁 */
+        .placeholder-dots {
+            display: inline-block;
+            animation: pulseDots 2.4s infinite ease-in-out;
             font-weight: 300;
-            opacity: 0.9;
+            letter-spacing: 6px;
+            margin-left: 6px;
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        /* 副文案 —— 极淡，克制动效 */
-        .dynamic-tagline {
-            font-size: 1.45rem;
-            font-weight: 350;
-            letter-spacing: 0.5px;
-            color: rgba(255, 245, 220, 0.7);
-            margin-bottom: 2.6rem;
-            min-height: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.8rem;
-            backdrop-filter: blur(4px);
-            transition: opacity 0.3s;
+        @keyframes pulseDots {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.9; }
+            100% { opacity: 0.3; }
         }
 
-        /* ---------- 登机按钮 · 磨砂玻璃质感，极简边框 ---------- */
-        .btn-boarding {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 240, 200, 0.25);
-            padding: 0;             /* 交给内部链接 */
-            border-radius: 100px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.22s ease;
+        /* ---------- 唯一按钮 · 进入 ---------- */
+        .btn-enter {
+            display: inline-block;
+            border: none;               /* 无边框 */
+            background: transparent;    /* 完全透明 */
+            padding: 0;
+            margin-top: 0.5rem;
             cursor: pointer;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
+            transition: all 0.25s ease;
         }
 
         .btn-link {
-            text-decoration: none;
-            color: #fffdf2;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            padding: 1.2rem 3.8rem;
-            font-size: 1.8rem;
-            font-weight: 450;
-            letter-spacing: 2px;
-            border-radius: 100px;
-            transition: background 0.2s;
+            padding: 0.8rem 3rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.5rem;
+            font-weight: 380;
+            letter-spacing: 8px;
+            border-radius: 0;           /* 完全无圆角，矩形 */
+            background: transparent;
+            transition: all 0.2s ease;
+            border: none;              /* 确保无边框 */
+            outline: none;            /* 无轮廓 */
         }
 
         .btn-link span {
-            font-size: 2rem;
-            opacity: 0.85;
+            font-size: 1.7rem;
+            opacity: 0.7;
+            transition: transform 0.25s ease;
         }
 
-        /* 微光悬浮效果 —— 非常安静 */
-        .btn-boarding:hover {
-            background: rgba(255, 245, 210, 0.12);
-            border-color: rgba(255, 235, 170, 0.45);
-            box-shadow: 0 14px 30px -8px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,230,150,0.1) inset;
-            transform: translateY(-2px);
+        /* 悬停效果 —— 仅文字微亮，箭头右移 */
+        .btn-enter:hover .btn-link {
+            color: white;
         }
 
-        .btn-boarding:active {
-            transform: translateY(2px);
-            box-shadow: 0 8px 20px -6px black;
-            background: rgba(255, 245, 210, 0.08);
+        .btn-enter:hover .btn-link span:last-child {
+            transform: translateX(6px);
         }
 
-        /* 礼物计数器 —— 极细，几乎隐身的优雅 */
-        .gift-stats {
-            margin-top: 2.2rem;
-            font-size: 1rem;
-            font-weight: 350;
-            background: rgba(8, 6, 14, 0.4);
-            padding: 0.6rem 1.8rem;
-            border-radius: 60px;
-            display: inline-block;
-            backdrop-filter: blur(10px);
-            border: 0.5px solid rgba(255, 245, 200, 0.15);
-            color: rgba(255, 250, 230, 0.7);
-            letter-spacing: 1.5px;
+        /* 点击效果 —— 极轻微下沉 */
+        .btn-enter:active .btn-link {
+            transform: translateY(1px);
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        /* ---------- 礼物雨画布 ---------- */
-        .gift-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 20;
-            overflow: hidden;
-        }
-
-        /* 单个礼物 —— 低饱和，更显质感，阴影极柔 */
-        .gift-item {
-            position: absolute;
-            top: -100px;
-            font-size: 2.5rem;
-            will-change: transform;
-            pointer-events: none;
-            filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.3));
-            opacity: 0.75;
-            white-space: nowrap;
-            z-index: 25;
-            color: #fff8e7;
-            transition: opacity 0.2s;
-            animation: subtleFloat 6s infinite ease-in-out;
-        }
-
-        /* 漂浮极其克制，只有微微的摆动 */
-        @keyframes subtleFloat {
-            0%   { transform: translateX(0px) rotate(0deg); }
-            30%  { transform: translateX(6px) rotate(3deg); }
-            70%  { transform: translateX(-5px) rotate(-2deg); }
-            100% { transform: translateX(0px) rotate(0deg); }
-        }
-
-        .gift-item.size-xs    { font-size: 1.5rem; opacity: 0.5; }
-        .gift-item.size-small { font-size: 2rem; opacity: 0.6; }
-        .gift-item.size-medium{ font-size: 2.8rem; opacity: 0.7; }
-        .gift-item.size-large { font-size: 3.6rem; opacity: 0.8; }
-
-        /* 取消过分的 shimmer, 只保留极少光影 */
-        .gift-item.shimmer {
-            filter: drop-shadow(0 0 8px rgba(255, 220, 150, 0.5));
-        }
-
-        /* 星星 —— 低调闪烁，几乎不可见，但增加深度 */
-        .star-twinkle {
-            position: absolute;
-            color: rgba(255, 250, 210, 0.4);
-            font-size: 1.2rem;
-            animation: starBreath 5s infinite alternate;
-            pointer-events: none;
-            z-index: 15;
-            user-select: none;
-        }
-
-        @keyframes starBreath {
-            0%   { opacity: 0.1; transform: scale(0.9); }
-            100% { opacity: 0.45; transform: scale(1.2); }
-        }
-
-        /* 右下署名 — 极简 */
+        /* 右下角极简署名 */
         .credit {
             position: absolute;
             bottom: 24px;
             right: 30px;
-            color: rgba(200, 195, 220, 0.35);
-            font-size: 0.8rem;
-            z-index: 50;
-            backdrop-filter: blur(2px);
-            padding: 5px 16px;
-            border-radius: 40px;
-            background: rgba(8, 6, 14, 0.2);
-            border: 0.5px solid rgba(255, 255, 255, 0.06);
-            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
             font-weight: 300;
+            z-index: 10;
+            text-transform: uppercase;
         }
 
-        /* 响应式细调 */
-        @media (max-width: 560px) {
-            .surprise-card { padding: 2.4rem 1.8rem; }
-            h1 { font-size: 3.2rem; }
-            .btn-link { padding: 1rem 2.4rem; font-size: 1.5rem; }
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+            .left-image {
+                flex: 0 0 60vh;
+                width: 100%;
+            }
+            .right-content {
+                flex: 1;
+                width: 100%;
+            }
+            .content-rect {
+                width: 70%;
+                padding: 2rem;
+            }
         }
 
-        /* 链接完全撑满按钮 */
-        .btn-boarding {
-            padding: 0;
-        }
-
-        /* 移除所有强阴影/浓重发光，保留干净线条 */
-        .gift-canvas {
-            pointer-events: none;
+        /* 移除所有焦点框 */
+        :focus {
+            outline: none;
         }
     </style>
 </head>
 <body>
-    <!-- 背景氛围层 -->
-    <div class="atmosphere"></div>
 
-    <!-- 主视觉卡片：极致简约，毛玻璃质感，安静高级 -->
-    <div class="surprise-card">
-        <h1>
-            <span>🎁</span> 礼遇 <span>✈️</span>
-        </h1>
-        <!-- 动态短语 —— 节奏舒缓 -->
-        <div class="dynamic-tagline" id="dynamicPhrase">
-            🎫 礼物正在飘落
-        </div>
+    <!-- 左侧：图片占2/3 -->
+    <div class="left-image"></div>
 
-        <!-- 
-            登机牌入口 —— 干净，唯一的行动点 
-            链接指向boarding-pass.html
-        -->
-        <div class="btn-boarding">
-            <a href="boarding-pass.html" class="btn-link" id="boardingLink">
-                <span>🧾</span> 登机 <span>🎟️</span>
-            </a>
-        </div>
-
-        <!-- 飘落计数，褪到背景里 -->
-        <div class="gift-stats">
-            <span id="giftCountDisplay">0</span> 件空中礼物
+    <!-- 右侧：内容占1/3 · 背景色与左图同色系 -->
+    <div class="right-content">
+        <!-- 微透明矩形 · 无边框 · 无可见背景框 -->
+        <div class="content-rect">
+            <!-- 上方一段话，用.........占位 -->
+            <div class="hero-text">
+                ........................
+                <span class="placeholder-dots"></span>
+            </div>
+            
+            <!-- 唯一按钮：“进入” · 无边框 · 纯文字 -->
+            <div class="btn-enter">
+                <a href="boarding-pass.html" class="btn-link">
+                    <span>→</span> 进入
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- 礼物掉落画布 & 点缀星尘 -->
-    <div class="gift-canvas" id="giftCanvas">
-        <!-- 仅保留几颗静态极简星，几乎不可见，纯粹层次 -->
-        <div class="star-twinkle" style="top: 18%; left: 12%;">✨</div>
-        <div class="star-twinkle" style="top: 70%; left: 85%;">✨</div>
-        <div class="star-twinkle" style="top: 55%; left: 30%;">🌟</div>
-        <div class="star-twinkle" style="top: 30%; left: 68%;">✨</div>
-    </div>
-
+    <!-- 极简署名 -->
     <div class="credit">
-        BOARDING · 礼遇
+        右 · 内容
     </div>
 
+    <!-- 图片加载检测 + 右侧背景色自动适配 -->
     <script>
         (function() {
-            "use strict";
-
-            // ---------- 高级礼物雨 · 去繁就简 · 匀速飘落 ----------
-            const canvas = document.getElementById('giftCanvas');
-            let giftElements = [];
-
-            // 精选礼物图标 —— 去除过于卡通、饱和度高的，保留优雅简洁符号
-            const giftIcons = [
-                '🎁', '📦', '🎀', '🧸', '🍂', '🍁', '🎐', '🧳',
-                '✈️', '🎫', '🧾', '🗺️', '🕊️', '🍃', '✨', '🌟',
-                '💫', '🪐', '🌙', '☕', '🍂', '🥂', '🔹', '▫️'
-            ];
-
-            // 动态短语 —— 更安静的文字
-            const phraseList = [
-                '🎁 零星礼物 · 静谧旅途', 
-                '✨ 登机口备好惊喜', 
-                '🧳 请拾取您的登机牌', 
-                '🍂 礼物与风一同飘落',
-                '🕊️ 专属航班 · 轻盈启程',
-                '🎫 今日礼遇 · 正在降落',
-                '🌟 一件礼物，一份宁静'
-            ];
-
-            const giftCountSpan = document.getElementById('giftCountDisplay');
-            const dynamicPhraseEl = document.getElementById('dynamicPhrase');
-
-            // 控制掉落密度——少而精致，不干扰视觉
-            const DROP_RATE = 1.7;        // 每秒约1.7个
-
-            // ---------- 星星偶尔呼吸感 (极少) ----------
-            function initStars() {
-                // 仅补充少许星星，保持干净
-                setInterval(() => {
-                    if (document.querySelectorAll('.star-twinkle').length < 16) {
-                        createStar();
-                    }
-                }, 5000);
-            }
-
-            function createStar() {
-                if (!canvas) return;
-                const star = document.createElement('div');
-                star.className = 'star-twinkle';
-                star.textContent = '✨';
-                star.style.left = Math.random() * 96 + '%';
-                star.style.top = Math.random() * 94 + '%';
-                star.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
-                star.style.animationDelay = (Math.random() * 5) + 's';
-                star.style.opacity = 0.2 + Math.random() * 0.25;
-                canvas.appendChild(star);
-                setTimeout(() => { star.remove(); }, 18000);
-            }
-
-            // ---------- 生成礼物 ----------
-            function createGift() {
-                if (!canvas) return;
-                const gift = document.createElement('div');
-                gift.className = 'gift-item';
-
-                const icon = giftIcons[Math.floor(Math.random() * giftIcons.length)];
-                gift.textContent = icon;
-
-                // 尺寸分布更倾向中小号，保持低调
-                const rand = Math.random();
-                if (rand < 0.35) gift.classList.add('size-xs');
-                else if (rand < 0.7) gift.classList.add('size-small');
-                else if (rand < 0.9) gift.classList.add('size-medium');
-                else gift.classList.add('size-large');
-
-                if (Math.random() > 0.7) gift.classList.add('shimmer');
-
-                gift.style.left = Math.random() * 92 + '%';
-                gift.style.top = `-${50 + Math.random() * 90}px`;
-
-                // 下落速度 (更舒缓)
-                const speed = 0.45 + Math.random() * 1.0;
-                gift.dataset.speed = speed;
-
-                // 存储当前y
-                let initialTop = parseFloat(gift.style.top);
-                gift.currentY = isNaN(initialTop) ? -70 : initialTop;
-
-                canvas.appendChild(gift);
-                giftElements.push(gift);
-                updateCounter();
-            }
-
-            function removeOffscreenGifts() {
-                giftElements = giftElements.filter(g => {
-                    if (!g || !g.parentNode) return false;
-                    let top = parseFloat(g.style.top);
-                    if (isNaN(top)) top = -100;
-                    if (top > window.innerHeight + 150) {
-                        g.remove();
-                        return false;
-                    }
-                    return true;
-                });
-            }
-
-            function moveGifts() {
-                for (let g of giftElements) {
-                    if (!g) continue;
-                    let current = parseFloat(g.style.top);
-                    if (isNaN(current)) current = -60;
-                    let sp = parseFloat(g.dataset.speed) || 0.7;
-                    g.style.top = (current + sp) + 'px';
-                }
-                removeOffscreenGifts();
-                updateCounter();
-            }
-
-            function updateCounter() {
-                if (giftCountSpan) {
-                    giftCountSpan.textContent = giftElements.length;
-                }
-            }
-
-            function rotatePhrase() {
-                if (!dynamicPhraseEl) return;
-                const idx = Math.floor(Math.random() * phraseList.length);
-                dynamicPhraseEl.textContent = phraseList[idx];
-            }
-
-            // ---------- 生成循环 (柔和) ----------
-            function generatorLoop() {
-                if (Math.random() < DROP_RATE / 60) {
-                    createGift();
-                }
-                if (Math.random() < 0.018) {
-                    rotatePhrase();
-                }
-                requestAnimationFrame(generatorLoop);
-            }
-
-            function animationLoop() {
-                moveGifts();
-                requestAnimationFrame(animationLoop);
-            }
-
-            // ---------- 初始化 ----------
-            function initApp() {
-                // 清空旧礼物
-                document.querySelectorAll('.gift-item').forEach(g => g.remove());
-                giftElements = [];
-
-                // 预生成少量礼物，不拥挤
-                for (let i = 0; i < 12; i++) {
-                    setTimeout(() => { createGift(); }, i * 25);
-                }
-
-                rotatePhrase();
-                initStars();
-
-                requestAnimationFrame(generatorLoop);
-                requestAnimationFrame(animationLoop);
-            }
-
-            window.addEventListener('load', initApp);
+            // 智能取色 —— 从图片提取主色调（模拟，实际可手动设置）
+            const leftDiv = document.querySelector('.left-image');
+            const rightDiv = document.querySelector('.right-content');
+            const imgUrl = 'test2.jpg';
+            
+            // 预设优雅的高级灰（如您的图片偏冷/偏暖，可手动修改下方色值）
+            const fallbackColor = '#2a2a2a';  // 中性深灰
+            
+            // 设置右侧背景色（您可以根据 test1.png 手动调整）
+            // 推荐：使用图片的主色调，这里先设为优雅的灰褐色系
+            rightDiv.style.backgroundColor = '#2c3e4e';  // 灰蓝绿，高级感
+            
+            // 检测图片是否加载
+            const img = new Image();
+            img.src = imgUrl;
+            img.onload = function() {
+                leftDiv.style.backgroundImage = `url('${imgUrl}')`;
+                // 图片加载成功，您可在此通过color thief等库取色，但为保持简洁，手动设置最佳
+                // 建议手动将rightDiv背景色改为与图片主视觉协调的颜色
+            };
+            img.onerror = function() {
+                leftDiv.style.backgroundImage = 'none';
+                leftDiv.style.backgroundColor = fallbackColor;
+                rightDiv.style.backgroundColor = fallbackColor;
+            };
         })();
     </script>
 
-    <!-- 确保按钮链接与高级风格一致 -->
     <style>
-        /* 无额外修饰，干净 */
-        .btn-link {
-            text-decoration: none;
-            background: transparent;
-            width: 100%;
+        /* 确保右侧背景色完全与左侧图片氛围一致 */
+        .right-content {
+            background-color: #2c3e4e;  /* 高级灰蓝绿，请根据您的test1.png手动调整 */
         }
-        .btn-boarding {
-            background: rgba(28, 26, 40, 0.6);
-            backdrop-filter: blur(20px);
+        .left-image {
+            background-color: #2c3e4e;  /* 加载失败时同色 */
         }
-        .gift-canvas {
-            pointer-events: none;
+        /* 微透明矩形 —— 几乎看不见，但增加层次 */
+        .content-rect {
+            background: rgba(20, 20, 30, 0.08);  /* 极淡微透明，无边框无圆角 */
+            backdrop-filter: blur(1.5px);
         }
-        /* 完全无边框跳跃 */
-        body {
-            background: #0a0812;
+        /* 按钮完全无边框 */
+        .btn-link, .btn-enter {
+            border: none;
+            outline: none;
+            box-shadow: none;
         }
-        /* 确保卡片内部间距完美 */
-        .surprise-card {
-            box-sizing: border-box;
+        /* 占位文案 */
+        .hero-text {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.75);
         }
     </style>
 </body>
