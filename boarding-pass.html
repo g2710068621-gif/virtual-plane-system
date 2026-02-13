@@ -1,205 +1,196 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>静妹妹 · 寄语卡片</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>静妹妹 · 寄语卡片</title>
 
-        body {
-            background: #eef1f5;  /* 柔和基底 */
-            font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            line-height: 1.5;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* 纯粹卡片 —— 无登机牌痕迹，只有文字 + 二维码 */
-        .card {
-            max-width: 960px;
-            width: 100%;
-            background: #ffffff;
-            border-radius: 40px;
-            box-shadow: 0 30px 50px -20px rgba(0, 20, 40, 0.15), 0 10px 20px -8px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: row;
-            overflow: hidden;
-            transition: all 0.2s;
-            border: 1px solid rgba(211, 222, 235, 0.5);
-            backdrop-filter: blur(2px);
-        }
+body {
+    background: #eef1f5;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
 
-        /* 左侧 2/3 — 专属文字区域 (干净、留白) */
-        .text-panel {
-            flex: 2;  /* 2/3 宽度 */
-            padding: 56px 48px;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+/* 主卡片 */
+.card {
+    width: 960px;
+    height: 560px;
+    background: #ffffff;
+    border-radius: 40px;
+    box-shadow: 0 30px 50px -20px rgba(0, 20, 40, 0.15),
+                0 10px 20px -8px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(211, 222, 235, 0.5);
+    padding: 60px;
+    
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 2fr;
+}
 
-        /* 优雅的署名 */
-        .signature {
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 1.2px;
-            color: #a1aebe;
-            text-transform: uppercase;
-            margin-bottom: 28px;
-            border-bottom: 1px solid #e6eaef;
-            padding-bottom: 18px;
-            width: fit-content;
-        }
+/* 左上大文字区域 */
+.text-panel {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        .signature strong {
-            font-weight: 550;
-            color: #4a5e7a;
-            font-size: 15px;
-            margin-right: 4px;
-        }
+/* 右上留白 */
+.top-right {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
 
-        /* 主文案 —— 诗一样的分行，保留所有文字 */
-        .poem {
-            margin-bottom: 40px;
-        }
+/* 左下留白 */
+.bottom-left {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
 
-        .poem p {
-            font-size: 22px;
-            line-height: 1.7;
-            color: #1c2a3f;
-            font-weight: 350;
-            margin-bottom: 14px;
-            letter-spacing: 0.3px;
-        }
+/* 右下大二维码区域 */
+.qr-panel {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        /* 第二段、第三段自然延续，不加额外装饰 */
-        .poem p:last-of-type {
-            margin-bottom: 0;
-        }
+/* 署名 */
+.signature {
+    font-size: 14px;
+    letter-spacing: 1.2px;
+    color: #a1aebe;
+    margin-bottom: 28px;
+}
 
-        /* 特别突出最后两行，但仅靠留白和字重区分 */
-        .poem .highlight-last {
-            margin-top: 24px;
-            font-weight: 420;
-            color: #0d1f34;
-        }
+.signature strong {
+    font-weight: 550;
+    color: #4a5e7a;
+    font-size: 15px;
+    margin-right: 4px;
+}
 
-        /* 右侧 1/3 二维码区 —— 极简，只有二维码和必要的轻柔提示 */
-        .qr-panel {
-            flex: 1; /* 1/3 宽度 */
-            background: #f9fcff;  /* 几乎不可查的暖白，与左侧区分但和谐 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 32px 24px;
-            border-left: 1px solid rgba(199, 212, 229, 0.4);
-        }
+/* 文案 */
+.poem p {
+    font-size: 22px;
+    line-height: 1.8;
+    color: #1c2a3f;
+    margin-bottom: 16px;
+    font-weight: 350;
+    letter-spacing: 0.3px;
+}
 
-        .qr-wrapper {
-            background: #ffffff;
-            padding: 16px;
-            border-radius: 28px;
-            box-shadow: 0 16px 28px -16px rgba(23, 55, 90, 0.18);
-            display: inline-block;
-            margin-bottom: 22px;
-            border: 1px solid #e3eaf2;
-            transition: transform 0.2s ease;
-        }
+.highlight-last {
+    margin-top: 20px;
+    font-weight: 420;
+    color: #0d1f34;
+}
 
-        .qr-wrapper:hover {
-            transform: scale(1.01);
-        }
+/* 二维码样式 */
+.qr-wrapper {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 28px;
+    box-shadow: 0 16px 28px -16px rgba(23, 55, 90, 0.18);
+    border: 1px solid #e3eaf2;
+}
 
-        .qr-wrapper img {
-            display: block;
-            width: 152px;
-            height: 152px;
-            image-rendering: crisp-edges;  /* 保持二维码锐利 */
-        }
+.qr-wrapper img {
+    width: 170px;
+    height: 170px;
+    display: block;
+    image-rendering: crisp-edges;
+}
 
-        .qr-panel .qr-caption {
-            font-size: 14px;
-            font-weight: 450;
-            color: #2b405c;
-            background: #e5ecf5;
-            padding: 6px 22px;
-            border-radius: 60px;
-            letter-spacing: 0.3px;
-            margin-bottom: 8px;
-        }
+/* 移动端 */
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+        height: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 40px 30px;
+    }
 
-        .qr-panel .micro-note {
-            font-size: 12px;
-            color: #869bb0;
-            font-weight: 350;
-        }
+    .text-panel {
+        grid-column: 1;
+        grid-row: 1;
+        margin-bottom: 40px;
+    }
 
-        /* 适配窄屏幕：竖排，依旧干净 */
-        @media (max-width: 700px) {
-            .card {
-                flex-direction: column;
-                border-radius: 36px;
-            }
-            .text-panel {
-                padding: 48px 32px;
-            }
-            .poem p {
-                font-size: 20px;
-            }
-            .qr-panel {
-                border-left: none;
-                border-top: 1px solid #dae2ec;
-                padding: 48px 24px;
-            }
-        }
+    .qr-panel {
+        grid-column: 1;
+        grid-row: 2;
+    }
 
-        /* 没有任何多余按钮、线框，完全纯粹 */
-        .quiet {
-            color: #7d8fa4;
-        }
-    </style>
+    .top-right,
+    .bottom-left {
+        display: none;
+    }
+}
+</style>
 </head>
+
 <body>
 
 <div class="card">
-    <!-- 左侧 2/3 文字 — 完全按需求：静妹妹 + 全段寄语 -->
+
+    <!-- 左上：祝福 -->
     <div class="text-panel">
         <div class="signature">
             <strong>静妹妹</strong> · 启
         </div>
+
         <div class="poem">
             <p>今启新程，愿你行稳致远。</p>
-            <p>烟火人间，自有繁杂，<br>但愿你心有主见，不失所爱；<br>岁月渐长，仍怀热忱。</p>
-            <p>既能与人并肩，<br>亦能独立从容。</p>
-            <p class="highlight-last">此去山高水长，<br>愿你圆满，<br>更愿你始终是你。</p>
+
+            <p>
+                烟火人间，自有繁杂，<br>
+                但愿你心有主见，不失所爱；<br>
+                岁月渐长，仍怀热忱。
+            </p>
+
+            <p>
+                既能与人并肩，<br>
+                亦能独立从容。
+            </p>
+
+            <p class="highlight-last">
+                此去山高水长，<br>
+                愿你圆满，<br>
+                更愿你始终是你。
+            </p>
         </div>
-        <!-- 下方不加任何落款时间，保持干净，署名已在上面 -->
     </div>
 
-    <!-- 右侧 1/3 二维码 (完全保留) -->
+    <!-- 右上留白 -->
+    <div class="top-right"></div>
+
+    <!-- 左下留白 -->
+    <div class="bottom-left"></div>
+
+    <!-- 右下：二维码 -->
     <div class="qr-panel">
         <div class="qr-wrapper">
-            <!-- 使用原有二维码链接，指向表单页面。尺寸微调至152px，依然清晰 -->
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=152x152&data=https%3A%2F%2Fg2710068621-gif.github.io%2Fvirtual-plane-system%2Fform.html"
-                 alt="Scan to boarding form"
-                 title="扫描 · 虚拟登机牌生成">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fg2710068621-gif.github.io%2Fvirtual-plane-system%2Fform.html"
+                 alt="Scan to boarding form">
         </div>
-        <div class="qr-caption">扫一扫 · 启程</div>
-        <div class="micro-note">生成你的专属登机牌</div>
-        <!-- 极淡装饰，完全不干扰文字 -->
     </div>
+
 </div>
 
-<!-- 没有多余脚本，只有您需要的文字和二维码 -->
 </body>
 </html>
