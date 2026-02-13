@@ -18,25 +18,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px;  /* 减小整体内边距 */
+            padding: 10px;
         }
         
-        /* 真实机票尺寸的登机牌 - 加长宽度 */
+        /* 真实机票尺寸的登机牌 */
         .boarding-pass {
             background: white;
             width: 100%;
-            max-width: 500px; /* 加长宽度 */
-            min-height: auto;  /* 改为自动高度 */
+            max-width: 500px;
+            min-height: auto;
             position: relative;
             border-radius: 0;
             display: flex;
             margin: 10px 0;
             border: 1px solid #999;
-            overflow: visible; /* 改为visible确保内容不被裁剪 */
+            overflow: visible;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
         
-        /* 左侧主要区域 - 占3/5 */
+        /* 左侧主要区域 */
         .left-section {
             flex: 3;
             padding: 6px 8px;
@@ -61,11 +61,10 @@
             );
         }
         
-        /* 右侧整体区域 - 占2/5 */
+        /* 右侧整体区域 */
         .right-section {
             flex: 2;
             display: flex;
-            /* ===== 右侧背景图片设置为 test3.jpg ===== */
             background-color: #f5f5f5;
             background-image: url('test3.jpg');
             background-size: cover;
@@ -160,7 +159,7 @@
             letter-spacing: 0.5px;
         }
         
-        /* 信息行样式 - 改为flex-wrap确保小屏幕不溢出 */
+        /* 信息行样式 */
         .info-row {
             display: flex;
             flex-wrap: wrap;
@@ -172,7 +171,7 @@
         /* 信息项样式 */
         .info-item {
             flex: 1 1 auto;
-            min-width: 45px; /* 设置最小宽度避免挤压太厉害 */
+            min-width: 45px;
             text-align: center;
             padding: 0 2px;
         }
@@ -256,24 +255,38 @@
             margin-bottom: 3px;
         }
         
-        /* 条形码区域 */
-        .barcode-area {
+        /* 二维码区域 */
+        .qrcode-area {
             margin: 8px 0 4px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        .barcode-container {
-            height: 22px;
+        .qrcode-container {
+            width: 70px;
+            height: 70px;
             background: white;
             border: 1px solid #ccc;
-            margin-bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            margin: 0 auto;
         }
         
-        .barcode-text {
-            display: none;
+        .qrcode-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .qrcode-text {
+            font-size: 6px;
+            color: #a05050;
+            text-align: center;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
         }
         
         /* 红色提示 */
@@ -372,40 +385,37 @@
             border-radius: 50%;
         }
         
-        /* ========== 重点：移动端优化 ========== */
+        /* ========== 移动端优化 ========== */
         @media (max-width: 500px) {
             body {
-                padding: 5px;  /* 进一步减小body内边距 */
+                padding: 5px;
             }
             
             .boarding-pass {
                 max-width: 100%;
-                min-width: 300px; /* 确保最小宽度 */
+                min-width: 300px;
                 margin: 5px 0;
             }
             
-            /* 确保左右区域都能显示 */
             .left-section,
             .right-section {
-                flex: 1;  /* 让左右区域根据内容自适应 */
+                flex: 1;
             }
             
             .left-section {
-                min-width: 180px; /* 左侧最小宽度 */
+                min-width: 180px;
             }
             
             .right-section {
-                min-width: 120px; /* 右侧最小宽度 */
+                min-width: 120px;
             }
             
-            /* 调整内边距 */
             .left-section,
             .right-part-1,
             .right-part-2 {
                 padding: 4px 4px;
             }
             
-            /* 调整字体大小 */
             .info-content {
                 font-size: 9px;
                 min-height: 10px;
@@ -420,7 +430,6 @@
                 font-size: 6px;
             }
             
-            /* 调整偏移量，避免文字被切割 */
             .info-label-chinese {
                 left: -8px;
             }
@@ -445,16 +454,14 @@
                 font-size: 9px;
             }
             
-            /* 信息行调整 */
             .info-row {
                 margin-bottom: 2px;
             }
             
             .info-item {
-                min-width: 35px; /* 进一步减小最小宽度 */
+                min-width: 35px;
             }
             
-            /* 标题栏调整 */
             .airline-header {
                 margin: -4px -4px 3px -4px;
                 padding: 2px 4px;
@@ -477,23 +484,16 @@
                 font-size: 9px;
             }
             
-            /* 条形码区域 */
-            .barcode-container {
-                height: 18px;
+            .qrcode-container {
+                width: 60px;
+                height: 60px;
             }
             
-            .barcode-container svg {
-                max-width: 100%;
-                height: 100%;
-            }
-            
-            /* 红字提示 */
             .red-note {
                 font-size: 6px;
                 margin-top: 3px;
             }
             
-            /* 右侧单列项目 */
             .info-single-item {
                 margin-bottom: 2px;
             }
@@ -503,7 +503,6 @@
             }
         }
         
-        /* 超小屏幕额外优化 */
         @media (max-width: 380px) {
             .info-content {
                 font-size: 8px;
@@ -527,13 +526,12 @@
                 font-size: 8px;
             }
             
-            .barcode-container {
-                height: 16px;
+            .qrcode-container {
+                width: 50px;
+                height: 50px;
             }
         }
     </style>
-    <!-- 加载 JsBarcode 库 -->
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
 <div class="boarding-pass">
@@ -558,7 +556,7 @@
                     <span class="info-label-chinese">日期</span>
                     <span class="info-label-english">DATE</span>
                 </div>
-                <div class="info-content" id="ticketDate">2024/01/01</div>
+                <div class="info-content" id="ticketDate">14MAR</div>
             </div>
             <div class="info-item">
                 <div class="info-label">
@@ -606,6 +604,7 @@
                 </div>
                 <div class="info-content" id="ticketGate">A3</div>
             </div>
+            <!-- 登机时间 + 姓名在同一行 -->
             <div class="info-item">
                 <div class="info-label">
                     <span class="info-label-chinese">登机时间</span>
@@ -613,10 +612,6 @@
                 </div>
                 <div class="info-content" id="ticketBoardingTime">14:00</div>
             </div>
-        </div>
-        
-        <!-- 第三行 -->
-        <div class="info-row">
             <div class="info-item">
                 <div class="info-label">
                     <span class="info-label-chinese">姓名</span>
@@ -626,11 +621,12 @@
             </div>
         </div>
         
-        <!-- 条形码区域 -->
-        <div class="barcode-area">
-            <div class="barcode-container" id="barcodeContainer">
-                <svg id="barcode-svg" style="width:100%; height:100%; background:white;"></svg>
+        <!-- 二维码区域 -->
+        <div class="qrcode-area">
+            <div class="qrcode-container" id="qrcodeContainer">
+                <img id="qrcode-img" src="" alt="HAPPY WEDDING QR Code">
             </div>
+            <div class="qrcode-text">❤️ HAPPY WEDDING ❤️</div>
         </div>
         
         <!-- 红字提示 -->
@@ -661,7 +657,7 @@
                         <span class="info-label-chinese">日期</span>
                         <span class="info-label-english">DATE</span>
                     </div>
-                    <div class="info-content" id="ticketDateRight1">2024/01/01</div>
+                    <div class="info-content" id="ticketDateRight1">14MAR</div>
                 </div>
                 
                 <div class="info-single-item">
@@ -717,7 +713,7 @@
                         <span class="info-label-chinese">日期</span>
                         <span class="info-label-english">DATE</span>
                     </div>
-                    <div class="info-content" id="ticketDateRight2">2024/01/01</div>
+                    <div class="info-content" id="ticketDateRight2">14MAR</div>
                 </div>
                 
                 <div class="info-single-item">
@@ -774,6 +770,34 @@
             };
         }
         
+        // 将日期转换为 DDMMM 格式 (例如: 14MAR)
+        function formatDateToDDMMM(dateString) {
+            if (!dateString) return '';
+            
+            // 尝试解析输入的日期 (支持 YYYY/MM/DD 或 YYYY-MM-DD)
+            let year, month, day;
+            
+            if (dateString.includes('/')) {
+                [year, month, day] = dateString.split('/');
+            } else if (dateString.includes('-')) {
+                [year, month, day] = dateString.split('-');
+            } else {
+                // 如果格式不对，返回原字符串
+                return dateString;
+            }
+            
+            // 月份英文缩写
+            const monthAbbr = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 
+                              'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            
+            // 确保月份是数字
+            const monthIndex = parseInt(month, 10) - 1;
+            if (monthIndex < 0 || monthIndex > 11) return dateString;
+            
+            // 返回格式如 "14MAR"
+            return `${parseInt(day, 10)}${monthAbbr[monthIndex]}`;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const params = getUrlParams();
             
@@ -801,15 +825,18 @@
                 displayDate = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
             }
             
+            // 将日期转换为 DDMMM 格式
+            const formattedDate = formatDateToDDMMM(displayDate);
+            
+            document.getElementById('ticketDate').textContent = formattedDate;
+            document.getElementById('ticketDateRight1').textContent = formattedDate;
+            document.getElementById('ticketDateRight2').textContent = formattedDate;
+            
             if (params.time) {
                 displayTime = params.time;
             } else {
                 displayTime = '10:00';
             }
-            
-            document.getElementById('ticketDate').textContent = displayDate;
-            document.getElementById('ticketDateRight1').textContent = displayDate;
-            document.getElementById('ticketDateRight2').textContent = displayDate;
             
             const generateFlightNumber = (from, to) => {
                 if (!from || !to) return 'AA0011';
@@ -857,18 +884,15 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            const svg = document.getElementById('barcode-svg');
-            if (svg) {
-                JsBarcode(svg, "HAPPY WEDDING", {
-                    format: "CODE128",
-                    width: 1.4,              // 进一步减小条宽，让条形码更短
-                    height: 18,               // 高度适当
-                    displayValue: false,
-                    background: "#ffffff",
-                    lineColor: "#2c1e1e",
-                    margin: 0,                // 边距设为0，充分利用宽度
-                });
-            }
+            // 生成二维码
+            const qrImg = document.getElementById('qrcode-img');
+            const encodedText = encodeURIComponent("HAPPY WEDDING");
+            qrImg.src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodedText}&choe=UTF-8`;
+            
+            qrImg.onerror = function() {
+                console.log('Google Charts API加载失败，使用备用API');
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=HAPPY%20WEDDING`;
+            };
         });
         
         function goBack() {
