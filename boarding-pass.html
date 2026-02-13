@@ -38,37 +38,22 @@ body {
     grid-template-rows: 1fr 2fr;
 }
 
-/* 左上大文字区域 — 调整为flex列，便于将署名推到底部 */
+/* 左上大文字区域 — 调整为flex列 */
 .text-panel {
     grid-column: 1 / 2;
-    grid-row: 1 / 3;            /* 占满左侧整列 (合并两行) 让左下留白消失，但署名位于底部 */
+    grid-row: 1 / 3;            /* 占满左侧整列 */
     display: flex;
     flex-direction: column;
     height: 100%;
     position: relative;
 }
 
-/* 诗的主体：占据剩余空间，自然将署名挤到底 */
+/* 诗的主体：占据剩余空间 */
 .poem-content {
-    flex: 1;                    /* 吃掉剩余高度，使底部署名贴在左下角 (实际是文字区域底部) */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* 内容从顶部开始 */
-}
-
-/* 署名容器 — 右下对齐 (相对于文字面板) */
-.signature-bottom {
-    align-self: flex-end;        /* 在交叉轴(右)对齐 */
-    margin-top: 20px;            /* 与上文保持一点距离，若空间不足可缩小 */
-    font-size: 15px;
-    letter-spacing: 1px;
-    color: #4a5e7a;
-    font-weight: 450;
-    border-bottom: 2px solid #dce4ec; /* 淡淡的下划线，点缀 */
-    padding-bottom: 4px;
-    padding-right: 2px;
-    display: inline-block;        /* 让下划线只包住文字 */
-    line-height: 1.2;
+    justify-content: flex-start;
 }
 
 /* 文案基础 */
@@ -87,24 +72,52 @@ body {
     color: #0d1f34;
 }
 
-/* 右上留白 (不用变) */
+/* 新增：最后一行容器，包含文案最后一句和署名 */
+.last-line-wrapper {
+    display: flex;
+    justify-content: space-between;  /* 两端对齐 */
+    align-items: baseline;           /* 基线对齐 */
+    margin-top: 20px;                /* 与上文保持距离 */
+    width: 100%;
+}
+
+/* 最后一句文字样式 (走得踏实，也走得自由) */
+.last-line-text {
+    font-size: 22px;
+    line-height: 1.8;
+    color: #0d1f34;
+    font-weight: 420;
+    letter-spacing: 0.3px;
+}
+
+/* 署名样式 — 带破折号，靠右 */
+.signature-end {
+    font-size: 18px;
+    color: #4a5e7a;
+    font-weight: 450;
+    letter-spacing: 1.5px;
+    white-space: nowrap;          /* 防止换行 */
+    margin-left: 20px;            /* 与左侧文字保持距离 */
+    border-bottom: 2px solid #dce4ec; /* 保持下划线点缀 */
+    padding-bottom: 4px;
+    line-height: 1.4;
+}
+
+/* 右上留白 */
 .top-right {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
 }
 
-/* 左下留白 — 不再需要，因为 text-panel 撑满了左侧整列 */
-.bottom-left {
-    display: none;               /* 隐藏原来的留白单元格，由 text-panel 直接占满 */
-}
-
-/* 右下二维码区域位置不变 */
+/* 右下二维码区域 */
 .qr-panel {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
 }
 
 /* 二维码样式 */
@@ -123,6 +136,21 @@ body {
     image-rendering: crisp-edges;
 }
 
+/* 扫码提示文字 */
+.qr-caption {
+    font-size: 16px;
+    color: #3f546e;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    background: rgba(220, 228, 236, 0.3);
+    padding: 8px 18px;
+    border-radius: 60px;
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(211, 222, 235, 0.6);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    white-space: nowrap;
+}
+
 /* 移动端适配 */
 @media (max-width: 768px) {
     .card {
@@ -138,25 +166,40 @@ body {
         grid-row: 1;
         margin-bottom: 30px;
         height: auto;
-        display: block;          /* 移动端取消flex撑开 */
+        display: block;
     }
 
     .poem-content {
         display: block;
     }
-
-    .signature-bottom {
-        align-self: flex-start;   /* 移动端左对齐也可 */
-        margin-top: 30px;
+    
+    .last-line-wrapper {
+        flex-direction: column;    /* 移动端上下排列 */
+        align-items: flex-start;   /* 左对齐 */
+        gap: 10px;
+    }
+    
+    .signature-end {
+        margin-left: 0;
+        align-self: flex-end;      /* 移动端靠右 */
+        white-space: normal;       /* 允许换行 */
     }
 
     .qr-panel {
         grid-column: 1;
         grid-row: 2;
+        gap: 14px;
     }
 
     .top-right {
         display: none;
+    }
+    
+    .qr-caption {
+        font-size: 15px;
+        letter-spacing: 1px;
+        white-space: normal;
+        padding: 6px 16px;
     }
 }
 </style>
@@ -166,33 +209,34 @@ body {
 
 <div class="card">
 
-    <!-- 左上/整个左侧区域 (合并原来左上下) 放置文字及右下署名 -->
+    <!-- 左上/整个左侧区域 -->
     <div class="text-panel">
-        <!-- 用poem-content包裹文案，方便flex撑开 -->
         <div class="poem-content">
             <div class="poem">
-                <p>今日启程。</p>
+                <!-- "今日启程。" 已删除 -->
                 <p>人生向前，不止一种身份，<br>亦不止一种远方。</p>
                 <p>这一张机票，<br>是我送你的路。</p>
                 <p>去看山海，去过日常，<br>去认真生活，也认真做自己。</p>
-                <p class="highlight-last">走得踏实，<br>也走得自由。</p>
+                <!-- 最后一句和署名放在同一行容器中 -->
+            </div>
+            <!-- 最后一行：文字 + 署名（带破折号） -->
+            <div class="last-line-wrapper">
+                <span class="last-line-text">走得踏实，也走得自由。</span>
+                <span class="signature-end">—— 静妹妹</span>
             </div>
         </div>
-        <!-- 署名去掉了“启”，只留静妹妹，右下位置 -->
-        <div class="signature-bottom">静妹妹</div>
     </div>
 
     <!-- 右上留白 -->
     <div class="top-right"></div>
 
-    <!-- 左下留白已隐藏，不用占位 -->
-
-    <!-- 右下：二维码 -->
+    <!-- 右下：二维码 + 下方文字 -->
     <div class="qr-panel">
         <div class="qr-wrapper">
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fg2710068621-gif.github.io%2Fvirtual-plane-system%2Fform.html"
                  alt="Scan to boarding form">
         </div>
+        <div class="qr-caption">扫码获取机票</div>
     </div>
 
 </div>

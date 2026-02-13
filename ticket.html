@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>电子机票 - Travel Airlines</title>
+    <title>登机票 · Travel Airlines</title>
     <style>
         * {
             margin: 0;
@@ -231,13 +231,13 @@
             margin-bottom: 3px;
         }
         
-        /* 条形码区域 */
+        /* 条形码区域 - 调整以容纳新婚快乐条形码 */
         .barcode-area {
-            margin: 10px 0 8px 0;
+            margin: 8px 0 8px 0;
         }
         
         .barcode-container {
-            height: 25px;
+            height: 32px;           /* 稍微加高，让条形码更清晰 */
             background: white;
             border: 1px solid #ccc;
             margin-bottom: 2px;
@@ -248,10 +248,14 @@
         }
         
         .barcode-text {
-            font-size: 6px;
-            color: #666;
+            font-size: 7px;
+            color: #a05050;          /* 喜庆的暗红色 */
             text-align: center;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-weight: 500;
+            background: #fef6f6;
+            padding: 2px 0;
+            border-radius: 0 0 4px 4px;
         }
         
         /* 红色提示样式 - 去掉边框 */
@@ -353,6 +357,8 @@
             border-radius: 50%;
         }
     </style>
+    <!-- 加载 JsBarcode 库生成英文新婚条形码 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
 <div class="boarding-pass">
@@ -360,7 +366,7 @@
     <div class="left-section">
         <div class="airline-header">
             <div class="airline-name">TRAVEL AIRLINES</div>
-            <div class="boarding-pass-label">ELECTRONIC TICKET</div>
+            <div class="boarding-pass-label">BOARDING PASS</div>   <!-- 电子机票 → 登机票 -->
         </div>
         
         <!-- 第一行 -->
@@ -452,28 +458,21 @@
             </div>
         </div>
         
-        <!-- 第四行：票价 -->
-        <div class="info-row">
-            <div class="info-item">
-                <div class="info-label">
-                    <span class="info-label-chinese">票价</span>
-                    <span class="info-label-english">FARE</span>
-                </div>
-                <div class="info-content" id="ticketFare">CNY 1200.00</div>
-            </div>
-        </div>
+        <!-- 第四行：原票价行已删除（FARE整行移除） -->
+        <!-- 此处留白，减少一行，让条形码更靠上一些 -->
         
-        <!-- 第五行：条形码 -->
+        <!-- 第五行：条形码区域（原SCAN AT GATE替换为“新婚快乐”英文条形码） -->
         <div class="barcode-area">
             <div class="barcode-container" id="barcodeContainer">
-                <!-- 条形码会在这里生成 -->
+                <!-- JsBarcode 会在此处生成svg条形码，内容 "HAPPY WEDDING" -->
+                <svg id="barcode-svg" style="width:100%; height:100%; background:white;"></svg>
             </div>
-            <div class="barcode-text">SCAN AT GATE</div>
+            <div class="barcode-text">❤️ HAPPY WEDDING ❤️</div>   <!-- 喜庆提示替代SCAN AT GATE -->
         </div>
         
-        <!-- 最后一行：红字提示 -->
+        <!-- 最后一行：红字提示（保留） -->
         <div class="red-note">
-            电子机票 - 请妥善保管
+            登机票 - 请妥善保管
         </div>
     </div>
         
@@ -481,9 +480,9 @@
     <div class="right-section">
         <!-- 右侧第一部分 - 占1/5 -->
         <div class="right-part-1">
-            <!-- 右侧标题栏 -->
+            <!-- 右侧标题栏：电子机票 → 登机票 -->
             <div class="right-header">
-                <div class="right-title">电子机票</div>
+                <div class="right-title">登机票</div>
             </div>
             
             <!-- 右侧单列信息布局 -->
@@ -544,9 +543,9 @@
         
         <!-- 右侧第二部分 - 占1/5 -->
         <div class="right-part-2">
-            <!-- 右侧标题栏 -->
+            <!-- 右侧标题栏：电子机票 → 登机票 -->
             <div class="right-header">
-                <div class="right-title">电子机票</div>
+                <div class="right-title">登机票</div>
             </div>
             
             <!-- 右侧单列信息布局 -->
@@ -609,7 +608,7 @@
 
     <!-- 操作按钮 -->
     <div class="action-buttons">
-        <button onclick="window.print()" class="action-btn print-btn">🖨️ 打印电子机票</button>
+        <button onclick="window.print()" class="action-btn print-btn">🖨️ 打印登机票</button>
         <button onclick="goBack()" class="action-btn back-btn">↩️ 返回首页</button>
     </div>
 
@@ -629,7 +628,7 @@
             };
         }
         
-        // 页面加载时设置电子机票信息
+        // 页面加载时设置登机票信息
         document.addEventListener('DOMContentLoaded', function() {
             console.log('ticket.html 页面加载完成');
             
@@ -662,11 +661,9 @@
             let displayDate, displayTime;
             
             if (params.date) {
-                // 如果form传递了日期，使用该日期
                 displayDate = params.date;
                 console.log('使用表单日期:', displayDate);
             } else {
-                // 否则使用明天
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 displayDate = `${tomorrow.getFullYear()}/${(tomorrow.getMonth()+1).toString().padStart(2,'0')}/${tomorrow.getDate().toString().padStart(2,'0')}`;
@@ -674,11 +671,9 @@
             }
             
             if (params.time) {
-                // 如果form传递了时间，使用该时间
                 displayTime = params.time;
                 console.log('使用表单时间:', displayTime);
             } else {
-                // 否则使用默认时间
                 displayTime = '10:00';
                 console.log('使用默认时间:', displayTime);
             }
@@ -690,12 +685,8 @@
             // 根据出发城市和目的城市生成航班号
             const generateFlightNumber = (from, to) => {
                 if (!from || !to) return 'AA0011';
-                
-                // 取城市拼音的首字母
                 const fromCode = from.charAt(0).toUpperCase();
                 const toCode = to.charAt(0).toUpperCase();
-                
-                // 生成随机航班号
                 const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 return `${fromCode}${toCode}${randomNum}`;
             };
@@ -731,13 +722,11 @@
             // 生成登机时间（基于form的时间+1-2小时）
             let boardingTime;
             if (params.time) {
-                // 如果form有时间，在此基础上加1-2小时
                 const [hours, minutes] = params.time.split(':').map(Number);
                 const addHours = Math.floor(Math.random() * 2) + 1;
                 const newHours = (hours + addHours) % 24;
                 boardingTime = `${newHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
             } else {
-                // 随机生成登机时间
                 const now = new Date();
                 const addHours = Math.floor(Math.random() * 3) + 1;
                 now.setHours(now.getHours() + addHours);
@@ -746,46 +735,30 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // 生成票价（根据城市距离）
-            const generateFare = (from, to) => {
-                const cityPairs = {
-                    '北京-上海': 'CNY 1200.00',
-                    '上海-北京': 'CNY 1200.00',
-                    '北京-广州': 'CNY 1800.00',
-                    '广州-北京': 'CNY 1800.00',
-                    '上海-广州': 'CNY 1500.00',
-                    '广州-上海': 'CNY 1500.00',
-                    '深圳-北京': 'CNY 2000.00',
-                    '成都-上海': 'CNY 1400.00'
-                };
-                
-                const key = `${from}-${to}`;
-                return cityPairs[key] || 'CNY ' + (1000 + Math.floor(Math.random() * 1000)).toString() + '.00';
-            };
+            // ———— 票价相关代码已全部删除 ————
             
-            const fare = generateFare(fromCity, toCity);
-            document.getElementById('ticketFare').textContent = fare;
+            // ★ 生成新婚快乐英文条形码 (替换原来的条形码图片)
+            const svg = document.getElementById('barcode-svg');
+            if (svg) {
+                JsBarcode(svg, "HAPPY WEDDING", {
+                    format: "CODE128",
+                    width: 2.2,
+                    height: 30,
+                    displayValue: false,      // 不重复显示文字，因为下面有barcode-text显示
+                    background: "#ffffff",
+                    lineColor: "#2c1e1e",
+                    margin: 2
+                });
+            } else {
+                // 降级处理：如果svg不存在，则用图片方式显示备用条形码
+                const barcodeContainer = document.getElementById('barcodeContainer');
+                if (barcodeContainer) {
+                    barcodeContainer.innerHTML = `<img src="https://barcode.tec-it.com/barcode.ashx?data=HAPPY%20WEDDING&code=Code128&dpi=96" style="width:100%; height:100%; object-fit:cover;" alt="barcode">`;
+                }
+            }
             
-            // 生成条形码
-            generateBarcode(`${flightNumber}-${displayDate}-${passengerName}-${fromCity}-${toCity}-${seatNo}`);
-            
-            console.log('电子机票生成完成');
+            console.log('登机票生成完成，条形码祝福：HAPPY WEDDING');
         });
-        
-        // 生成条形码
-        function generateBarcode(data) {
-            const barcodeContainer = document.getElementById('barcodeContainer');
-            
-            const encodedData = encodeURIComponent(data);
-            const barcodeUrl = `https://barcode.tec-it.com/barcode.ashx?data=${encodedData}&code=Code128&dpi=96&dataseparator=`;
-            
-            barcodeContainer.innerHTML = `
-                <img src="${barcodeUrl}"
-                     alt="Electronic Ticket Barcode"
-                     style="width: 100%; height: 100%; object-fit: cover;"
-                     onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"25\"><text x=\"10\" y=\"15\" font-size=\"12\">TICKET: ${data}</text></svg>'">
-            `;
-        }
         
         // 返回首页
         function goBack() {
@@ -794,7 +767,7 @@
         
         // 打印提示
         window.addEventListener('afterprint', function() {
-            alert('电子机票打印完成！请妥善保管。');
+            alert('登机票打印完成！请妥善保管。');
         });
     </script>
 </body>
