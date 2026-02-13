@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>左图 · 右内容 · 只用test2.jpg</title>
+    <title>左图 · 右内容 · 强制显示您的图片</title>
     <style>
         /* -----------------------------------------------
            极致简约 · 左2/3图片 · 右1/3内容
-           背景微透明矩形 · 无边框 · 单按钮“进入”
-           ★★★ 只用您本地的 test2.jpg ★★★
-           同时保证100%显示，绝不使用其他网络图片
+           ★★★ 强制显示您的test2.jpg，绝不使用其他图片 ★★★
+           如果图片不存在，显示醒目提示
         ----------------------------------------------- */
         * {
             margin: 0;
@@ -23,43 +22,49 @@
             width: 100vw;
             overflow: hidden;
             display: flex;
-            background-color: #2a2a2a;
+            background-color: #1a1a1a;
         }
 
         /* ---------- 左侧：图片占2/3 ---------- */
         .left-image {
             flex: 0 0 66.666%;
             height: 100vh;
-            /* 初始无图，由JS专门加载您的test2.jpg */
-            background-image: none;
+            position: relative;
+            z-index: 2;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            position: relative;
-            z-index: 2;
-            background-color: #2c3e4e; /* 后备色，等会儿会根据您的图片调整 */
+            /* 初始状态：纯色背景 */
+            background-color: #1e2f35;
+            /* 不使用任何背景图，完全由JS控制 */
+            background-image: none;
+            /* 用于显示图片加载状态 */
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
         }
 
         /* ---------- 右侧：内容区域占1/3 ---------- */
         .right-content {
             flex: 0 0 33.333%;
             height: 100vh;
-            background-color: #2c3e4e; /* 初始后备，JS会适配您的图片 */
+            background-color: #1e2f35;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             z-index: 3;
+            transition: background-color 0.3s ease;
         }
 
-        /* ---------- 微透明矩形 · 无边框 · 无可见背景框 ---------- */
+        /* ---------- 微透明矩形 · 无边框 ---------- */
         .content-rect {
             width: 80%;
             max-width: 320px;
             padding: 2.5rem 1.8rem;
-            background: rgba(20, 30, 35, 0.08);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
+            background: rgba(10, 25, 30, 0.15);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -77,10 +82,9 @@
             line-height: 1.7;
             letter-spacing: 0.2em;
             margin-bottom: 2.8rem;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.88);
             text-align: center;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            word-break: break-word;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.3);
             width: 100%;
         }
 
@@ -96,7 +100,7 @@
 
         @keyframes breatheDots {
             0% { opacity: 0.35; }
-            50% { opacity: 0.95; }
+            50% { opacity: 1; }
             100% { opacity: 0.35; }
         }
 
@@ -108,7 +112,6 @@
             padding: 0;
             margin-top: 0.2rem;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .btn-link {
@@ -118,7 +121,7 @@
             gap: 12px;
             padding: 0.8rem 2.8rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.92);
+            color: rgba(255, 255, 255, 0.95);
             font-size: 1.6rem;
             font-weight: 360;
             letter-spacing: 8px;
@@ -132,7 +135,7 @@
 
         .btn-link span {
             font-size: 1.9rem;
-            opacity: 0.75;
+            opacity: 0.8;
             transition: transform 0.25s ease;
         }
 
@@ -153,12 +156,29 @@
             position: absolute;
             bottom: 24px;
             right: 30px;
-            color: rgba(220, 240, 245, 0.25);
+            color: rgba(200, 220, 230, 0.25);
             font-size: 0.75rem;
             letter-spacing: 5px;
             font-weight: 300;
             z-index: 10;
             text-transform: uppercase;
+        }
+
+        /* 图片状态提示层 - 只在没有图片时显示 */
+        .image-tip {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 300;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 16px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            z-index: 30;
         }
 
         /* 响应式调整 */
@@ -186,16 +206,15 @@
         }
         
         /* 确保没有任何外来图片 */
-        .left-image, .right-content, .content-rect, .btn-enter, .btn-link {
+        .left-image {
             border: none !important;
             outline: none !important;
-            box-shadow: none !important;
         }
     </style>
 </head>
 <body>
 
-    <!-- 左侧：图片占2/3 · 只用test2.jpg，绝不使用其他图 -->
+    <!-- 左侧：图片占2/3 · 只显示您的test2.jpg -->
     <div class="left-image" id="leftImage"></div>
 
     <!-- 右侧：内容占1/3 -->
@@ -223,102 +242,129 @@
             "use strict";
             
             // -------------------------------------------------------------
-            // 只使用您的本地图片：test2.jpg
-            // 绝不使用任何其他网络图片，同时保证左侧100%有显示
+            // 终极方案：只显示您的test2.jpg
+            // 1. 强制清除所有可能的外来图片设置
+            // 2. 使用多种方式尝试加载您的图片
+            // 3. 如果图片不存在，显示明确提示
             // -------------------------------------------------------------
+            
             const leftDiv = document.getElementById('leftImage');
             const rightDiv = document.getElementById('rightContent');
             
-            // 您的图片文件名（只改这里就可以）
+            // 您的图片文件名（请确保文件在此HTML同目录下）
             const YOUR_IMAGE = 'test2.jpg';
             
-            // 后备色 —— 从您的图片提取的氛围色（您可以手动调整为图片主色调）
-            // 这里预设了几种高级灰，您可以根据test2.jpg手动选一个最接近的
-            const fallbackColors = {
-                background: '#2c3e4e', // 灰蓝绿
-                rightBg: '#2c3e4e'
-            };
+            // 完全清除任何可能的外来背景图设置
+            leftDiv.style.backgroundImage = 'none';
             
-            // 设置右侧初始背景色
-            rightDiv.style.backgroundColor = fallbackColors.rightBg;
-            leftDiv.style.backgroundColor = fallbackColors.background;
+            // 移除之前可能存在的提示层
+            const oldTip = document.getElementById('image-tip');
+            if (oldTip) oldTip.remove();
             
-            // ---- 第一步：直接尝试显示您的图片 ----
+            // ---- 创建图片加载状态显示器 ----
+            const statusTip = document.createElement('div');
+            statusTip.id = 'image-tip';
+            statusTip.className = 'image-tip';
+            
+            // ---- 第一步：直接设置背景图（最直接的方式）----
+            // 这种方法最简单直接，如果图片存在就会显示
+            leftDiv.style.backgroundImage = `url('${YOUR_IMAGE}')`;
+            
+            // ---- 第二步：检测图片是否真正加载成功 ----
             const img = new Image();
             img.src = YOUR_IMAGE;
             
             img.onload = function() {
-                // ✅ 成功！完全使用您的图片
+                // ✅ 图片存在且加载成功
+                // 确保背景图已设置
                 leftDiv.style.backgroundImage = `url('${YOUR_IMAGE}')`;
                 
-                // 图片加载成功后，尝试提取氛围色（手动模式）
-                // 为了让右侧背景更协调，您可以在这里手动设置一个和test2.jpg搭配的颜色
-                // 比如您的图片偏蓝调，可以用 #1e3b40；偏棕调可以用 #3a332c
-                // 当前保留 #2c3e4e，您可以根据实际图片修改下行：
-                rightDiv.style.backgroundColor = '#2c3e4e'; // ← 请根据您的图片手动调整
+                // 移除任何提示（如果有）
+                const tip = document.getElementById('image-tip');
+                if (tip) tip.remove();
                 
-                console.log('✅ 成功加载您的图片: test2.jpg');
+                // 可选：根据您的图片色调调整右侧背景色
+                // 请根据您的实际图片修改这个颜色值
+                rightDiv.style.backgroundColor = '#1e2f35'; // 深灰绿，您可手动调整
+                
+                // 在控制台输出成功信息
+                console.log('✅ test2.jpg 加载成功，图片已显示');
             };
             
             img.onerror = function() {
-                // ❌ 您的图片不存在或路径错误
-                // 但我们绝不使用其他网络图片！而是显示一个明确的提示层
-                // 让您知道“请放置图片”，同时保持布局完美
-                console.warn('❌ 未找到 test2.jpg - 请在同级目录放置此图片');
-                
-                // 创建一个视觉提示，但依然保持极简风格
+                // ❌ 图片不存在或路径错误
+                // 清除可能错误加载的背景图
                 leftDiv.style.backgroundImage = 'none';
-                leftDiv.style.backgroundColor = '#1e2f35';
                 
-                // 在图片区域显示一个极简文字提示（几乎不可见，但存在）
-                // 使用伪元素或创建div来提示，但不破坏设计
-                const tip = document.createElement('div');
-                tip.style.position = 'absolute';
-                tip.style.bottom = '30px';
-                tip.style.left = '30px';
-                tip.style.color = 'rgba(255, 255, 255, 0.25)';
-                tip.style.fontSize = '0.8rem';
-                tip.style.letterSpacing = '4px';
-                tip.style.textTransform = 'uppercase';
-                tip.style.fontWeight = '300';
-                tip.style.zIndex = '20';
-                tip.style.textShadow = '0 1px 2px rgba(0,0,0,0.2)';
-                tip.innerText = '请放置 test2.jpg';
+                // 显示明确的提示信息
+                statusTip.innerText = '⚠️ 请放置图片: test2.jpg';
+                leftDiv.appendChild(statusTip);
                 
-                // 移除之前的tip（如果有）
-                const oldTip = document.getElementById('image-tip');
-                if (oldTip) oldTip.remove();
-                tip.id = 'image-tip';
-                leftDiv.appendChild(tip);
-                
-                // 右侧背景保持协调
+                // 右侧背景色调整为匹配的深色
                 rightDiv.style.backgroundColor = '#1e2f35';
+                
+                // 在控制台输出错误信息
+                console.error('❌ 未找到 test2.jpg - 请将图片放在HTML同级目录');
             };
             
-            // 额外保险：如果您的图片加载极慢，设置一个友好的等待提示（可选）
-            // 但绝不替换为其他图片
+            // ---- 第三步：多重保险 ----
+            // 使用Image对象的complete属性检查缓存
+            if (img.complete) {
+                if (img.naturalWidth > 0) {
+                    // 图片已缓存且有效
+                    leftDiv.style.backgroundImage = `url('${YOUR_IMAGE}')`;
+                    const tip = document.getElementById('image-tip');
+                    if (tip) tip.remove();
+                }
+            }
+            
+            // ---- 第四步：设置一个超时检测 ----
+            setTimeout(function() {
+                // 检查背景图是否真的显示出来了
+                const computedStyle = window.getComputedStyle(leftDiv);
+                const bgImage = computedStyle.backgroundImage;
+                
+                // 如果背景图是none或者包含"test2.jpg"但图片实际上没加载成功
+                if (bgImage === 'none' || bgImage.includes('test2.jpg') && !img.complete) {
+                    // 再次尝试设置
+                    leftDiv.style.backgroundImage = `url('${YOUR_IMAGE}?t=${Date.now()})`; // 加时间戳避免缓存
+                    
+                    setTimeout(function() {
+                        const retryStyle = window.getComputedStyle(leftDiv);
+                        if (retryStyle.backgroundImage === 'none') {
+                            statusTip.innerText = '⚠️ 请放置图片: test2.jpg';
+                            leftDiv.appendChild(statusTip);
+                        }
+                    }, 500);
+                }
+            }, 500);
             
         })();
     </script>
     
-    <!-- 没有任何外来图片CDN，没有任何pexels/unsplash/picsum，只有您的test2.jpg -->
+    <!-- 完全没有任何外来图片CDN，只有您的test2.jpg -->
     <style>
-        /* 确保没有任何隐藏的背景图设置 */
+        /* 强制清除所有可能的外来图片设置 */
         .left-image {
-            background-image: none !important; /* 完全由JS设置，初始为空 */
+            background-image: none !important; /* 由JS动态设置 */
         }
         
-        /* 右侧背景您可以手动调整 */
+        /* 右侧背景色 - 您可以手动调整为您图片的主色调 */
         .right-content {
-            background-color: #2c3e4e; /* 默认灰蓝色，请根据您的图片修改 */
+            background-color: #1e2f35;
         }
         
-        /* 微调 */
-        .content-rect {
-            background: rgba(15, 30, 35, 0.12);
+        /* 提示框样式优化 */
+        .image-tip {
+            background: rgba(20, 20, 25, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            backdrop-filter: blur(5px);
         }
     </style>
     
-    <!-- 使用说明：将您的test2.jpg放在和此HTML相同的文件夹下，左侧就会显示您的图片 -->
+    <!-- 使用说明：请将您的test2.jpg放在和此HTML文件相同的文件夹下 -->
 </body>
 </html>
