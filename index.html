@@ -10,18 +10,18 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* 去掉移动端点击灰块 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background-color: #000;  /* 纯黑底色，确保任何情况下无白边 */
+            background-color: #000;
             font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         }
 
-        /* 图片容器 - 使用 img 标签而不是背景图，保证手机兼容性 */
+        /* 图片容器 */
         .image-container {
             position: absolute;
             top: 0;
@@ -30,19 +30,27 @@
             height: 100%;
             z-index: 1;
             overflow: hidden;
-            background-color: #1a1a1a; /* 加载过程中显示深色 */
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 直接使用 img 元素，手机兼容性最好 */
+        /* img 元素样式 */
         .image-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;        /* 覆盖全屏，不留黑边 */
-            object-position: center;  /* 居中显示 */
-            display: block;           /* 去除图片底部的间隙 */
+            object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
-        /* 按钮容器：绝对定位，确保在图片上方 */
+        /* 加载中的占位文字（纯色，无文字，只有背景） */
+        .image-container.loading {
+            background-color: #2a2a2a;
+        }
+
+        /* 按钮容器 */
         .button-wrapper {
             position: absolute;
             bottom: 15%;
@@ -51,17 +59,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 20;              /* 高于图片 */
-            pointer-events: none;      /* 容器不拦截点击，按钮本身可点 */
+            z-index: 20;
+            pointer-events: none;
         }
 
-        /* 手机大按钮 - 使用 button 元素，确保可点击 */
+        /* 手机大按钮 */
         .btn-down {
-            pointer-events: auto;      /* 关键：允许点击 */
+            pointer-events: auto;
             background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px) brightness(1.1);
-            -webkit-backdrop-filter: blur(12px) brightness(1.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             color: white;
             font-size: 2rem;
             font-weight: 350;
@@ -75,37 +82,18 @@
             line-height: 1.2;
             min-width: 260px;
             text-align: center;
-            border: none;
-            background: rgba(30, 30, 30, 0.25);
             border: 1.5px solid rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             -webkit-touch-callout: none;
             user-select: none;
-            /* 增加点击区域 */
-            position: relative;
             z-index: 30;
         }
 
-        /* 触摸反馈 */
         .btn-down:active {
             transform: scale(0.95);
             background: rgba(255, 255, 255, 0.4);
             border-color: rgba(255, 255, 255, 0.9);
-            transition: all 0.08s;
         }
 
-        /* 图片加载失败时的提示（纯色，无文字） */
-        .image-container img.error {
-            display: none;
-        }
-        
-        .image-container.fallback {
-            background-color: #2a2a2a;
-            background-image: none;
-        }
-
-        /* 小屏幕适配 */
         @media (max-width: 400px) {
             .btn-down {
                 font-size: 1.8rem;
@@ -114,7 +102,6 @@
             }
         }
 
-        /* 横屏适配 */
         @media (orientation: landscape) and (max-height: 500px) {
             .button-wrapper {
                 bottom: 18%;
@@ -128,68 +115,119 @@
 </head>
 <body>
 
-    <!-- 使用 img 标签直接显示图片（手机兼容性最好） -->
+    <!-- 图片容器 -->
     <div class="image-container" id="imageContainer">
-        <img id="mainImage" src="https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true" 
-             alt="" 
-             onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg';">
+        <img id="mainImage" src="" alt="" style="display: none;">
     </div>
 
-    <!-- 按钮 - 使用 button 元素保证可点击 -->
+    <!-- 按钮 -->
     <div class="button-wrapper">
         <button class="btn-down" id="magicButton">点一下我</button>
     </div>
 
     <script>
         (function() {
-            // 获取图片元素
-            const img = document.getElementById('mainImage');
             const container = document.getElementById('imageContainer');
-            
-            // 图片地址列表
-            const primaryURL = 'https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true';
-            const fallbackURL = 'https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg';
-            
-            // 如果图片加载失败，已经通过 onerror 使用了备用地址
-            // 但为了更健壮，再添加一个额外的错误处理
-            img.addEventListener('error', function() {
-                console.log('主图加载失败，尝试备用');
-                if (img.src !== fallbackURL) {
-                    img.src = fallbackURL;
-                } else {
-                    // 备用也失败，显示纯色背景
-                    container.style.backgroundColor = '#333';
-                    img.style.display = 'none';
-                }
-            });
-
-            // 图片加载成功后的处理
-            img.addEventListener('load', function() {
-                console.log('图片加载成功');
-                img.style.display = 'block';
-            });
-
-            // 强制重试一次（某些手机浏览器可能需要）
-            setTimeout(function() {
-                // 如果图片没有加载完成，且当前src是主地址，尝试重新加载
-                if (!img.complete || img.naturalHeight === 0) {
-                    if (img.src === primaryURL) {
-                        img.src = fallbackURL;
-                    }
-                }
-            }, 2000);
-
-            // 按钮点击跳转 - 跳转到同一目录下的 boarding-pass.html
+            const img = document.getElementById('mainImage');
             const btn = document.getElementById('magicButton');
             
-            // 确保按钮可点：移除任何可能阻止点击的属性
+            // ========== 图片地址列表（按优先级排序）==========
+            // 使用多种可能的图片地址，确保手机能显示
+            const imageUrls = [
+                // 1. 使用原始github raw地址（最直接）
+                'https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg',
+                
+                // 2. 使用jsdelivr CDN（加速且稳定）
+                'https://cdn.jsdelivr.net/gh/g2710068621-gif/virtual-plane-system@main/test2.jpg',
+                
+                // 3. 使用github页面地址（备用）
+                'https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true',
+                
+                // 4. 使用镜像加速（如果上面都失败）
+                'https://ghproxy.com/https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg',
+                
+                // 5. 最后备用：一个纯色背景（无图模式）
+                ''
+            ];
+            
+            let currentIndex = 0;
+            
+            // 显示加载状态（无文字，只有深色背景）
+            container.classList.add('loading');
+            
+            // 尝试加载图片的函数
+            function tryLoadImage(index) {
+                if (index >= imageUrls.length - 1) {
+                    // 所有图片地址都失败，显示纯色背景（无图模式）
+                    console.log('所有图片地址均失败，使用纯色背景');
+                    container.classList.remove('loading');
+                    container.style.backgroundColor = '#2a2a2a'; // 深灰色背景
+                    img.style.display = 'none';
+                    
+                    // 图片完全失败，但按钮仍然可用
+                    return;
+                }
+                
+                const url = imageUrls[index];
+                if (!url) {
+                    // 空地址，尝试下一个
+                    tryLoadImage(index + 1);
+                    return;
+                }
+                
+                console.log('尝试加载图片: ' + url);
+                
+                // 创建新的Image对象测试加载
+                const testImg = new Image();
+                testImg.src = url + '?t=' + new Date().getTime(); // 加时间戳防止缓存
+                
+                testImg.onload = function() {
+                    // 加载成功，显示图片
+                    console.log('图片加载成功: ' + url);
+                    img.src = url;
+                    img.style.display = 'block';
+                    container.classList.remove('loading');
+                    container.style.backgroundColor = ''; // 恢复默认
+                    
+                    // 额外确保图片显示
+                    img.onload = function() {
+                        console.log('图片已显示');
+                    };
+                };
+                
+                testImg.onerror = function() {
+                    // 加载失败，尝试下一个
+                    console.log('图片加载失败: ' + url);
+                    tryLoadImage(index + 1);
+                };
+            }
+            
+            // 开始尝试加载图片
+            tryLoadImage(0);
+            
+            // 额外的重试机制：如果5秒后图片仍未显示，尝试下一个地址
+            setTimeout(function() {
+                if (!img.complete || img.naturalHeight === 0) {
+                    console.log('超时检测，尝试下一个地址');
+                    // 获取当前尝试的索引，然后尝试下一个
+                    const nextIndex = currentIndex + 1;
+                    if (nextIndex < imageUrls.length) {
+                        tryLoadImage(nextIndex);
+                    }
+                }
+            }, 5000);
+            
+            // ========== 按钮点击跳转 ==========
             btn.disabled = false;
+            
+            // 跳转目标
+            const targetUrl = 'boarding-pass.html';
             
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation(); // 防止事件冒泡
+                e.stopPropagation();
                 
-                console.log('按钮被点击'); // 调试用
+                console.log('按钮被点击');
                 
                 // 微缩动画
                 btn.style.transform = 'scale(0.94)';
@@ -197,35 +235,24 @@
                 
                 // 动画完成后跳转
                 setTimeout(() => {
-                    // 使用相对路径跳转到同一目录下的 boarding-pass.html
-                    window.location.href = 'boarding-pass.html';
-                    console.log('正在跳转到 boarding-pass.html');
+                    window.location.href = targetUrl;
+                    console.log('正在跳转到 ' + targetUrl);
                 }, 150);
             });
-
+            
             // 移动端触摸事件优化
             btn.addEventListener('touchstart', function(e) {
-                e.preventDefault();  // 防止默认行为，但不影响click
-            }, { passive: false });
-
-            // 确保按钮可点：添加额外的点击区域测试
-            btn.addEventListener('mousedown', function(e) {
                 e.preventDefault();
-            });
-
-            // 如果上述都失败，使用最直接的方式：将按钮包装在a标签内（但保留button样式）
-            // 这里不改变结构，但增加一个后备方案：如果click失效，可以通过触摸事件再触发一次
+            }, { passive: false });
+            
+            // 额外保险：touchend 直接跳转（防止某些设备click不触发）
             btn.addEventListener('touchend', function(e) {
                 e.preventDefault();
-                // 触发跳转
-                window.location.href = 'boarding-pass.html';
+                window.location.href = targetUrl;
             });
-
-            // 打印调试信息
+            
             console.log('页面加载完成，按钮已绑定事件');
         })();
     </script>
-
-    <!-- 无任何文字水印 -->
 </body>
 </html>

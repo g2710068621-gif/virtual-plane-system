@@ -250,33 +250,7 @@
                     <div class="error-message" id="nameError">请输入真实姓名</div>
                 </div>
                 
-                <!-- 2. 身份证号码 -->
-                <div class="form-group">
-                    <label class="form-label">身份证号码 <span>*</span></label>
-                    <input type="text" class="form-input" id="idCard" 
-                           name="idCard" placeholder="请输入18位身份证号码" required 
-                           pattern="\d{17}[\dXx]" maxlength="18">
-                    <div class="error-message" id="idCardError">请输入有效的18位身份证号码</div>
-                </div>
-                
-                <!-- 3. 手机号码 -->
-                <div class="form-group">
-                    <label class="form-label">手机号码 <span>*</span></label>
-                    <input type="tel" class="form-input" id="phone" 
-                           name="phone" placeholder="请输入11位手机号码" required 
-                           pattern="\d{11}" maxlength="11">
-                    <div class="error-message" id="phoneError">请输入有效的11位手机号码</div>
-                </div>
-                
-                <!-- 4. 邮箱地址 -->
-                <div class="form-group">
-                    <label class="form-label">邮箱地址 <span>*</span></label>
-                    <input type="email" class="form-input" id="email" 
-                           name="email" placeholder="请输入您的邮箱地址" required>
-                    <div class="error-message" id="emailError">请输入有效的邮箱地址</div>
-                </div>
-                
-                <!-- 5. 出发日期 -->
+                <!-- 2. 出发日期 (原第三项，上移) -->
                 <div class="form-group">
                     <label class="form-label">出发日期 <span>*</span></label>
                     <input type="date" class="form-input" id="departureDate" 
@@ -284,7 +258,7 @@
                     <div class="error-message" id="dateError">请选择出发日期</div>
                 </div>
                 
-                <!-- 6. 出发地 -->
+                <!-- 3. 出发地 -->
                 <div class="form-group">
                     <label class="form-label">出发地 <span>*</span></label>
                     <input type="text" class="form-input" id="departureCity" 
@@ -292,7 +266,7 @@
                     <div class="error-message" id="departureError">请输入出发地</div>
                 </div>
                 
-                <!-- 7. 目的地 -->
+                <!-- 4. 目的地 -->
                 <div class="form-group">
                     <label class="form-label">目的地 <span>*</span></label>
                     <input type="text" class="form-input" id="destinationCity" 
@@ -300,7 +274,7 @@
                     <div class="error-message" id="destinationError">请输入目的地</div>
                 </div>
                 
-                <!-- 8. 出发大约时间 -->
+                <!-- 5. 出发大约时间 (原第八项，调整顺序后) -->
                 <div class="form-group">
                     <label class="form-label">出发大约时间 <span>*</span></label>
                     <input type="time" class="form-input" id="departureTime" 
@@ -364,7 +338,7 @@
         });
     });
     
-    // 表单验证
+    // 表单验证 (移除了身份证、手机、邮箱的验证)
     function validateForm() {
         console.log('=== 开始表单验证 ===');
         let isValid = true;
@@ -389,39 +363,6 @@
             isValid = false;
         } else {
             console.log('✅ 真实姓名通过');
-        }
-        
-        // 验证身份证
-        const idCard = document.getElementById('idCard').value.trim();
-        const idCardPattern = /^\d{17}[\dXx]$/;
-        if (!idCardPattern.test(idCard)) {
-            console.log('❌ 身份证格式错误');
-            showError('idCardError', '请输入有效的18位身份证号码');
-            isValid = false;
-        } else {
-            console.log('✅ 身份证通过');
-        }
-        
-        // 验证手机号码
-        const phone = document.getElementById('phone').value.trim();
-        const phonePattern = /^\d{11}$/;
-        if (!phonePattern.test(phone)) {
-            console.log('❌ 手机号格式错误');
-            showError('phoneError', '请输入有效的11位手机号码');
-            isValid = false;
-        } else {
-            console.log('✅ 手机号通过');
-        }
-        
-        // 验证邮箱
-        const email = document.getElementById('email').value.trim();
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            console.log('❌ 邮箱格式错误');
-            showError('emailError', '请输入有效的邮箱地址');
-            isValid = false;
-        } else {
-            console.log('✅ 邮箱通过');
         }
         
         // 验证出发日期
@@ -484,173 +425,166 @@
         }
     }
     
-    // 表单提交处理
     // ========================================
-// 配置部分 - 请替换为你的实际EmailJS配置
-// ========================================
-const EMAILJS_CONFIG = {
-    USER_ID: "7YeIL_BgIZ8HdEb-C",         // 替换为你的EmailJS User ID
-    SERVICE_ID: "service_hp6w7nj",   // 替换为你的Service ID
-    TEMPLATE_ID: "template_0i56xkt"  // 替换为你的Template ID
-};
-
-// ========================================
-// 初始化EmailJS
-// ========================================
-(function() {
-    console.log('🚀 初始化EmailJS，User ID:', EMAILJS_CONFIG.USER_ID);
-    emailjs.init(EMAILJS_CONFIG.USER_ID);
-    console.log('✅ EmailJS初始化完成');
-})();
-
-// ========================================
-// 邮件发送函数
-// ========================================
-async function sendEmail(formData) {
-    console.log('📧 === 开始发送邮件 ===');
-    console.log('📤 发件服务:', EMAILJS_CONFIG.SERVICE_ID);
-    console.log('📝 使用模板:', EMAILJS_CONFIG.TEMPLATE_ID);
-    
-    try {
-        // 准备模板参数（变量名必须与EmailJS模板中的一致）
-const templateParams = {
-    name: formData.name,                     // {{name}}
-    id_card: formData.idCard,                // {{id_card}}
-    phone: formData.phone,                   // {{phone}}
-    email: formData.email,                   // {{email}}
-    flight_number: formData.flightNumber,    // {{flight_number}}
-    departure_city: formData.departureCity,  // {{departure_city}}
-    destination_city: formData.destinationCity, // {{destination_city}}
-    departure_date: formData.departureDate,  // {{departure_date}}
-    departure_time: formData.departureTime   // {{departure_time}}
-};
-        
-        console.log('📋 邮件模板参数:', templateParams);
-        
-        // 发送邮件
-        console.log('🔄 正在发送邮件...');
-        const response = await emailjs.send(
-            EMAILJS_CONFIG.SERVICE_ID,
-            EMAILJS_CONFIG.TEMPLATE_ID,
-            templateParams
-        );
-        
-        console.log('✅ 邮件发送成功！响应:', response);
-        
-        return { 
-            success: true, 
-            message: '邮件发送成功',
-            response: response,
-            email_sent_to: formData.email
-        };
-        
-    } catch (error) {
-        console.error('❌ 邮件发送失败:', error);
-        return { 
-            success: false, 
-            message: `邮件发送失败: ${error.message || error.text || '未知错误'}`,
-            error: error
-        };
-    }
-}
-
-// ========================================
-// 跳转到机票页面函数
-// ========================================
-function proceedToTicket(formData) {
-    console.log('🎫 跳转到机票页面');
-    
-    // 显示成功消息
-    document.getElementById('successMessage').style.display = 'block';
-    document.getElementById('successMessage').innerHTML = `
-        <h3>✅ 信息提交成功！</h3>
-        <p>航班号：${formData.flightNumber}</p>
-        <p>乘客姓名：${formData.name}</p>
-        <p>页面即将自动跳转...</p>
-    `;
-    
-    // 3秒后跳转
-    setTimeout(() => {
-        // 跳转到机票展示页面
-        window.location.href = `ticket.html?name=${encodeURIComponent(formData.name)}&flight=${formData.flightNumber}`;
-    }, 3000);
-}
-
-// ========================================
-// 表单提交处理（修改后的版本）
-// ========================================
-document.getElementById('infoForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    console.log('=== 表单提交开始 ===');
-    
-    // 验证表单
-    if (!validateForm()) {
-        console.log('❌ 表单验证失败，停止提交');
-        return false;
-    }
-    
-    console.log('✅ 表单验证通过');
-    
-    // 显示加载状态
-    const submitBtn = document.getElementById('submitBtn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    submitBtn.disabled = true;
-    submitBtn.textContent = '发送中...';
-    loadingOverlay.style.display = 'flex';
-    
-    // 收集表单数据
-    const formData = {
-        name: document.getElementById('realName').value.trim(),
-        idCard: document.getElementById('idCard').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        departureCity: document.getElementById('departureCity').value.trim(),
-        destinationCity: document.getElementById('destinationCity').value.trim(),
-        departureDate: document.getElementById('departureDate').value,
-        departureTime: document.getElementById('departureTime').value,
-        flightNumber: 'TA' + Math.floor(Math.random() * 9000 + 1000)  // 修改航班号前缀
+    // 配置部分 - 请替换为你的实际EmailJS配置
+    // ========================================
+    const EMAILJS_CONFIG = {
+        USER_ID: "7YeIL_BgIZ8HdEb-C",         // 替换为你的EmailJS User ID
+        SERVICE_ID: "service_hp6w7nj",   // 替换为你的Service ID
+        TEMPLATE_ID: "template_0i56xkt"  // 替换为你的Template ID
     };
     
-    console.log('📋 表单数据:', formData);
+    // ========================================
+    // 初始化EmailJS
+    // ========================================
+    (function() {
+        console.log('🚀 初始化EmailJS，User ID:', EMAILJS_CONFIG.USER_ID);
+        emailjs.init(EMAILJS_CONFIG.USER_ID);
+        console.log('✅ EmailJS初始化完成');
+    })();
     
-    try {
-        // 1. 首先尝试发送邮件
-        console.log('📧 正在发送确认邮件...');
-        const emailResult = await sendEmail(formData);
+    // ========================================
+    // 邮件发送函数 (已移除身份证、手机、邮箱字段)
+    // ========================================
+    async function sendEmail(formData) {
+        console.log('📧 === 开始发送邮件 ===');
+        console.log('📤 发件服务:', EMAILJS_CONFIG.SERVICE_ID);
+        console.log('📝 使用模板:', EMAILJS_CONFIG.TEMPLATE_ID);
         
-        if (emailResult.success) {
-            console.log('✅ 邮件发送成功，收件人:', formData.email);
-        } else {
-            console.warn('⚠️ 邮件发送失败:', emailResult.message);
-            // 邮件失败也继续流程
+        try {
+            // 准备模板参数（根据剩余字段调整）
+            const templateParams = {
+                name: formData.name,                     // {{name}}
+                flight_number: formData.flightNumber,    // {{flight_number}}
+                departure_city: formData.departureCity,  // {{departure_city}}
+                destination_city: formData.destinationCity, // {{destination_city}}
+                departure_date: formData.departureDate,  // {{departure_date}}
+                departure_time: formData.departureTime   // {{departure_time}}
+            };
+            
+            console.log('📋 邮件模板参数:', templateParams);
+            
+            // 发送邮件
+            console.log('🔄 正在发送邮件...');
+            const response = await emailjs.send(
+                EMAILJS_CONFIG.SERVICE_ID,
+                EMAILJS_CONFIG.TEMPLATE_ID,
+                templateParams
+            );
+            
+            console.log('✅ 邮件发送成功！响应:', response);
+            
+            return { 
+                success: true, 
+                message: '邮件发送成功',
+                response: response
+                // 已移除 email_sent_to 字段
+            };
+            
+        } catch (error) {
+            console.error('❌ 邮件发送失败:', error);
+            return { 
+                success: false, 
+                message: `邮件发送失败: ${error.message || error.text || '未知错误'}`,
+                error: error
+            };
         }
+    }
+    
+    // ========================================
+    // 跳转到机票页面函数 (调整传参，移除了多余字段)
+    // ========================================
+    function proceedToTicket(formData) {
+        console.log('🎫 跳转到机票页面');
         
-        // 2. 无论邮件是否成功，都跳转到机票页面
-        proceedToTicket(formData);
-        
-    } catch (error) {
-        console.error('❌ 提交过程中出错:', error);
-        
-        // 显示错误消息
+        // 显示成功消息
         document.getElementById('successMessage').style.display = 'block';
         document.getElementById('successMessage').innerHTML = `
-            <h3>⚠️ 提交过程中出现错误</h3>
-            <p>${error.message || '未知错误'}</p>
-            <p>请稍后重试或联系客服</p>
+            <h3>✅ 信息提交成功！</h3>
+            <p>航班号：${formData.flightNumber}</p>
+            <p>乘客姓名：${formData.name}</p>
+            <p>页面即将自动跳转...</p>
         `;
         
-        // 恢复按钮状态
-        submitBtn.disabled = false;
-        submitBtn.textContent = '重新提交';
-        
-    } finally {
-        // 隐藏加载状态
+        // 3秒后跳转 (参数只保留姓名、出发/目的地、日期、时间)
         setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-        }, 2000);
+            // 跳转到机票展示页面
+            window.location.href = `ticket.html?name=${encodeURIComponent(formData.name)}&from=${encodeURIComponent(formData.departureCity)}&to=${encodeURIComponent(formData.destinationCity)}&date=${encodeURIComponent(formData.departureDate)}&time=${encodeURIComponent(formData.departureTime)}&flight=${formData.flightNumber}`;
+        }, 3000);
     }
-});
+    
+    // ========================================
+    // 表单提交处理
+    // ========================================
+    document.getElementById('infoForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        console.log('=== 表单提交开始 ===');
+        
+        // 验证表单
+        if (!validateForm()) {
+            console.log('❌ 表单验证失败，停止提交');
+            return false;
+        }
+        
+        console.log('✅ 表单验证通过');
+        
+        // 显示加载状态
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '发送中...';
+        loadingOverlay.style.display = 'flex';
+        
+        // 收集表单数据 (移除了身份证、电话、邮箱)
+        const formData = {
+            name: document.getElementById('realName').value.trim(),
+            departureCity: document.getElementById('departureCity').value.trim(),
+            destinationCity: document.getElementById('destinationCity').value.trim(),
+            departureDate: document.getElementById('departureDate').value,
+            departureTime: document.getElementById('departureTime').value,
+            flightNumber: 'TA' + Math.floor(Math.random() * 9000 + 1000)  // 生成航班号
+        };
+        
+        console.log('📋 表单数据:', formData);
+        
+        try {
+            // 1. 尝试发送邮件（但邮件模板需适配，如果邮件模板需要id/phone/email可能会失败，这里保留尝试但容错）
+            console.log('📧 正在发送确认邮件...');
+            const emailResult = await sendEmail(formData);
+            
+            if (emailResult.success) {
+                console.log('✅ 邮件发送成功');
+            } else {
+                console.warn('⚠️ 邮件发送失败:', emailResult.message);
+                // 邮件失败也继续流程
+            }
+            
+            // 2. 无论邮件是否成功，都跳转到机票页面
+            proceedToTicket(formData);
+            
+        } catch (error) {
+            console.error('❌ 提交过程中出错:', error);
+            
+            // 显示错误消息
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successMessage').innerHTML = `
+                <h3>⚠️ 提交过程中出现错误</h3>
+                <p>${error.message || '未知错误'}</p>
+                <p>请稍后重试或联系客服</p>
+            `;
+            
+            // 恢复按钮状态
+            submitBtn.disabled = false;
+            submitBtn.textContent = '重新提交';
+            
+        } finally {
+            // 隐藏加载状态
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 2000);
+        }
+    });
     </script>
 </body>
 </html>
