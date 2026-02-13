@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>手机全显 · 点一下我（跳转 boarding-pass）</title>
+    <title>手机专用 · 图片保证显示 · 按钮可点</title>
     <style>
-        /* 极致精简 · 完美适配手机 */
+        /* 极简 · 移动端优先 · 100%显示图片 */
         * {
             margin: 0;
             padding: 0;
@@ -17,53 +17,58 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background-color: #1e1a16;  /* 深底色，与图片融合 */
+            background-color: #000;  /* 纯黑底色，确保任何情况下无白边 */
             font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         }
 
-        /* ----- 图片容器：手机全屏显示，保证图片完整 ----- */
-        .full-image {
+        /* 图片容器 - 使用 img 标签而不是背景图，保证手机兼容性 */
+        .image-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true');
-            background-size: cover;        /* 保证填满屏幕，不留白 */
-            background-position: center center;  /* 居中展示，保留核心区域 */
-            background-repeat: no-repeat;
-            background-color: #2f2822;     /* 底色 */
-            transition: background-image 0.2s;
             z-index: 1;
+            overflow: hidden;
+            background-color: #1a1a1a; /* 加载过程中显示深色 */
         }
 
-        /* 按钮容器：绝对定位，中间靠下，适合拇指点击 */
+        /* 直接使用 img 元素，手机兼容性最好 */
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;        /* 覆盖全屏，不留黑边 */
+            object-position: center;  /* 居中显示 */
+            display: block;           /* 去除图片底部的间隙 */
+        }
+
+        /* 按钮容器：绝对定位，确保在图片上方 */
         .button-wrapper {
             position: absolute;
-            bottom: 15%;            /* 手机底部向上15% 符合人体工学 */
+            bottom: 15%;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 20;
-            pointer-events: none;    /* 容器不拦截点击，按钮本身可点 */
+            z-index: 20;              /* 高于图片 */
+            pointer-events: none;      /* 容器不拦截点击，按钮本身可点 */
         }
 
-        /* 手机大按钮：易点按，半透明磨砂，在任何图片上都清晰 */
+        /* 手机大按钮 - 使用 button 元素，确保可点击 */
         .btn-down {
-            pointer-events: auto;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1.5px solid rgba(255, 255, 255, 0.7);
+            pointer-events: auto;      /* 关键：允许点击 */
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px) brightness(1.1);
             -webkit-backdrop-filter: blur(12px) brightness(1.1);
             color: white;
-            font-size: 2rem;           /* 大号字体，易读 */
-            font-weight: 340;
+            font-size: 2rem;
+            font-weight: 350;
             letter-spacing: 6px;
-            padding: 1rem 3rem;         /* 大按钮区域 */
-            border-radius: 70px;         /* 圆润 */
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+            padding: 1rem 3rem;
+            border-radius: 70px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
             cursor: pointer;
             transition: all 0.2s ease;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
@@ -71,34 +76,45 @@
             min-width: 260px;
             text-align: center;
             border: none;
-            background: rgba(30, 30, 30, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            -webkit-touch-callout: none; /* 禁止长按菜单 */
+            background: rgba(30, 30, 30, 0.25);
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            -webkit-touch-callout: none;
             user-select: none;
+            /* 增加点击区域 */
+            position: relative;
+            z-index: 30;
         }
 
         /* 触摸反馈 */
         .btn-down:active {
-            transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.4);
             border-color: rgba(255, 255, 255, 0.9);
             transition: all 0.08s;
         }
 
-        /* 没有任何文字水印，没有任何多余元素 */
-        /* 针对极端小屏幕做微调 */
+        /* 图片加载失败时的提示（纯色，无文字） */
+        .image-container img.error {
+            display: none;
+        }
+        
+        .image-container.fallback {
+            background-color: #2a2a2a;
+            background-image: none;
+        }
+
+        /* 小屏幕适配 */
         @media (max-width: 400px) {
             .btn-down {
                 font-size: 1.8rem;
-                padding: 0.9rem 2.4rem;
-                min-width: 220px;
-                letter-spacing: 5px;
+                padding: 0.9rem 2.5rem;
+                min-width: 230px;
             }
         }
 
-        /* 横屏适配：按钮依然在安全区 */
+        /* 横屏适配 */
         @media (orientation: landscape) and (max-height: 500px) {
             .button-wrapper {
                 bottom: 18%;
@@ -112,72 +128,104 @@
 </head>
 <body>
 
-    <!-- 单图背景：专门针对手机优化，保证显示 -->
-    <div class="full-image" id="mainImage"></div>
+    <!-- 使用 img 标签直接显示图片（手机兼容性最好） -->
+    <div class="image-container" id="imageContainer">
+        <img id="mainImage" src="https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true" 
+             alt="" 
+             onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg';">
+    </div>
 
-    <!-- 唯一按钮：点一下我，触手可及，点击后跳转到 boarding-pass.html -->
+    <!-- 按钮 - 使用 button 元素保证可点击 -->
     <div class="button-wrapper">
         <button class="btn-down" id="magicButton">点一下我</button>
     </div>
 
     <script>
         (function() {
-            const imageDiv = document.getElementById('mainImage');
+            // 获取图片元素
+            const img = document.getElementById('mainImage');
+            const container = document.getElementById('imageContainer');
             
-            // 图片地址（主用 + 备用）
+            // 图片地址列表
             const primaryURL = 'https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true';
             const fallbackURL = 'https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg';
             
-            // 移动端图片加载优化：静默尝试，保证显示
-            function loadImage(url) {
-                const img = new Image();
-                img.src = url;
-                img.onload = function() {
-                    imageDiv.style.backgroundImage = `url('${url}')`;
-                    console.log('图片加载成功'); // 仅调试，正式可移除
-                };
-                img.onerror = function() {
-                    if (url === primaryURL) {
-                        // 主图失败，尝试备用
-                        loadImage(fallbackURL);
-                    } else {
-                        // 备用也失败，保留纯色背景（无文字）
-                        imageDiv.style.backgroundImage = 'none';
-                        imageDiv.style.backgroundColor = '#3a322b';
+            // 如果图片加载失败，已经通过 onerror 使用了备用地址
+            // 但为了更健壮，再添加一个额外的错误处理
+            img.addEventListener('error', function() {
+                console.log('主图加载失败，尝试备用');
+                if (img.src !== fallbackURL) {
+                    img.src = fallbackURL;
+                } else {
+                    // 备用也失败，显示纯色背景
+                    container.style.backgroundColor = '#333';
+                    img.style.display = 'none';
+                }
+            });
+
+            // 图片加载成功后的处理
+            img.addEventListener('load', function() {
+                console.log('图片加载成功');
+                img.style.display = 'block';
+            });
+
+            // 强制重试一次（某些手机浏览器可能需要）
+            setTimeout(function() {
+                // 如果图片没有加载完成，且当前src是主地址，尝试重新加载
+                if (!img.complete || img.naturalHeight === 0) {
+                    if (img.src === primaryURL) {
+                        img.src = fallbackURL;
                     }
-                };
-            }
-            
-            loadImage(primaryURL);
+                }
+            }, 2000);
 
             // 按钮点击跳转 - 跳转到同一目录下的 boarding-pass.html
             const btn = document.getElementById('magicButton');
+            
+            // 确保按钮可点：移除任何可能阻止点击的属性
+            btn.disabled = false;
+            
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation(); // 防止事件冒泡
                 
-                // 微缩动画（提升用户体验）
+                console.log('按钮被点击'); // 调试用
+                
+                // 微缩动画
                 btn.style.transform = 'scale(0.94)';
                 btn.style.background = 'rgba(255, 255, 255, 0.4)';
                 
-                // 动画完成后跳转到 boarding-pass.html（同一目录）
+                // 动画完成后跳转
                 setTimeout(() => {
                     // 使用相对路径跳转到同一目录下的 boarding-pass.html
                     window.location.href = 'boarding-pass.html';
-                    // 如果文件在子文件夹中，可以使用类似 'folder/boarding-pass.html' 的路径
-                }, 120);
-                
-                // 注意：上面的延时给了按钮动画时间，让体验更顺滑
+                    console.log('正在跳转到 boarding-pass.html');
+                }, 150);
             });
 
-            // 防止双击缩放（不影响单击）
+            // 移动端触摸事件优化
             btn.addEventListener('touchstart', function(e) {
-                e.preventDefault();  // 阻止默认，但不影响click
+                e.preventDefault();  // 防止默认行为，但不影响click
             }, { passive: false });
 
-            // 确保触摸时没有灰色半透明闪动
+            // 确保按钮可点：添加额外的点击区域测试
+            btn.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+            });
+
+            // 如果上述都失败，使用最直接的方式：将按钮包装在a标签内（但保留button样式）
+            // 这里不改变结构，但增加一个后备方案：如果click失效，可以通过触摸事件再触发一次
+            btn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                // 触发跳转
+                window.location.href = 'boarding-pass.html';
+            });
+
+            // 打印调试信息
+            console.log('页面加载完成，按钮已绑定事件');
         })();
     </script>
 
-    <!-- 无任何文字水印、署名、日期，完全符合要求 -->
+    <!-- 无任何文字水印 -->
 </body>
 </html>
