@@ -19,19 +19,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 16px;
 }
 
-/* 主卡片 */
+/* 主卡片 - 尺寸整体缩小 */
 .card {
-    width: 960px;
-    height: 560px;
+    width: 760px;           /* 从960px缩小到760px */
+    height: 440px;          /* 从560px缩小到440px */
     background: #ffffff;
-    border-radius: 40px;
-    box-shadow: 0 30px 50px -20px rgba(0, 20, 40, 0.15),
-                0 10px 20px -8px rgba(0, 0, 0, 0.05);
+    border-radius: 32px;    /* 圆角相应缩小 */
+    box-shadow: 0 25px 40px -18px rgba(0, 20, 40, 0.15),
+                0 8px 16px -6px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(211, 222, 235, 0.5);
-    padding: 60px;
+    padding: 40px;          /* 内边距从60px缩小到40px */
     
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -56,18 +56,18 @@ body {
     justify-content: flex-start;
 }
 
-/* 文案基础 */
+/* 文案基础 - 字体相应缩小 */
 .poem p {
-    font-size: 22px;
-    line-height: 1.8;
+    font-size: 18px;          /* 从22px缩小到18px */
+    line-height: 1.6;         /* 行高略微调小 */
     color: #1c2a3f;
-    margin-bottom: 16px;
+    margin-bottom: 12px;      /* 间距缩小 */
     font-weight: 350;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
 }
 
 .highlight-last {
-    margin-top: 20px;
+    margin-top: 16px;         /* 间距缩小 */
     font-weight: 420;
     color: #0d1f34;
 }
@@ -77,30 +77,30 @@ body {
     display: flex;
     justify-content: space-between;  /* 两端对齐 */
     align-items: baseline;           /* 基线对齐 */
-    margin-top: 20px;                /* 与上文保持距离 */
+    margin-top: 16px;                /* 与上文保持距离 */
     width: 100%;
 }
 
 /* 最后一句文字样式 (走得踏实，也走得自由) */
 .last-line-text {
-    font-size: 22px;
-    line-height: 1.8;
+    font-size: 18px;          /* 从22px缩小到18px */
+    line-height: 1.6;
     color: #0d1f34;
     font-weight: 420;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
 }
 
 /* 署名样式 — 带破折号，靠右 */
 .signature-end {
-    font-size: 18px;
+    font-size: 15px;          /* 从18px缩小到15px */
     color: #4a5e7a;
     font-weight: 450;
-    letter-spacing: 1.5px;
-    white-space: nowrap;          /* 防止换行 */
-    margin-left: 20px;            /* 与左侧文字保持距离 */
+    letter-spacing: 1.2px;
+    white-space: nowrap;      /* 防止换行 */
+    margin-left: 16px;        /* 与左侧文字保持距离 */
     border-bottom: 2px solid #dce4ec; /* 保持下划线点缀 */
-    padding-bottom: 4px;
-    line-height: 1.4;
+    padding-bottom: 3px;      /* 稍微缩小 */
+    line-height: 1.3;
 }
 
 /* 右上留白 */
@@ -117,37 +117,37 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 12px;                /* 间距缩小 */
 }
 
-/* 二维码样式 */
+/* 二维码样式 - 相应缩小 */
 .qr-wrapper {
     background: #ffffff;
-    padding: 18px;
-    border-radius: 28px;
-    box-shadow: 0 16px 28px -16px rgba(23, 55, 90, 0.18);
+    padding: 14px;            /* 从18px缩小到14px */
+    border-radius: 22px;      /* 圆角缩小 */
+    box-shadow: 0 12px 22px -14px rgba(23, 55, 90, 0.18);
     border: 1px solid #e3eaf2;
 }
 
 .qr-wrapper img {
-    width: 170px;
-    height: 170px;
+    width: 130px;             /* 从170px缩小到130px */
+    height: 130px;
     display: block;
     image-rendering: crisp-edges;
 }
 
-/* 扫码提示文字 */
+/* 扫码提示文字 - 相应缩小 */
 .qr-caption {
-    font-size: 16px;
+    font-size: 14px;          /* 从16px缩小到14px */
     color: #3f546e;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
     font-weight: 400;
     background: rgba(220, 228, 236, 0.3);
-    padding: 8px 18px;
-    border-radius: 60px;
+    padding: 6px 14px;        /* 内边距缩小 */
+    border-radius: 50px;
     backdrop-filter: blur(2px);
     border: 1px solid rgba(211, 222, 235, 0.6);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.02);
     white-space: nowrap;
 }
 
@@ -158,13 +158,14 @@ body {
         height: auto;
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
-        padding: 40px 30px;
+        padding: 30px 24px;    /* 移动端内边距也缩小 */
+        border-radius: 28px;
     }
 
     .text-panel {
         grid-column: 1;
         grid-row: 1;
-        margin-bottom: 30px;
+        margin-bottom: 24px;   /* 间距缩小 */
         height: auto;
         display: block;
     }
@@ -173,22 +174,42 @@ body {
         display: block;
     }
     
+    .poem p {
+        font-size: 17px;       /* 移动端稍微大一点，易于阅读 */
+        margin-bottom: 10px;
+    }
+    
     .last-line-wrapper {
         flex-direction: column;    /* 移动端上下排列 */
         align-items: flex-start;   /* 左对齐 */
-        gap: 10px;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .last-line-text {
+        font-size: 17px;
     }
     
     .signature-end {
         margin-left: 0;
         align-self: flex-end;      /* 移动端靠右 */
         white-space: normal;       /* 允许换行 */
+        font-size: 14px;
     }
 
     .qr-panel {
         grid-column: 1;
         grid-row: 2;
-        gap: 14px;
+        gap: 10px;
+    }
+    
+    .qr-wrapper {
+        padding: 12px;
+    }
+    
+    .qr-wrapper img {
+        width: 120px;
+        height: 120px;
     }
 
     .top-right {
@@ -196,10 +217,30 @@ body {
     }
     
     .qr-caption {
-        font-size: 15px;
+        font-size: 13px;
         letter-spacing: 1px;
         white-space: normal;
-        padding: 6px 16px;
+        padding: 5px 12px;
+    }
+}
+
+/* 更小的屏幕 (小于480px) 进一步优化 */
+@media (max-width: 480px) {
+    .card {
+        padding: 20px 16px;
+    }
+    
+    .poem p {
+        font-size: 16px;
+    }
+    
+    .last-line-text {
+        font-size: 16px;
+    }
+    
+    .qr-wrapper img {
+        width: 100px;
+        height: 100px;
     }
 }
 </style>
@@ -213,11 +254,9 @@ body {
     <div class="text-panel">
         <div class="poem-content">
             <div class="poem">
-                <!-- "今日启程。" 已删除 -->
                 <p>人生向前，不止一种身份，<br>亦不止一种远方。</p>
                 <p>这一张机票，<br>是我送你的路。</p>
                 <p>去看山海，去过日常，<br>去认真生活，也认真做自己。</p>
-                <!-- 最后一句和署名放在同一行容器中 -->
             </div>
             <!-- 最后一行：文字 + 署名（带破折号） -->
             <div class="last-line-wrapper">
