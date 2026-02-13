@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>左图 · 右内容 · 图片绝对显</title>
+    <title>左图 · 右内容 · 只用test2.jpg</title>
     <style>
         /* -----------------------------------------------
            极致简约 · 左2/3图片 · 右1/3内容
            背景微透明矩形 · 无边框 · 单按钮“进入”
-           图片❗❗ 本次100%显示，使用稳定网络图片
+           ★★★ 只用您本地的 test2.jpg ★★★
+           同时保证100%显示，绝不使用其他网络图片
         ----------------------------------------------- */
         * {
             margin: 0;
@@ -22,29 +23,28 @@
             width: 100vw;
             overflow: hidden;
             display: flex;
-            background-color: #1a2c31;
+            background-color: #2a2a2a;
         }
 
-        /* ---------- 左侧：图片占2/3 · 使用稳定可靠的网络图片 ---------- */
+        /* ---------- 左侧：图片占2/3 ---------- */
         .left-image {
             flex: 0 0 66.666%;
             height: 100vh;
-            /* ★★★ 使用来自picsum的稳定高清图片，100%显示，无需任何本地文件 ★★★ */
-            background-image: url('https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1600');
+            /* 初始无图，由JS专门加载您的test2.jpg */
+            background-image: none;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
             z-index: 2;
-            /* 后备色 */
-            background-color: #2c3e4e;
+            background-color: #2c3e4e; /* 后备色，等会儿会根据您的图片调整 */
         }
 
         /* ---------- 右侧：内容区域占1/3 ---------- */
         .right-content {
             flex: 0 0 33.333%;
             height: 100vh;
-            background-color: #1e2f35;  /* 深绿色调，与左侧图片氛围融合 */
+            background-color: #2c3e4e; /* 初始后备，JS会适配您的图片 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,9 +57,9 @@
             width: 80%;
             max-width: 320px;
             padding: 2.5rem 1.8rem;
-            background: rgba(10, 20, 25, 0.15);  /* 稍微明显一点的透明层，但依然无边框 */
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
+            background: rgba(20, 30, 35, 0.08);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -77,9 +77,9 @@
             line-height: 1.7;
             letter-spacing: 0.2em;
             margin-bottom: 2.8rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.85);
             text-align: center;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.25);
             word-break: break-word;
             width: 100%;
         }
@@ -91,12 +91,12 @@
             font-weight: 300;
             letter-spacing: 8px;
             margin-left: 4px;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         @keyframes breatheDots {
             0% { opacity: 0.35; }
-            50% { opacity: 1; }
+            50% { opacity: 0.95; }
             100% { opacity: 0.35; }
         }
 
@@ -118,7 +118,7 @@
             gap: 12px;
             padding: 0.8rem 2.8rem;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.95);
+            color: rgba(255, 255, 255, 0.92);
             font-size: 1.6rem;
             font-weight: 360;
             letter-spacing: 8px;
@@ -132,7 +132,7 @@
 
         .btn-link span {
             font-size: 1.9rem;
-            opacity: 0.8;
+            opacity: 0.75;
             transition: transform 0.25s ease;
         }
 
@@ -146,7 +146,6 @@
 
         .btn-enter:active .btn-link {
             transform: translateY(2px);
-            color: rgba(255, 255, 255, 0.9);
         }
 
         /* 右下角极简署名 */
@@ -154,13 +153,12 @@
             position: absolute;
             bottom: 24px;
             right: 30px;
-            color: rgba(220, 240, 245, 0.3);
+            color: rgba(220, 240, 245, 0.25);
             font-size: 0.75rem;
             letter-spacing: 5px;
             font-weight: 300;
             z-index: 10;
             text-transform: uppercase;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
 
         /* 响应式调整 */
@@ -187,7 +185,7 @@
             outline: none;
         }
         
-        /* 确保没有任何边框 */
+        /* 确保没有任何外来图片 */
         .left-image, .right-content, .content-rect, .btn-enter, .btn-link {
             border: none !important;
             outline: none !important;
@@ -197,11 +195,11 @@
 </head>
 <body>
 
-    <!-- 左侧：图片占2/3 · 使用稳定可靠的Pexels图片，绝对显示 -->
-    <div class="left-image"></div>
+    <!-- 左侧：图片占2/3 · 只用test2.jpg，绝不使用其他图 -->
+    <div class="left-image" id="leftImage"></div>
 
     <!-- 右侧：内容占1/3 -->
-    <div class="right-content">
+    <div class="right-content" id="rightContent">
         <div class="content-rect">
             <div class="hero-text">
                 <span style="letter-spacing: 10px;">••••••••••••••••</span>
@@ -220,114 +218,107 @@
         右 · 内 · 容
     </div>
 
-    <!-- 终极保障：三张不同来源的稳定图片，层层递进，确保100%显示 -->
     <script>
         (function() {
             "use strict";
             
             // -------------------------------------------------------------
-            // 绝对图片显示方案：使用多个稳定、高速、永不失效的图片CDN
-            // 多层后备：pexels → unsplash → picsum → 纯色渐变SVG
+            // 只使用您的本地图片：test2.jpg
+            // 绝不使用任何其他网络图片，同时保证左侧100%有显示
             // -------------------------------------------------------------
-            const leftDiv = document.querySelector('.left-image');
+            const leftDiv = document.getElementById('leftImage');
+            const rightDiv = document.getElementById('rightContent');
             
-            // 图片URL数组 —— 全部是稳定、可靠、高速的图片资源
-            const imageUrls = [
-                // 第一优先：高山湖泊，深色调，与右侧完美融合
-                'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1600&h=1200&dpr=1',
-                // 第二优先：森林迷雾（备用）
-                'https://images.pexels.com/photos/167684/pexels-photo-167684.jpeg?auto=compress&cs=tinysrgb&w=1600',
-                // 第三优先：深色海洋（备用）
-                'https://images.pexels.com/photos/2166559/pexels-photo-2166559.jpeg?auto=compress&cs=tinysrgb&w=1600',
-                // 第四优先：抽象渐变（终极后备，永远可用）
-                'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200"%3E%3Cdefs%3E%3ClinearGradient id="a" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%231e3a3f"/%3E%3Cstop offset="50%25" stop-color="%232a4a50"/%3E%3Cstop offset="100%25" stop-color="%23172e33"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="1600" height="1200" fill="url(%23a)"/%3E%3Ccircle cx="1200" cy="400" r="280" fill="%233d686b" opacity="0.2"/%3E%3Ccircle cx="350" cy="750" r="340" fill="%23285357" opacity="0.18"/%3E%3C/svg%3E'
-            ];
+            // 您的图片文件名（只改这里就可以）
+            const YOUR_IMAGE = 'test2.jpg';
             
-            // 尝试加载第一个可用图片
-            function tryLoadImage(index) {
-                if (index >= imageUrls.length) return; // 所有图片都失败（几乎不可能）
+            // 后备色 —— 从您的图片提取的氛围色（您可以手动调整为图片主色调）
+            // 这里预设了几种高级灰，您可以根据test2.jpg手动选一个最接近的
+            const fallbackColors = {
+                background: '#2c3e4e', // 灰蓝绿
+                rightBg: '#2c3e4e'
+            };
+            
+            // 设置右侧初始背景色
+            rightDiv.style.backgroundColor = fallbackColors.rightBg;
+            leftDiv.style.backgroundColor = fallbackColors.background;
+            
+            // ---- 第一步：直接尝试显示您的图片 ----
+            const img = new Image();
+            img.src = YOUR_IMAGE;
+            
+            img.onload = function() {
+                // ✅ 成功！完全使用您的图片
+                leftDiv.style.backgroundImage = `url('${YOUR_IMAGE}')`;
                 
-                const img = new Image();
-                img.src = imageUrls[index];
+                // 图片加载成功后，尝试提取氛围色（手动模式）
+                // 为了让右侧背景更协调，您可以在这里手动设置一个和test2.jpg搭配的颜色
+                // 比如您的图片偏蓝调，可以用 #1e3b40；偏棕调可以用 #3a332c
+                // 当前保留 #2c3e4e，您可以根据实际图片修改下行：
+                rightDiv.style.backgroundColor = '#2c3e4e'; // ← 请根据您的图片手动调整
                 
-                img.onload = function() {
-                    // 成功！设置背景图
-                    leftDiv.style.backgroundImage = `url('${imageUrls[index]}')`;
-                    console.log(`✅ 图片加载成功: ${index}`);
-                };
+                console.log('✅ 成功加载您的图片: test2.jpg');
+            };
+            
+            img.onerror = function() {
+                // ❌ 您的图片不存在或路径错误
+                // 但我们绝不使用其他网络图片！而是显示一个明确的提示层
+                // 让您知道“请放置图片”，同时保持布局完美
+                console.warn('❌ 未找到 test2.jpg - 请在同级目录放置此图片');
                 
-                img.onerror = function() {
-                    console.log(`⚠️ 图片${index}加载失败，尝试下一张`);
-                    // 当前图片失败，尝试下一张
-                    tryLoadImage(index + 1);
-                };
-            }
+                // 创建一个视觉提示，但依然保持极简风格
+                leftDiv.style.backgroundImage = 'none';
+                leftDiv.style.backgroundColor = '#1e2f35';
+                
+                // 在图片区域显示一个极简文字提示（几乎不可见，但存在）
+                // 使用伪元素或创建div来提示，但不破坏设计
+                const tip = document.createElement('div');
+                tip.style.position = 'absolute';
+                tip.style.bottom = '30px';
+                tip.style.left = '30px';
+                tip.style.color = 'rgba(255, 255, 255, 0.25)';
+                tip.style.fontSize = '0.8rem';
+                tip.style.letterSpacing = '4px';
+                tip.style.textTransform = 'uppercase';
+                tip.style.fontWeight = '300';
+                tip.style.zIndex = '20';
+                tip.style.textShadow = '0 1px 2px rgba(0,0,0,0.2)';
+                tip.innerText = '请放置 test2.jpg';
+                
+                // 移除之前的tip（如果有）
+                const oldTip = document.getElementById('image-tip');
+                if (oldTip) oldTip.remove();
+                tip.id = 'image-tip';
+                leftDiv.appendChild(tip);
+                
+                // 右侧背景保持协调
+                rightDiv.style.backgroundColor = '#1e2f35';
+            };
             
-            // 开始尝试从第一张图加载
-            tryLoadImage(0);
-            
-            // 立即设置一个快速显示的图片（从第二张开始快速尝试，让第一张有时间）
-            // 但为保持简洁，上面递归已足够
-            
-            // 同时设置一个超时兜底：2秒后如果还没有任何图片成功，强制使用SVG
-            setTimeout(function() {
-                // 检查当前背景图是否包含'pexels'（即成功加载网络图）
-                const currentBg = leftDiv.style.backgroundImage;
-                if (!currentBg || currentBg === 'none' || currentBg.includes('undefined')) {
-                    // 强制使用SVG
-                    leftDiv.style.backgroundImage = `url('${imageUrls[imageUrls.length-1]}')`;
-                    console.log('⏱️ 超时兜底：使用SVG');
-                }
-            }, 2000);
+            // 额外保险：如果您的图片加载极慢，设置一个友好的等待提示（可选）
+            // 但绝不替换为其他图片
             
         })();
     </script>
     
-    <!-- 最终保险：内联样式直接设置pexels图片，确保JS执行前已有图 -->
+    <!-- 没有任何外来图片CDN，没有任何pexels/unsplash/picsum，只有您的test2.jpg -->
     <style>
-        /* 最高优先级：直接显示pexels图片，无需任何JS */
+        /* 确保没有任何隐藏的背景图设置 */
         .left-image {
-            background-image: url('https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1600&h=1200&dpr=1') !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
+            background-image: none !important; /* 完全由JS设置，初始为空 */
         }
         
-        /* 微调右侧背景色，更贴合图片氛围 */
+        /* 右侧背景您可以手动调整 */
         .right-content {
-            background-color: #1c353b;  /* 深湖绿色，从图片提取 */
+            background-color: #2c3e4e; /* 默认灰蓝色，请根据您的图片修改 */
         }
         
-        /* 矩形透明度稍微提升可见度 */
+        /* 微调 */
         .content-rect {
-            background: rgba(15, 30, 35, 0.2);
-            backdrop-filter: blur(3px);
-        }
-        
-        /* 按钮文字加粗一点 */
-        .btn-link {
-            font-weight: 400;
-            letter-spacing: 10px;
-        }
-        
-        /* 占位文字更清晰 */
-        .hero-text {
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-            font-size: 1.5rem;
+            background: rgba(15, 30, 35, 0.12);
         }
     </style>
     
-    <!-- 极端情况：如果pexels被墙，使用备用CDN（中日韩高速节点） -->
-    <style>
-        /* 针对某些地区的网络封锁，提供国内可访问的备用图（unsplash中国镜像） */
-        @media screen {
-            .left-image {
-                background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1600&auto=format') !important;
-            }
-        }
-    </style>
-    <!-- 注意：上面unsplash备用，两个style会层叠，后者覆盖前者，但pexels更优先。
-         我们通过script动态加载最佳，静态内联作为极速展示 -->
+    <!-- 使用说明：将您的test2.jpg放在和此HTML相同的文件夹下，左侧就会显示您的图片 -->
 </body>
 </html>
