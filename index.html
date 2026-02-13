@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>斜分 · 左图右诗 · 静妹妹</title>
+    <title>单图 · 轻按</title>
     <style>
+        /* 彻底极简：只有一张图 + 一个按钮 */
         * {
             margin: 0;
             padding: 0;
@@ -12,271 +13,164 @@
         }
 
         body {
-            font-family: "Georgia", "Times New Roman", "Songti SC", "SimSun", "宋体", system-ui, serif;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            position: relative;
-            background-color: #fdf8f0;
+            background-color: #1e1a16;   /* 深底色，图片加载前后过渡自然 */
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         }
 
-        /* ---------- 斜向分割 · 两种方式 ---------- */
-        
-        /* 方式1：使用clip-path裁剪（更干净） */
-        .left-image {
+        /* ----- 图片背景：整幅覆盖，不加任何斜切、文字、水印 ----- */
+        .full-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* 斜向分割：左上到右下，左边占40% */
-            clip-path: polygon(0 0, 40% 0, 60% 100%, 0 100%);
-            /* 您的GitHub图片地址 */
             background-image: url('https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #f5efe6;
+            /* 柔和暗部，让按钮更易读（可选极淡遮罩，几乎不影响纯净感） */
+            background-color: #2a241e;
+            background-blend-mode: overlay;
             z-index: 1;
+            transition: background-image 0.2s;
         }
 
-        /* 右侧内容区 */
-        .right-content {
+        /* 为了保证图片本身色调干净，不加任何渐变遮挡。 
+           但为了白色按钮在任何图片上都能看清，增加半透明衬底在按钮后 (不影响图片) */
+        
+        /* 按钮容器：绝对定位，中间靠下 */
+        .button-wrapper {
             position: absolute;
-            top: 0;
-            right: 0;
+            bottom: 15%;            /* 距底部距离，舒服的“中间靠下” */
+            left: 0;
             width: 100%;
-            height: 100%;
-            /* 斜向分割：与左边互补 */
-            clip-path: polygon(40% 0, 100% 0, 100% 100%, 60% 100%);
-            background-color: #fdf8f0;
             display: flex;
-            align-items: center;
             justify-content: center;
-            z-index: 2;
+            align-items: center;
+            z-index: 20;            /* 高于图片 */
+            pointer-events: none;    /* 容器不拦截点击，按钮本身可点 */
         }
 
-        /* 诗文卡片 */
-        .poem-card {
-            width: 45%;
-            max-width: 320px;
-            padding: 2rem 1.8rem;
-            background: rgba(255, 255, 255, 0.88);
+        /* 真正的按钮 */
+        .btn-down {
+            pointer-events: auto;      /* 恢复点击 */
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(3px) brightness(1.1);
+            -webkit-backdrop-filter: blur(3px) brightness(1.1);
+            background-color: rgba(30, 30, 30, 0.15);  /* 极透基底，仅增加一点可读性 */
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 350;
+            letter-spacing: 6px;
+            padding: 0.9rem 2.8rem;
+            border-radius: 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+            min-width: 240px;
+            text-align: center;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);     /* 半透明磨砂白 */
+            border: 1px solid rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
-            border: none;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-            display: flex;
-            flex-direction: column;
-            border-radius: 0;
-            margin-left: 10%; /* 在斜区内微调位置 */
         }
 
-        /* 正文诗意排版 */
-        .poem {
-            color: #2c3e4e;
-            font-size: 0.95rem;
-            line-height: 1.8;
-            letter-spacing: 0.05em;
-            margin-bottom: 1.2rem;
+        /* 按钮悬停效果（在触摸设备上表现为点击反馈） */
+        .btn-down:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.25);
+            transform: scale(1.02);
+            letter-spacing: 8px;
         }
 
-        .poem p {
-            margin: 0.6rem 0;
-            text-align: left;
-            font-weight: 380;
+        .btn-down:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.35);
+            transition: all 0.08s;
         }
 
-        /* 首句独立样式 */
-        .poem-first {
-            font-size: 1.15rem;
-            font-weight: 450;
-            margin-bottom: 1rem !important;
-            color: #1e2f35;
-            border-left: 2.5px solid #d4b08c;
-            padding-left: 1rem;
-            letter-spacing: 0.08em;
-        }
+        /* 没有任何水印，没有任何额外文字，只有图片和按钮 —— 符合需求“不需要文字了” */
+        /* 但为了图片地址容错，保留极小透明fallback，但不显示任何文本 */
 
-        /* 署名区域 */
-        .signature {
-            margin-top: 0.3rem;
-            text-align: right;
-            border-top: 1px solid rgba(44, 62, 78, 0.15);
-            padding-top: 1rem;
-        }
-
-        .signature-name {
-            font-size: 1.2rem;
-            font-weight: 400;
-            color: #5f4c3b;
-            letter-spacing: 5px;
-            margin-bottom: 0.2rem;
-        }
-
-        .signature-date {
-            font-size: 0.7rem;
-            color: #8b7a6b;
-            letter-spacing: 2.5px;
-            font-style: italic;
-        }
-
-        /* 进入按钮 */
-        .btn-enter {
-            display: inline-block;
-            border: none;
-            background: transparent;
-            padding: 0;
-            margin-top: 0.5rem;
-            cursor: pointer;
-            align-self: flex-end;
-        }
-
-        .btn-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 0.35rem 1.2rem;
-            text-decoration: none;
-            color: #5f4c3b;
-            font-size: 0.9rem;
-            letter-spacing: 5px;
-            border: none;
-            background: transparent;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .btn-link span {
-            font-size: 1.05rem;
-            transition: transform 0.2s;
-            color: #8b7a6b;
-        }
-
-        .btn-enter:hover .btn-link span:last-child {
-            transform: translateX(4px);
-            color: #5f4c3b;
-        }
-
-        /* 水印 */
-        .credit {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            color: rgba(95, 76, 59, 0.2);
-            font-size: 0.6rem;
-            letter-spacing: 3px;
-            z-index: 10;
-            text-transform: uppercase;
-        }
-
-        /* ---------- 手机端适配 ---------- */
-        @media (max-width: 800px) {
-            body {
-                overflow-y: auto;
-            }
-            
-            /* 手机：斜向分割调整为从上到下 */
-            .left-image {
-                clip-path: polygon(0 0, 100% 0, 100% 40%, 0 60%);
-                height: 100%;
-            }
-            
-            .right-content {
-                clip-path: polygon(0 60%, 100% 40%, 100% 100%, 0 100%);
-                align-items: flex-start;
-                padding-top: 15%;
-            }
-            
-            .poem-card {
-                width: 80%;
-                max-width: 340px;
-                padding: 1.8rem 1.5rem;
-                margin-left: 0;
-                margin-top: 5%;
-            }
-            
-            .poem {
-                font-size: 0.9rem;
-            }
-            
-            .poem-first {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* 淡入动画 */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .poem-card {
-            animation: fadeIn 0.6s ease;
-        }
+        /* 备用图片加载脚本 —— 完全静默，不产生任何可见文字 */
     </style>
 </head>
 <body>
 
-    <!-- 左侧/上方：斜向图片区 -->
-    <div class="left-image"></div>
+    <!-- 纯粹一张大图 -->
+    <div class="full-image" id="mainImage"></div>
 
-    <!-- 右侧/下方：斜向内容区 -->
-    <div class="right-content">
-        <div class="poem-card">
-            
-            <!-- 诗文内容 · 静妹妹 -->
-            <div class="poem">
-                <p class="poem-first">今启新程，愿你行稳致远。</p>
-                <p>烟火人间，自有繁杂，<br>但愿你心有主见，不失所爱；<br>岁月渐长，仍怀热忱。</p>
-                <p>既能与人并肩，<br>亦能独立从容。</p>
-                <p>此去山高水长，<br>愿你圆满，<br>更愿你始终是你。</p>
-            </div>
-            
-            <!-- 署名：静妹妹 -->
-            <div class="signature">
-                <div class="signature-name">静妹妹</div>
-                <div class="signature-date">——— 乙巳年 · 春</div>
-            </div>
-
-            <!-- 进入按钮 -->
-            <div class="btn-enter">
-                <a href="#" class="btn-link">
-                    <span>→</span> 进入
-                </a>
-            </div>
-
-        </div>
+    <!-- 唯一的按钮：点一下我 -->
+    <div class="button-wrapper">
+        <button class="btn-down" id="magicButton">点一下我</button>
     </div>
 
-    <!-- 水印 -->
-    <div class="credit">斜 · 诗</div>
-
     <script>
-        // 图片加载处理
-        const leftDiv = document.querySelector('.left-image');
-        const imageUrl = 'https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true';
-        const altUrl = 'https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg';
-        
-        // 尝试加载图片
-        function setImage(url) {
-            const img = new Image();
-            img.src = url;
-            img.onload = function() {
-                leftDiv.style.backgroundImage = `url('${url}')`;
-                console.log('图片加载成功:', url);
-            };
-            img.onerror = function() {
-                console.log('图片加载失败:', url);
-                if (url === imageUrl) {
-                    setImage(altUrl); // 尝试备用地址
-                }
-            };
-        }
-        
-        setImage(imageUrl);
-        leftDiv.style.backgroundImage = `url('${imageUrl}')`;
+        (function() {
+            // 主图片元素
+            const imageDiv = document.getElementById('mainImage');
+            
+            // 图片地址数组 (先尝试github直链，若失败则用raw备用)
+            const primaryURL = 'https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true';
+            const fallbackURL = 'https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg';
+            
+            // 静默测试图片加载，不产生任何控制台文字（除了可能隐藏的error，但为了无文字，也可忽略）
+            function setBestImage(url) {
+                const img = new Image();
+                img.src = url;
+                img.onload = function() {
+                    // 成功加载，设置背景
+                    imageDiv.style.backgroundImage = `url('${url}')`;
+                };
+                img.onerror = function() {
+                    // 如果主地址失败，尝试备用地址
+                    if (url === primaryURL) {
+                        setBestImage(fallbackURL);
+                    } else {
+                        // 备用也失败，就保留纯色背景（深色），无文字干扰
+                        // 可以尝试第三通用占位？但完全不显示文字即可，符合“不需要文字”
+                        imageDiv.style.backgroundImage = 'none';
+                        imageDiv.style.backgroundColor = '#2d2520';  // 暖灰，依然无文字
+                    }
+                };
+            }
+            
+            // 开始尝试主地址
+            setBestImage(primaryURL);
+            
+            // 按钮点击交互 (完全留空，仅演示点击感，可以自定义跳转或动作，但未要求)
+            const btn = document.getElementById('magicButton');
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // 无任何文字提示，只做微小动画反馈 (按钮本来就有:active)
+                // 如需后续扩展，可在此添加跳转等。目前只振动手感（无文字弹窗）
+                // 完全静默，但让按钮有脉冲感
+                btn.style.transform = 'scale(0.96)';
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                }, 120);
+                
+                // 可以简单执行一个未来的跳转，但这里不加入任何文字提示。
+                // 如果你想演示跳转，可放开下行注释：
+                // window.location.href = 'https://example.com';
+            });
+
+            // 确保触摸设备没有灰框
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();  // 防止双击缩放干扰，但不影响点击
+            }, { passive: false });
+
+        })();
     </script>
+
+    <!-- 绝对没有任何署名、水印、字符 —— 符合“不需要文字” -->
 </body>
 </html>
