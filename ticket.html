@@ -313,27 +313,15 @@
             background-color: transparent;
         }
         
-        /* 姓名和拼音容器 */
-        .name-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            line-height: 1.2;
-        }
-        
+        /* 姓名样式 - 只保留中文 */
         .chinese-name {
             font-size: 11px;
-            font-weight: bold;
+            font-weight: normal;
             color: #000;
+            display: inline-block;
         }
         
-        .pinyin-name {
-            font-size: 8px;
-            color: #444;
-            letter-spacing: 0.5px;
-        }
-        
-        /* 操作按钮 - 只保留返回按钮，打印按钮已移除 */
+        /* 操作按钮 - 只保留返回按钮 */
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -539,10 +527,6 @@
             .chinese-name {
                 font-size: 9px;
             }
-            
-            .pinyin-name {
-                font-size: 7px;
-            }
         }
         
         @media (max-width: 380px) {
@@ -576,10 +560,6 @@
             .chinese-name {
                 font-size: 8px;
             }
-            
-            .pinyin-name {
-                font-size: 6px;
-            }
         }
     </style>
     <!-- 使用更可靠的QRCode库和备用方案 -->
@@ -601,6 +581,7 @@
                     <span class="info-label-chinese">航班</span>
                     <span class="info-label-english">FLIGHT</span>
                 </div>
+                <!-- 航班号固定为AA0011 -->
                 <div class="info-content" id="ticketFlight">AA0011</div>
             </div>
             <div class="info-item">
@@ -640,7 +621,7 @@
                     <span class="info-label-chinese">目的地</span>
                     <span class="info-label-english">TO</span>
                 </div>
-                <!-- 目的地：保留客人填写的中文，不转拼音 -->
+                <!-- 目的地：保留客人填写的中文 -->
                 <div class="info-content" id="ticketToCity">上海</div>
             </div>
             <div class="info-item">
@@ -648,7 +629,7 @@
                     <span class="info-label-chinese">始发地</span>
                     <span class="info-label-english">FROM</span>
                 </div>
-                <!-- 始发地：保留客人填写的中文，不转拼音 -->
+                <!-- 始发地：保留客人填写的中文 -->
                 <div class="info-content" id="ticketFromCity">北京</div>
             </div>
             <div class="info-item">
@@ -671,12 +652,9 @@
                     <span class="info-label-chinese">姓名</span>
                     <span class="info-label-english">NAME</span>
                 </div>
-                <!-- 姓名：上方显示中文，下方显示拼音（通过JS填入） -->
-                <div class="info-content" style="padding: 0;">
-                    <div class="name-wrapper">
-                        <span class="chinese-name" id="ticketChineseName"></span>
-                        <span class="pinyin-name" id="ticketPinyinName"></span>
-                    </div>
+                <!-- 姓名：只显示中文 -->
+                <div class="info-content">
+                    <span class="chinese-name" id="ticketChineseName"></span>
                 </div>
             </div>
         </div>
@@ -695,7 +673,7 @@
         </div>
     </div>
         
-    <!-- 右侧：登机信息区（同样修改始发地/目的地和姓名显示） -->
+    <!-- 右侧：登机信息区 -->
     <div class="right-section">
         <!-- 右侧第一部分 -->
         <div class="right-part-1">
@@ -709,6 +687,7 @@
                         <span class="info-label-chinese">航班</span>
                         <span class="info-label-english">FLIGHT</span>
                     </div>
+                    <!-- 航班号固定为AA0011 -->
                     <div class="info-content" id="ticketFlightRight1">AA0011</div>
                 </div>
                 
@@ -766,6 +745,7 @@
                         <span class="info-label-chinese">航班</span>
                         <span class="info-label-english">FLIGHT</span>
                     </div>
+                    <!-- 航班号固定为AA0011 -->
                     <div class="info-content" id="ticketFlightRight2">AA0011</div>
                 </div>
                 
@@ -813,55 +793,12 @@
     </div>
 </div>
 
-    <!-- 操作按钮 - 只保留返回按钮，打印按钮已移除 -->
+    <!-- 操作按钮 - 只保留返回按钮 -->
     <div class="action-buttons">
         <button onclick="goBack()" class="action-btn back-btn">↩️ 返回首页</button>
     </div>
     
     <script>
-        // 简单的汉字转拼音函数（只转换常见姓氏和简单规则，仅作示例，实际可根据需要扩展）
-        function chineseToPinyinSimple(chinese) {
-            if (!chinese) return '';
-            
-            // 简单映射表（仅覆盖常见姓氏和示例，实际应用中可使用更完整的拼音库）
-            const pinyinMap = {
-                '张': 'ZHANG', '王': 'WANG', '李': 'LI', '赵': 'ZHAO', '刘': 'LIU',
-                '陈': 'CHEN', '杨': 'YANG', '黄': 'HUANG', '周': 'ZHOU', '吴': 'WU',
-                '徐': 'XU', '孙': 'SUN', '胡': 'HU', '朱': 'ZHU', '高': 'GAO',
-                '林': 'LIN', '何': 'HE', '郭': 'GUO', '马': 'MA', '罗': 'LUO',
-                '梁': 'LIANG', '宋': 'SONG', '郑': 'ZHENG', '谢': 'XIE', '韩': 'HAN',
-                '唐': 'TANG', '冯': 'FENG', '于': 'YU', '董': 'DONG', '萧': 'XIAO',
-                '程': 'CHENG', '曹': 'CAO', '袁': 'YUAN', '邓': 'DENG', '许': 'XU',
-                '傅': 'FU', '沈': 'SHEN', '曾': 'ZENG', '彭': 'PENG', '吕': 'LV',
-                '苏': 'SU', '卢': 'LU', '蒋': 'JIANG', '蔡': 'CAI', '贾': 'JIA',
-                '丁': 'DING', '魏': 'WEI', '薛': 'XUE', '叶': 'YE', '阎': 'YAN',
-                '余': 'YU', '潘': 'PAN', '杜': 'DU', '戴': 'DAI', '夏': 'XIA',
-                '钟': 'ZHONG', '汪': 'WANG', '田': 'TIAN', '任': 'REN', '姜': 'JIANG',
-                '范': 'FAN', '方': 'FANG', '石': 'SHI', '姚': 'YAO', '谭': 'TAN',
-                '廖': 'LIAO', '邹': 'ZOU', '熊': 'XIONG', '金': 'JIN', '陆': 'LU',
-                '郝': 'HAO', '孔': 'KONG', '白': 'BAI', '崔': 'CUI', '康': 'KANG',
-                '毛': 'MAO', '邱': 'QIU', '秦': 'QIN', '江': 'JIANG', '史': 'SHI',
-                '顾': 'GU', '侯': 'HOU', '邵': 'SHAO', '孟': 'MENG', '龙': 'LONG',
-                '万': 'WAN', '段': 'DUAN', '雷': 'LEI', '钱': 'QIAN', '汤': 'TANG'
-            };
-            
-            let pinyin = '';
-            for (let char of chinese) {
-                if (pinyinMap[char]) {
-                    pinyin += pinyinMap[char] + ' ';
-                } else {
-                    // 如果不在映射表中，保留原字符（大写处理）
-                    pinyin += char.toUpperCase() + ' ';
-                }
-            }
-            
-            // 去除末尾空格
-            pinyin = pinyin.trim();
-            
-            // 简单处理：如果是两个字，通常拼音连写或空格，这里用空格分隔
-            return pinyin;
-        }
-        
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
             return {
@@ -902,17 +839,12 @@
             
             // 中文姓名（保留原样）
             const chineseName = params.name || '未填写姓名';
-            // 生成拼音（这里使用简单转换，实际可按需优化）
-            const pinyinName = chineseToPinyinSimple(chineseName);
-            
-            // 填入中文姓名和拼音
             document.getElementById('ticketChineseName').textContent = chineseName;
-            document.getElementById('ticketPinyinName').textContent = pinyinName;
             
             const fromCity = params.from; // 保留中文
             const toCity = params.to;     // 保留中文
             
-            // 始发地、目的地直接填入中文，不转拼音/大写
+            // 始发地、目的地直接填入中文
             document.getElementById('ticketFromCity').textContent = fromCity;
             document.getElementById('ticketToCity').textContent = toCity;
             document.getElementById('ticketToCityRight1').textContent = toCity;
@@ -940,21 +872,11 @@
                 displayTime = '10:00';
             }
             
-            const generateFlightNumber = (from, to) => {
-                // 航班号生成逻辑不变，使用拼音首字母
-                const fromPinyin = chineseToPinyinSimple(from).split(' ')[0] || 'B';
-                const toPinyin = chineseToPinyinSimple(to).split(' ')[0] || 'S';
-                const fromCode = fromPinyin.charAt(0).toUpperCase() || 'B';
-                const toCode = toPinyin.charAt(0).toUpperCase() || 'S';
-                const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                return `${fromCode}${toCode}${randomNum}`;
-            };
-            
-            const flightNumber = generateFlightNumber(fromCity, toCity);
-            
-            document.getElementById('ticketFlight').textContent = flightNumber;
-            document.getElementById('ticketFlightRight1').textContent = flightNumber;
-            document.getElementById('ticketFlightRight2').textContent = flightNumber;
+            // 航班号固定为AA0011，不需要生成
+            // 直接设置右侧的航班号（已在HTML中预设AA0011，但为确保一致性再设置一次）
+            document.getElementById('ticketFlight').textContent = 'AA0011';
+            document.getElementById('ticketFlightRight1').textContent = 'AA0011';
+            document.getElementById('ticketFlightRight2').textContent = 'AA0011';
             
             const row = Math.floor(Math.random() * 35) + 10;
             const seats = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -988,13 +910,10 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // 生成二维码 - 使用更可靠的方法
+            // 生成二维码
             const qrContainer = document.getElementById('qrcodeDisplay');
-            
-            // 确保容器是空的
             qrContainer.innerHTML = '';
             
-            // 使用qrcode库生成二维码 (内容为 HAPPY WEDDING)
             if (typeof QRCode !== 'undefined') {
                 try {
                     QRCode.toDataURL('HAPPY WEDDING', {
@@ -1026,7 +945,6 @@
                 fallbackQR();
             }
             
-            // 备用方案：使用canvas手动绘制简单二维码样式
             function fallbackQR() {
                 const canvas = document.createElement('canvas');
                 canvas.width = 74;
@@ -1053,8 +971,6 @@
                 img.style.width = '100%';
                 img.style.height = '100%';
                 qrContainer.appendChild(img);
-                
-                console.log('使用备用二维码图案');
             }
         });
         

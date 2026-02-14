@@ -71,25 +71,10 @@
             font-size: 14px;
         }
         
-        /* 警告框 */
-        .warning-box {
-            background: #fff3cd;
-            border: 1px solid #ffecb5;
-            color: #856404;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .warning-box strong {
-            color: #d32f2f;
-        }
-        
         /* 表单组 */
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
         
         .form-label {
@@ -130,6 +115,107 @@
             font-size: 12px;
             margin-top: 5px;
             display: none;
+        }
+        
+        /* 机场下拉提示框 - 增加最大高度和滚动 */
+        .airport-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+        }
+        
+        .airport-suggestions.show {
+            display: block;
+        }
+        
+        .airport-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .airport-item:last-child {
+            border-bottom: none;
+        }
+        
+        .airport-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .airport-item.selected {
+            background: #e3f2fd;
+        }
+        
+        .airport-code {
+            font-weight: bold;
+            color: #003366;
+            background: #e6f0fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .airport-name {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .airport-city {
+            color: #666;
+            font-size: 12px;
+            min-width: 60px;
+            text-align: right;
+        }
+        
+        /* 选中的机场显示 */
+        .selected-airport {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .selected-airport .airport-tag {
+            background: #e6f0fa;
+            color: #003366;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .clear-airport {
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+            margin-left: auto;
+        }
+        
+        .clear-airport:hover {
+            color: #d32f2f;
         }
         
         /* 按钮组 */
@@ -224,6 +310,10 @@
             .form-buttons {
                 flex-direction: column;
             }
+            
+            .airport-item {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
@@ -237,10 +327,6 @@
                 <p class="form-subtitle">Travel Airlines - 获取电子机票</p>
             </div>
             
-            <div class="warning-box">
-                <strong>重要提示：</strong>请填写真实信息以获取电子机票
-            </div>
-            
             <form id="infoForm">
                 <!-- 1. 真实姓名 -->
                 <div class="form-group">
@@ -250,7 +336,7 @@
                     <div class="error-message" id="nameError">请输入真实姓名</div>
                 </div>
                 
-                <!-- 2. 出发日期 (原第三项，上移) -->
+                <!-- 2. 出发日期 -->
                 <div class="form-group">
                     <label class="form-label">出发日期 <span>*</span></label>
                     <input type="date" class="form-input" id="departureDate" 
@@ -258,23 +344,51 @@
                     <div class="error-message" id="dateError">请选择出发日期</div>
                 </div>
                 
-                <!-- 3. 出发地 -->
-                <div class="form-group">
-                    <label class="form-label">出发地 <span>*</span></label>
-                    <input type="text" class="form-input" id="departureCity" 
-                           name="departureCity" placeholder="例如：北京" required>
-                    <div class="error-message" id="departureError">请输入出发地</div>
+                <!-- 3. 出发地 - 机场选择 -->
+                <div class="form-group" id="departureGroup">
+                    <label class="form-label">出发地（机场）<span>*</span></label>
+                    <input type="text" class="form-input" id="departureInput" 
+                           placeholder="请输入城市或机场名称" autocomplete="off">
+                    <input type="hidden" id="departureCity" name="departureCity">
+                    <input type="hidden" id="departureAirportCode" name="departureAirportCode">
+                    <input type="hidden" id="departureAirportName" name="departureAirportName">
+                    
+                    <!-- 机场下拉提示 -->
+                    <div class="airport-suggestions" id="departureSuggestions"></div>
+                    
+                    <!-- 已选机场显示 -->
+                    <div class="selected-airport" id="selectedDeparture" style="display: none;">
+                        <span class="airport-tag" id="departureTag"></span>
+                        <span id="departureDisplay"></span>
+                        <span class="clear-airport" onclick="clearDeparture()">✕</span>
+                    </div>
+                    
+                    <div class="error-message" id="departureError">请选择出发机场</div>
                 </div>
                 
-                <!-- 4. 目的地 -->
-                <div class="form-group">
-                    <label class="form-label">目的地 <span>*</span></label>
-                    <input type="text" class="form-input" id="destinationCity" 
-                           name="destinationCity" placeholder="例如：上海" required>
-                    <div class="error-message" id="destinationError">请输入目的地</div>
+                <!-- 4. 目的地 - 机场选择 -->
+                <div class="form-group" id="destinationGroup">
+                    <label class="form-label">目的地（机场）<span>*</span></label>
+                    <input type="text" class="form-input" id="destinationInput" 
+                           placeholder="请输入城市或机场名称" autocomplete="off">
+                    <input type="hidden" id="destinationCity" name="destinationCity">
+                    <input type="hidden" id="destinationAirportCode" name="destinationAirportCode">
+                    <input type="hidden" id="destinationAirportName" name="destinationAirportName">
+                    
+                    <!-- 机场下拉提示 -->
+                    <div class="airport-suggestions" id="destinationSuggestions"></div>
+                    
+                    <!-- 已选机场显示 -->
+                    <div class="selected-airport" id="selectedDestination" style="display: none;">
+                        <span class="airport-tag" id="destinationTag"></span>
+                        <span id="destinationDisplay"></span>
+                        <span class="clear-airport" onclick="clearDestination()">✕</span>
+                    </div>
+                    
+                    <div class="error-message" id="destinationError">请选择目的地机场</div>
                 </div>
                 
-                <!-- 5. 出发大约时间 (原第八项，调整顺序后) -->
+                <!-- 5. 出发大约时间 -->
                 <div class="form-group">
                     <label class="form-label">出发大约时间 <span>*</span></label>
                     <input type="time" class="form-input" id="departureTime" 
@@ -306,6 +420,219 @@
     </div>
 
     <script>
+    // ========================================
+    // 全国机场数据 (基于民航局公布的机场列表)[citation:1][citation:3][citation:4]
+    // 包含华北、东北、华东、中南、西南、西北、新疆等地区主要机场
+    // 数据来源：中国民用航空局、IATA三字代码标准[citation:2][citation:5][citation:8]
+    // ========================================
+    const airports = [
+        // 华北地区 - 北京、天津、河北、山西、内蒙古[citation:1]
+        { code: 'PEK', name: '北京首都国际机场', city: '北京' },
+        { code: 'PKX', name: '北京大兴国际机场', city: '北京' },
+        { code: 'NAY', name: '北京南苑机场', city: '北京' },
+        { code: 'TSN', name: '天津滨海国际机场', city: '天津' },
+        { code: 'SJW', name: '石家庄正定国际机场', city: '石家庄' },
+        { code: 'BPE', name: '秦皇岛北戴河机场', city: '秦皇岛' },
+        { code: 'TVS', name: '唐山三女河机场', city: '唐山' },
+        { code: 'HDG', name: '邯郸机场', city: '邯郸' },
+        { code: 'ZQZ', name: '张家口宁远机场', city: '张家口' },
+        { code: 'TYN', name: '太原武宿国际机场', city: '太原' },
+        { code: 'DAT', name: '大同云冈机场', city: '大同' },
+        { code: 'CIH', name: '长治王村机场', city: '长治' },
+        { code: 'YCU', name: '运城张孝机场', city: '运城' },
+        { code: 'LLV', name: '吕梁大武机场', city: '吕梁' },
+        { code: 'WUT', name: '忻州五台山机场', city: '忻州' },
+        { code: 'HET', name: '呼和浩特白塔国际机场', city: '呼和浩特' },
+        { code: 'BAV', name: '包头二里半机场', city: '包头' },
+        { code: 'CIF', name: '赤峰玉龙机场', city: '赤峰' },
+        { code: 'DSN', name: '鄂尔多斯伊金霍洛国际机场', city: '鄂尔多斯' },
+        { code: 'HLD', name: '呼伦贝尔海拉尔机场', city: '呼伦贝尔' },
+        { code: 'TGO', name: '通辽机场', city: '通辽' },
+        { code: 'RLK', name: '巴彦淖尔天吉泰机场', city: '巴彦淖尔' },
+        { code: 'WUA', name: '乌海机场', city: '乌海' },
+        { code: 'XIL', name: '锡林浩特机场', city: '锡林浩特' },
+        { code: 'HLH', name: '乌兰浩特义勒力特机场', city: '乌兰浩特' },
+        { code: 'ERL', name: '二连浩特赛乌素机场', city: '二连浩特' },
+        { code: 'AXF', name: '阿拉善左旗巴彦浩特机场', city: '阿拉善左旗' },
+        { code: 'RHT', name: '阿拉善右旗巴丹吉林机场', city: '阿拉善右旗' },
+        { code: 'EJN', name: '额济纳旗桃来机场', city: '额济纳旗' },
+        
+        // 东北地区 - 辽宁、吉林、黑龙江[citation:1][citation:4]
+        { code: 'SHE', name: '沈阳桃仙国际机场', city: '沈阳' },
+        { code: 'DLC', name: '大连周水子国际机场', city: '大连' },
+        { code: 'AOG', name: '鞍山腾鳌机场', city: '鞍山' },
+        { code: 'CHG', name: '朝阳机场', city: '朝阳' },
+        { code: 'DDG', name: '丹东浪头机场', city: '丹东' },
+        { code: 'JNZ', name: '锦州锦州湾机场', city: '锦州' },
+        { code: 'CNI', name: '长海大长山岛机场', city: '长海' },
+        { code: 'CGQ', name: '长春龙嘉国际机场', city: '长春' },
+        { code: 'YNJ', name: '延吉朝阳川国际机场', city: '延吉' },
+        { code: 'TNH', name: '通化三源浦机场', city: '通化' },
+        { code: 'NBS', name: '长白山机场', city: '白山' },
+        { code: 'HRB', name: '哈尔滨太平国际机场', city: '哈尔滨' },
+        { code: 'JMU', name: '佳木斯东郊机场', city: '佳木斯' },
+        { code: 'MDG', name: '牡丹江海浪国际机场', city: '牡丹江' },
+        { code: 'NDG', name: '齐齐哈尔三家子机场', city: '齐齐哈尔' },
+        { code: 'HEK', name: '黑河机场', city: '黑河' },
+        { code: 'DQA', name: '大庆萨尔图机场', city: '大庆' },
+        { code: 'JXA', name: '鸡西兴凯湖机场', city: '鸡西' },
+        { code: 'LDS', name: '伊春林都机场', city: '伊春' },
+        { code: 'OHE', name: '漠河古莲机场', city: '漠河' },
+        { code: 'JGD', name: '加格达奇机场', city: '大兴安岭' },
+        
+        // 华东地区 - 上海、江苏、浙江、安徽、福建、江西、山东[citation:1][citation:4][citation:6]
+        { code: 'PVG', name: '上海浦东国际机场', city: '上海' },
+        { code: 'SHA', name: '上海虹桥国际机场', city: '上海' },
+        { code: 'NKG', name: '南京禄口国际机场', city: '南京' },
+        { code: 'CZX', name: '常州奔牛国际机场', city: '常州' },
+        { code: 'WUX', name: '苏南硕放国际机场', city: '无锡' },
+        { code: 'XUZ', name: '徐州观音国际机场', city: '徐州' },
+        { code: 'LYG', name: '连云港白塔埠机场', city: '连云港' },
+        { code: 'HIA', name: '淮安涟水国际机场', city: '淮安' },
+        { code: 'YNZ', name: '盐城南洋国际机场', city: '盐城' },
+        { code: 'YTY', name: '扬州泰州国际机场', city: '扬州' },
+        { code: 'NTG', name: '南通兴东国际机场', city: '南通' },
+        { code: 'HGH', name: '杭州萧山国际机场', city: '杭州' },
+        { code: 'NGB', name: '宁波栎社国际机场', city: '宁波' },
+        { code: 'WNZ', name: '温州龙湾国际机场', city: '温州' },
+        { code: 'HYN', name: '台州路桥机场', city: '台州' },
+        { code: 'YIW', name: '义乌机场', city: '义乌' },
+        { code: 'JUZ', name: '衢州机场', city: '衢州' },
+        { code: 'HSN', name: '舟山普陀山机场', city: '舟山' },
+        { code: 'HFE', name: '合肥新桥国际机场', city: '合肥' },
+        { code: 'TXN', name: '黄山屯溪国际机场', city: '黄山' },
+        { code: 'AQG', name: '安庆天柱山机场', city: '安庆' },
+        { code: 'FUG', name: '阜阳西关机场', city: '阜阳' },
+        { code: 'JUH', name: '池州九华山机场', city: '池州' },
+        { code: 'BFU', name: '蚌埠滕湖机场', city: '蚌埠' },
+        { code: 'FOC', name: '福州长乐国际机场', city: '福州' },
+        { code: 'XMN', name: '厦门高崎国际机场', city: '厦门' },
+        { code: 'JJN', name: '泉州晋江国际机场', city: '泉州' },
+        { code: 'WUS', name: '武夷山机场', city: '武夷山' },
+        { code: 'LCX', name: '连城冠豸山机场', city: '龙岩' },
+        { code: 'SQJ', name: '三明沙县机场', city: '三明' },
+        { code: 'KHN', name: '南昌昌北国际机场', city: '南昌' },
+        { code: 'KOW', name: '赣州黄金机场', city: '赣州' },
+        { code: 'JGS', name: '井冈山机场', city: '吉安' },
+        { code: 'JDZ', name: '景德镇罗家机场', city: '景德镇' },
+        { code: 'JIU', name: '九江庐山机场', city: '九江' },
+        { code: 'YIC', name: '宜春明月山机场', city: '宜春' },
+        { code: 'TNA', name: '济南遥墙国际机场', city: '济南' },
+        { code: 'TAO', name: '青岛胶东国际机场', city: '青岛' },
+        { code: 'YNT', name: '烟台蓬莱国际机场', city: '烟台' },
+        { code: 'WEH', name: '威海大水泊国际机场', city: '威海' },
+        { code: 'LYI', name: '临沂启阳机场', city: '临沂' },
+        { code: 'WEF', name: '潍坊机场', city: '潍坊' },
+        { code: 'DOY', name: '东营胜利机场', city: '东营' },
+        { code: 'JNG', name: '济宁曲阜机场', city: '济宁' },
+        { code: 'HZA', name: '菏泽牡丹机场', city: '菏泽' },
+        { code: 'RIZ', name: '日照山字河机场', city: '日照' },
+        
+        // 中南地区 - 广东、广西、海南、河南、湖北、湖南[citation:1][citation:7]
+        { code: 'CAN', name: '广州白云国际机场', city: '广州' },
+        { code: 'SZX', name: '深圳宝安国际机场', city: '深圳' },
+        { code: 'ZUH', name: '珠海金湾机场', city: '珠海' },
+        { code: 'SWA', name: '揭阳潮汕国际机场', city: '揭阳' },
+        { code: 'HUZ', name: '惠州平潭机场', city: '惠州' },
+        { code: 'ZHA', name: '湛江吴川机场', city: '湛江' },
+        { code: 'MXZ', name: '梅州梅县机场', city: '梅州' },
+        { code: 'FUO', name: '佛山沙堤机场', city: '佛山' },
+        { code: 'NNG', name: '南宁吴圩国际机场', city: '南宁' },
+        { code: 'KWL', name: '桂林两江国际机场', city: '桂林' },
+        { code: 'BHY', name: '北海福成机场', city: '北海' },
+        { code: 'LZH', name: '柳州白莲机场', city: '柳州' },
+        { code: 'WUZ', name: '梧州西江机场', city: '梧州' },
+        { code: 'HAK', name: '海口美兰国际机场', city: '海口' },
+        { code: 'SYX', name: '三亚凤凰国际机场', city: '三亚' },
+        { code: 'BAR', name: '琼海博鳌机场', city: '琼海' },
+        { code: 'CGO', name: '郑州新郑国际机场', city: '郑州' },
+        { code: 'LYA', name: '洛阳北郊机场', city: '洛阳' },
+        { code: 'NNY', name: '南阳姜营机场', city: '南阳' },
+        { code: 'AYN', name: '安阳红旗渠机场', city: '安阳' },
+        { code: 'WUH', name: '武汉天河国际机场', city: '武汉' },
+        { code: 'YIH', name: '宜昌三峡机场', city: '宜昌' },
+        { code: 'XFN', name: '襄阳刘集机场', city: '襄阳' },
+        { code: 'ENH', name: '恩施许家坪机场', city: '恩施' },
+        { code: 'SHS', name: '荆州沙市机场', city: '荆州' },
+        { code: 'CSX', name: '长沙黄花国际机场', city: '长沙' },
+        { code: 'DYG', name: '张家界荷花国际机场', city: '张家界' },
+        { code: 'CGD', name: '常德桃花源机场', city: '常德' },
+        { code: 'HJJ', name: '怀化芷江机场', city: '怀化' },
+        { code: 'LLF', name: '永州零陵机场', city: '永州' },
+        
+        // 西南地区 - 重庆、四川、贵州、云南、西藏[citation:1][citation:6]
+        { code: 'CKG', name: '重庆江北国际机场', city: '重庆' },
+        { code: 'WXN', name: '万州五桥机场', city: '万州' },
+        { code: 'CTU', name: '成都双流国际机场', city: '成都' },
+        { code: 'TFU', name: '成都天府国际机场', city: '成都' },
+        { code: 'MIG', name: '绵阳南郊机场', city: '绵阳' },
+        { code: 'LZO', name: '泸州云龙机场', city: '泸州' },
+        { code: 'NAO', name: '南充高坪机场', city: '南充' },
+        { code: 'YBP', name: '宜宾五粮液机场', city: '宜宾' },
+        { code: 'PZI', name: '攀枝花保安营机场', city: '攀枝花' },
+        { code: 'XIC', name: '西昌青山机场', city: '西昌' },
+        { code: 'DAX', name: '达州金垭机场', city: '达州' },
+        { code: 'GHN', name: '广汉机场', city: '广汉' },
+        { code: 'KWE', name: '贵阳龙洞堡国际机场', city: '贵阳' },
+        { code: 'ZYI', name: '遵义新舟机场', city: '遵义' },
+        { code: 'TEN', name: '铜仁凤凰机场', city: '铜仁' },
+        { code: 'KMG', name: '昆明长水国际机场', city: '昆明' },
+        { code: 'LJG', name: '丽江三义国际机场', city: '丽江' },
+        { code: 'JHG', name: '西双版纳嘎洒国际机场', city: '景洪' },
+        { code: 'DLU', name: '大理凤仪机场', city: '大理' },
+        { code: 'BSD', name: '保山云瑞机场', city: '保山' },
+        { code: 'LUM', name: '德宏芒市国际机场', city: '芒市' },
+        { code: 'DIG', name: '迪庆香格里拉机场', city: '香格里拉' },
+        { code: 'SYM', name: '普洱思茅机场', city: '普洱' },
+        { code: 'ZAT', name: '昭通机场', city: '昭通' },
+        { code: 'LNJ', name: '临沧博尚机场', city: '临沧' },
+        { code: 'LXA', name: '拉萨贡嘎国际机场', city: '拉萨' },
+        { code: 'BPX', name: '昌都邦达机场', city: '昌都' },
+        { code: 'NGQ', name: '阿里昆莎机场', city: '阿里' },
+        
+        // 西北地区 - 陕西、甘肃、青海、宁夏[citation:1]
+        { code: 'XIY', name: '西安咸阳国际机场', city: '西安' },
+        { code: 'UYN', name: '榆林榆阳机场', city: '榆林' },
+        { code: 'ENY', name: '延安南泥湾机场', city: '延安' },
+        { code: 'HZG', name: '汉中城固机场', city: '汉中' },
+        { code: 'AKA', name: '安康富强机场', city: '安康' },
+        { code: 'LHW', name: '兰州中川国际机场', city: '兰州' },
+        { code: 'JGN', name: '嘉峪关酒泉机场', city: '嘉峪关' },
+        { code: 'DNH', name: '敦煌莫高国际机场', city: '敦煌' },
+        { code: 'CHW', name: '酒泉机场', city: '酒泉' },
+        { code: 'IQN', name: '庆阳西峰机场', city: '庆阳' },
+        { code: 'XNN', name: '西宁曹家堡国际机场', city: '西宁' },
+        { code: 'GOQ', name: '格尔木机场', city: '格尔木' },
+        { code: 'INC', name: '银川河东国际机场', city: '银川' },
+        { code: 'GYU', name: '固原六盘山机场', city: '固原' },
+        
+        // 新疆地区[citation:1][citation:5]
+        { code: 'URC', name: '乌鲁木齐地窝堡国际机场', city: '乌鲁木齐' },
+        { code: 'KHG', name: '喀什徕宁国际机场', city: '喀什' },
+        { code: 'KRL', name: '库尔勒梨城机场', city: '库尔勒' },
+        { code: 'AKU', name: '阿克苏红旗坡机场', city: '阿克苏' },
+        { code: 'HTN', name: '和田昆冈机场', city: '和田' },
+        { code: 'YIN', name: '伊宁机场', city: '伊宁' },
+        { code: 'KRY', name: '克拉玛依古海机场', city: '克拉玛依' },
+        { code: 'TCG', name: '塔城千泉机场', city: '塔城' },
+        { code: 'AAT', name: '阿勒泰雪都机场', city: '阿勒泰' },
+        { code: 'HMI', name: '哈密机场', city: '哈密' },
+        { code: 'KCA', name: '库车龟兹机场', city: '库车' },
+        { code: 'IQM', name: '且末玉都机场', city: '且末' },
+        { code: 'FYN', name: '富蕴可可托海机场', city: '富蕴' },
+        
+        // 港澳台地区[citation:1][citation:2]
+        { code: 'HKG', name: '香港国际机场', city: '香港' },
+        { code: 'MFM', name: '澳门国际机场', city: '澳门' },
+        { code: 'TPE', name: '台湾桃园国际机场', city: '台北' },
+        { code: 'TSA', name: '台北松山机场', city: '台北' },
+        { code: 'KHH', name: '高雄国际机场', city: '高雄' }
+    ];
+
+    // 当前选中的机场
+    let selectedDeparture = null;
+    let selectedDestination = null;
+
     // 页面加载时自动显示表单
     document.addEventListener('DOMContentLoaded', function() {
         // 设置默认日期为明天
@@ -324,26 +651,191 @@
         const inputs = document.querySelectorAll('.form-input');
         inputs.forEach(input => {
             input.addEventListener('input', function() {
-                // 获取对应的错误ID
                 const errorId = this.id + 'Error';
-                // 直接隐藏错误
                 const errorElement = document.getElementById(errorId);
                 if (errorElement) {
                     errorElement.style.display = 'none';
                     errorElement.textContent = '';
                 }
-                // 移除错误样式
                 this.classList.remove('error');
             });
         });
+        
+        // 初始化机场搜索
+        initAirportSearch('departure');
+        initAirportSearch('destination');
+        
+        // 点击其他地方关闭下拉框
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#departureGroup')) {
+                document.getElementById('departureSuggestions').classList.remove('show');
+            }
+            if (!e.target.closest('#destinationGroup')) {
+                document.getElementById('destinationSuggestions').classList.remove('show');
+            }
+        });
     });
+
+    // ========================================
+    // 初始化机场搜索
+    // ========================================
+    function initAirportSearch(type) {
+        const input = document.getElementById(type + 'Input');
+        const suggestionsDiv = document.getElementById(type + 'Suggestions');
+        
+        input.addEventListener('input', function() {
+            const keyword = this.value.trim().toLowerCase();
+            
+            if (keyword.length < 1) {
+                suggestionsDiv.classList.remove('show');
+                return;
+            }
+            
+            // 搜索匹配的机场
+            const matches = airports.filter(airport => 
+                airport.code.toLowerCase().includes(keyword) ||
+                airport.name.toLowerCase().includes(keyword) ||
+                airport.city.toLowerCase().includes(keyword)
+            ).slice(0, 12); // 最多显示12个结果
+            
+            // 显示匹配结果
+            displaySuggestions(suggestionsDiv, matches, type);
+            
+            if (matches.length > 0) {
+                suggestionsDiv.classList.add('show');
+            } else {
+                suggestionsDiv.classList.remove('show');
+            }
+        });
+        
+        // 输入框获得焦点时，如果有内容且没有选中，显示建议
+        input.addEventListener('focus', function() {
+            const selected = type === 'departure' ? selectedDeparture : selectedDestination;
+            if (!selected && this.value.trim().length > 0) {
+                this.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+
+    // ========================================
+    // 显示机场建议
+    // ========================================
+    function displaySuggestions(container, airports, type) {
+        container.innerHTML = '';
+        
+        airports.forEach(airport => {
+            const item = document.createElement('div');
+            item.className = 'airport-item';
+            item.innerHTML = `
+                <span class="airport-code">${airport.code}</span>
+                <span class="airport-name">${airport.name}</span>
+                <span class="airport-city">${airport.city}</span>
+            `;
+            
+            item.addEventListener('click', function() {
+                selectAirport(airport, type);
+            });
+            
+            container.appendChild(item);
+        });
+        
+        // 如果没有结果，显示提示
+        if (airports.length === 0) {
+            const noResult = document.createElement('div');
+            noResult.className = 'airport-item';
+            noResult.innerHTML = '<span style="color:#999; text-align:center; width:100%;">未找到匹配的机场</span>';
+            container.appendChild(noResult);
+        }
+    }
+
+    // ========================================
+    // 选择机场
+    // ========================================
+    function selectAirport(airport, type) {
+        const input = document.getElementById(type + 'Input');
+        const hiddenCity = document.getElementById(type + 'City');
+        const hiddenCode = document.getElementById(type + 'AirportCode');
+        const hiddenName = document.getElementById(type + 'AirportName');
+        const selectedDiv = document.getElementById('selected' + type.charAt(0).toUpperCase() + type.slice(1));
+        const tagSpan = document.getElementById(type + 'Tag');
+        const displaySpan = document.getElementById(type + 'Display');
+        const suggestionsDiv = document.getElementById(type + 'Suggestions');
+        
+        // 更新隐藏字段
+        hiddenCity.value = airport.city;
+        hiddenCode.value = airport.code;
+        hiddenName.value = airport.name;
+        
+        // 更新显示
+        input.value = '';
+        input.style.display = 'none';
+        tagSpan.textContent = airport.code;
+        displaySpan.textContent = airport.name + ' · ' + airport.city;
+        selectedDiv.style.display = 'flex';
+        
+        // 关闭下拉框
+        suggestionsDiv.classList.remove('show');
+        
+        // 移除错误样式
+        document.getElementById(type + 'Error').style.display = 'none';
+        
+        // 保存选中状态
+        if (type === 'departure') {
+            selectedDeparture = airport;
+        } else {
+            selectedDestination = airport;
+        }
+    }
+
+    // ========================================
+    // 清除出发地选择
+    // ========================================
+    function clearDeparture() {
+        const input = document.getElementById('departureInput');
+        const hiddenCity = document.getElementById('departureCity');
+        const hiddenCode = document.getElementById('departureAirportCode');
+        const hiddenName = document.getElementById('departureAirportName');
+        const selectedDiv = document.getElementById('selectedDeparture');
+        
+        hiddenCity.value = '';
+        hiddenCode.value = '';
+        hiddenName.value = '';
+        
+        input.value = '';
+        input.style.display = 'block';
+        selectedDiv.style.display = 'none';
+        
+        selectedDeparture = null;
+        input.focus();
+    }
+
+    // ========================================
+    // 清除目的地选择
+    // ========================================
+    function clearDestination() {
+        const input = document.getElementById('destinationInput');
+        const hiddenCity = document.getElementById('destinationCity');
+        const hiddenCode = document.getElementById('destinationAirportCode');
+        const hiddenName = document.getElementById('destinationAirportName');
+        const selectedDiv = document.getElementById('selectedDestination');
+        
+        hiddenCity.value = '';
+        hiddenCode.value = '';
+        hiddenName.value = '';
+        
+        input.value = '';
+        input.style.display = 'block';
+        selectedDiv.style.display = 'none';
+        
+        selectedDestination = null;
+        input.focus();
+    }
     
-    // 表单验证 (移除了身份证、手机、邮箱的验证)
+    // 表单验证
     function validateForm() {
         console.log('=== 开始表单验证 ===');
         let isValid = true;
         
-        // 先清除所有错误显示
         const errorMessages = document.querySelectorAll('.error-message');
         errorMessages.forEach(el => {
             el.style.display = 'none';
@@ -355,218 +847,131 @@
             el.classList.remove('error');
         });
         
-        // 验证真实姓名
         const realName = document.getElementById('realName').value.trim();
         if (!realName) {
-            console.log('❌ 真实姓名为空');
             showError('nameError', '请输入真实姓名');
             isValid = false;
-        } else {
-            console.log('✅ 真实姓名通过');
         }
         
-        // 验证出发日期
         const departureDate = document.getElementById('departureDate').value;
         if (!departureDate) {
-            console.log('❌ 出发日期为空');
             showError('dateError', '请选择出发日期');
             isValid = false;
-        } else {
-            console.log('✅ 出发日期通过');
         }
         
-        // 验证出发地
-        const departureCity = document.getElementById('departureCity').value.trim();
-        if (!departureCity) {
-            console.log('❌ 出发地为空');
-            showError('departureError', '请输入出发地');
+        const departureCode = document.getElementById('departureAirportCode').value;
+        if (!departureCode) {
+            showError('departureError', '请选择出发机场');
             isValid = false;
-        } else {
-            console.log('✅ 出发地通过');
         }
         
-        // 验证目的地
-        const destinationCity = document.getElementById('destinationCity').value.trim();
-        if (!destinationCity) {
-            console.log('❌ 目的地为空');
-            showError('destinationError', '请输入目的地');
+        const destinationCode = document.getElementById('destinationAirportCode').value;
+        if (!destinationCode) {
+            showError('destinationError', '请选择目的地机场');
             isValid = false;
-        } else {
-            console.log('✅ 目的地通过');
         }
         
-        // 验证出发时间
         const departureTime = document.getElementById('departureTime').value;
         if (!departureTime) {
-            console.log('❌ 出发时间为空');
             showError('timeError', '请选择出发时间');
             isValid = false;
-        } else {
-            console.log('✅ 出发时间通过');
         }
         
-        console.log('表单验证结果:', isValid ? '通过' : '失败');
         return isValid;
     }
     
     function showError(errorId, message) {
-        console.log('显示错误:', errorId, message);
         const errorElement = document.getElementById(errorId);
         if (errorElement) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
         }
-        
-        // 找到对应的输入框并添加错误样式
-        const inputId = errorId.replace('Error', '');
-        const inputElement = document.getElementById(inputId);
-        if (inputElement) {
-            inputElement.classList.add('error');
-        }
     }
     
-    // ========================================
-    // 配置部分 - 请替换为你的实际EmailJS配置
-    // ========================================
+    // EmailJS配置
     const EMAILJS_CONFIG = {
-        USER_ID: "7YeIL_BgIZ8HdEb-C",         // 替换为你的EmailJS User ID
-        SERVICE_ID: "service_hp6w7nj",   // 替换为你的Service ID
-        TEMPLATE_ID: "template_0i56xkt"  // 替换为你的Template ID
+        USER_ID: "7YeIL_BgIZ8HdEb-C",
+        SERVICE_ID: "service_hp6w7nj",
+        TEMPLATE_ID: "template_0i56xkt"
     };
     
-    // ========================================
-    // 初始化EmailJS
-    // ========================================
     (function() {
-        console.log('🚀 初始化EmailJS，User ID:', EMAILJS_CONFIG.USER_ID);
         emailjs.init(EMAILJS_CONFIG.USER_ID);
-        console.log('✅ EmailJS初始化完成');
     })();
     
-    // ========================================
-    // 邮件发送函数 (已移除身份证、手机、邮箱字段)
-    // ========================================
     async function sendEmail(formData) {
-        console.log('📧 === 开始发送邮件 ===');
-        console.log('📤 发件服务:', EMAILJS_CONFIG.SERVICE_ID);
-        console.log('📝 使用模板:', EMAILJS_CONFIG.TEMPLATE_ID);
-        
         try {
-            // 准备模板参数（根据剩余字段调整）
             const templateParams = {
-                name: formData.name,                     // {{name}}
-                flight_number: formData.flightNumber,    // {{flight_number}}
-                departure_city: formData.departureCity,  // {{departure_city}}
-                destination_city: formData.destinationCity, // {{destination_city}}
-                departure_date: formData.departureDate,  // {{departure_date}}
-                departure_time: formData.departureTime   // {{departure_time}}
+                name: formData.name,
+                flight_number: formData.flightNumber,
+                departure_city: formData.departureCity,
+                departure_airport: formData.departureAirport,
+                destination_city: formData.destinationCity,
+                destination_airport: formData.destinationAirport,
+                departure_date: formData.departureDate,
+                departure_time: formData.departureTime
             };
             
-            console.log('📋 邮件模板参数:', templateParams);
-            
-            // 发送邮件
-            console.log('🔄 正在发送邮件...');
             const response = await emailjs.send(
                 EMAILJS_CONFIG.SERVICE_ID,
                 EMAILJS_CONFIG.TEMPLATE_ID,
                 templateParams
             );
             
-            console.log('✅ 邮件发送成功！响应:', response);
-            
-            return { 
-                success: true, 
-                message: '邮件发送成功',
-                response: response
-                // 已移除 email_sent_to 字段
-            };
+            return { success: true };
             
         } catch (error) {
-            console.error('❌ 邮件发送失败:', error);
-            return { 
-                success: false, 
-                message: `邮件发送失败: ${error.message || error.text || '未知错误'}`,
-                error: error
-            };
+            console.error('邮件发送失败:', error);
+            return { success: false };
         }
     }
     
-    // ========================================
-    // 跳转到机票页面函数 (调整传参，移除了多余字段)
-    // ========================================
     function proceedToTicket(formData) {
-        console.log('🎫 跳转到机票页面');
-        
-        // 显示成功消息
         document.getElementById('successMessage').style.display = 'block';
         document.getElementById('successMessage').innerHTML = `
             <h3>✅ 信息提交成功！</h3>
             <p>航班号：${formData.flightNumber}</p>
             <p>乘客姓名：${formData.name}</p>
+            <p>出发：${formData.departureAirport} (${formData.departureCode})</p>
+            <p>到达：${formData.destinationAirport} (${formData.destinationCode})</p>
             <p>页面即将自动跳转...</p>
         `;
         
-        // 3秒后跳转 (参数只保留姓名、出发/目的地、日期、时间)
         setTimeout(() => {
-            // 跳转到机票展示页面
-            window.location.href = `ticket.html?name=${encodeURIComponent(formData.name)}&from=${encodeURIComponent(formData.departureCity)}&to=${encodeURIComponent(formData.destinationCity)}&date=${encodeURIComponent(formData.departureDate)}&time=${encodeURIComponent(formData.departureTime)}&flight=${formData.flightNumber}`;
+            window.location.href = `ticket.html?name=${encodeURIComponent(formData.name)}&from=${encodeURIComponent(formData.departureCity)}&fromCode=${formData.departureCode}&fromAirport=${encodeURIComponent(formData.departureAirport)}&to=${encodeURIComponent(formData.destinationCity)}&toCode=${formData.destinationCode}&toAirport=${encodeURIComponent(formData.destinationAirport)}&date=${encodeURIComponent(formData.departureDate)}&time=${encodeURIComponent(formData.departureTime)}&flight=${formData.flightNumber}`;
         }, 3000);
     }
     
-    // ========================================
-    // 表单提交处理
-    // ========================================
     document.getElementById('infoForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        console.log('=== 表单提交开始 ===');
-        
-        // 验证表单
         if (!validateForm()) {
-            console.log('❌ 表单验证失败，停止提交');
             return false;
         }
         
-        console.log('✅ 表单验证通过');
-        
-        // 显示加载状态
         const submitBtn = document.getElementById('submitBtn');
         const loadingOverlay = document.getElementById('loadingOverlay');
         submitBtn.disabled = true;
         submitBtn.textContent = '发送中...';
         loadingOverlay.style.display = 'flex';
         
-        // 收集表单数据 (移除了身份证、电话、邮箱)
         const formData = {
             name: document.getElementById('realName').value.trim(),
-            departureCity: document.getElementById('departureCity').value.trim(),
-            destinationCity: document.getElementById('destinationCity').value.trim(),
+            departureCity: document.getElementById('departureCity').value,
+            departureCode: document.getElementById('departureAirportCode').value,
+            departureAirport: document.getElementById('departureAirportName').value,
+            destinationCity: document.getElementById('destinationCity').value,
+            destinationCode: document.getElementById('destinationAirportCode').value,
+            destinationAirport: document.getElementById('destinationAirportName').value,
             departureDate: document.getElementById('departureDate').value,
             departureTime: document.getElementById('departureTime').value,
-            flightNumber: 'TA' + Math.floor(Math.random() * 9000 + 1000)  // 生成航班号
+            flightNumber: 'TA' + Math.floor(Math.random() * 9000 + 1000)
         };
         
-        console.log('📋 表单数据:', formData);
-        
         try {
-            // 1. 尝试发送邮件（但邮件模板需适配，如果邮件模板需要id/phone/email可能会失败，这里保留尝试但容错）
-            console.log('📧 正在发送确认邮件...');
-            const emailResult = await sendEmail(formData);
-            
-            if (emailResult.success) {
-                console.log('✅ 邮件发送成功');
-            } else {
-                console.warn('⚠️ 邮件发送失败:', emailResult.message);
-                // 邮件失败也继续流程
-            }
-            
-            // 2. 无论邮件是否成功，都跳转到机票页面
+            await sendEmail(formData);
             proceedToTicket(formData);
-            
         } catch (error) {
-            console.error('❌ 提交过程中出错:', error);
-            
-            // 显示错误消息
             document.getElementById('successMessage').style.display = 'block';
             document.getElementById('successMessage').innerHTML = `
                 <h3>⚠️ 提交过程中出现错误</h3>
@@ -574,12 +979,9 @@
                 <p>请稍后重试或联系客服</p>
             `;
             
-            // 恢复按钮状态
             submitBtn.disabled = false;
             submitBtn.textContent = '重新提交';
-            
         } finally {
-            // 隐藏加载状态
             setTimeout(() => {
                 loadingOverlay.style.display = 'none';
             }, 2000);
