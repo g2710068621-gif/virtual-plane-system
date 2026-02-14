@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>静妹妹 · 寄语</title>
-
+<title>静妹妹 · 寄语 · 机票兑换</title>
 <style>
 * {
     margin: 0;
@@ -66,9 +65,10 @@ body {
     letter-spacing: 0.2px;
 }
 
+/* 移除高亮加粗，确保最后一句常规字重 */
 .highlight-last {
     margin-top: 16px;         /* 间距缩小 */
-    font-weight: 420;
+    font-weight: 420;         /* 仅保留轻微区分 (但最后一句不使用此class) */
     color: #0d1f34;
 }
 
@@ -81,12 +81,12 @@ body {
     width: 100%;
 }
 
-/* 最后一句文字样式 (走得踏实，也走得自由) */
+/* 最后一句文字样式 (走得踏实，也走得自由) —— 明确设定正常字重，不加粗 */
 .last-line-text {
     font-size: 18px;          /* 从22px缩小到18px */
     line-height: 1.6;
     color: #0d1f34;
-    font-weight: 420;
+    font-weight: 400;         /* 更改为常规字重 (normal/400)，不加粗 */
     letter-spacing: 0.2px;
 }
 
@@ -135,7 +135,7 @@ body {
     image-rendering: crisp-edges;
 }
 
-/* 扫码提示文字 - 相应缩小 */
+/* 扫码提示文字 - 相应缩小，更改为「扫码获取机票兑换」 */
 .qr-caption {
     font-size: 14px;          /* 从16px缩小到14px */
     color: #3f546e;
@@ -187,6 +187,7 @@ body {
     
     .last-line-text {
         font-size: 17px;
+        font-weight: 400;         /* 确保移动端也不加粗 */
     }
     
     .signature-end {
@@ -235,6 +236,7 @@ body {
     
     .last-line-text {
         font-size: 16px;
+        font-weight: 400;
     }
     
     .qr-wrapper img {
@@ -259,6 +261,7 @@ body {
             </div>
             <!-- 最后一行：文字 + 署名（带破折号） -->
             <div class="last-line-wrapper">
+                <!-- 最后一句已移除加粗样式 (font-weight: 400) 符合要求 -->
                 <span class="last-line-text">走得踏实，也走得自由。</span>
                 <span class="signature-end">—— 静妹妹</span>
             </div>
@@ -268,13 +271,14 @@ body {
     <!-- 右上留白 -->
     <div class="top-right"></div>
 
-    <!-- 右下：二维码 + 下方文字 -->
+    <!-- 右下：二维码 + 下方文字 — 文字已改为“扫码获取机票兑换” -->
     <div class="qr-panel">
         <div class="qr-wrapper">
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fg2710068621-gif.github.io%2Fvirtual-plane-system%2Fform.html"
                  alt="Scan to boarding form">
         </div>
-        <div class="qr-caption">扫码获取机票</div>
+        <!-- 根据要求：二维码下面的改成“扫码获取机票兑换” -->
+        <div class="qr-caption">扫码获取机票兑换</div>
     </div>
 
 </div>

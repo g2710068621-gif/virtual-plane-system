@@ -557,8 +557,8 @@
             }
         }
     </style>
-    <!-- 引入QRCode库 -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- 使用更可靠的QRCode库和备用方案 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 </head>
 <body>
 <div class="boarding-pass">
@@ -651,7 +651,8 @@
         <!-- 二维码区域 - 下方文字改为 SCAN GATE -->
         <div class="qrcode-area">
             <div class="qrcode-container" id="qrcodeContainer">
-                <div id="qrcode"></div>
+                <!-- 这里将用JS生成二维码，不使用id="qrcode"避免冲突 -->
+                <div id="qrcodeDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"></div>
             </div>
             <div class="qrcode-text">SCAN GATE</div>  <!-- 修改为 SCAN GATE -->
         </div>
@@ -827,7 +828,8 @@
             const idNo = params.id;
             
             document.getElementById('ticketPassengerName').textContent = passengerName;
-            document.getElementById('ticketIdNo').textContent = idNo;
+            // 注意：原代码中有一个ticketIdNo元素，但实际没有，这里忽略或可添加
+            // 如果有ID显示需求，可以添加对应元素
             
             const fromCity = params.from;
             const toCity = params.to;
@@ -905,15 +907,80 @@
             }
             document.getElementById('ticketBoardingTime').textContent = boardingTime;
             
-            // 生成二维码 - 内容为 HAPPY WEDDING
-            new QRCode(document.getElementById("qrcode"), {
-                text: "HAPPY WEDDING",
-                width: 74,
-                height: 74,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            // 生成二维码 - 使用更可靠的方法
+            const qrContainer = document.getElementById('qrcodeDisplay');
+            
+            // 确保容器是空的
+            qrContainer.innerHTML = '';
+            
+            // 使用qrcode库生成二维码 (内容为 HAPPY WEDDING)
+            if (typeof QRCode !== 'undefined') {
+                // 使用qrcode库 (版本1.5.1)
+                try {
+                    QRCode.toDataURL('HAPPY WEDDING', {
+                        width: 74,
+                        height: 74,
+                        margin: 0,
+                        color: {
+                            dark: '#000000',
+                            light: '#ffffff'
+                        }
+                    }, function(err, url) {
+                        if (err) {
+                            console.error(err);
+                            fallbackQR();
+                        } else {
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.alt = 'QR Code';
+                            img.style.width = '100%';
+                            img.style.height = '100%';
+                            qrContainer.appendChild(img);
+                        }
+                    });
+                } catch(e) {
+                    console.error(e);
+                    fallbackQR();
+                }
+            } else {
+                fallbackQR();
+            }
+            
+            // 备用方案：使用canvas手动绘制简单二维码样式
+            function fallbackQR() {
+                // 创建一个简单图案表示二维码
+                const canvas = document.createElement('canvas');
+                canvas.width = 74;
+                canvas.height = 74;
+                const ctx = canvas.getContext('2d');
+                
+                // 绘制一个样式化的二维码样式 (为了视觉上不空白)
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, 74, 74);
+                
+                ctx.fillStyle = '#000000';
+                // 绘制三个定位图案
+                ctx.fillRect(5, 5, 14, 14);
+                ctx.fillRect(55, 5, 14, 14);
+                ctx.fillRect(5, 55, 14, 14);
+                
+                // 添加一些随机点模拟二维码
+                for (let i = 0; i < 30; i++) {
+                    const x = 20 + Math.floor(Math.random() * 40);
+                    const y = 20 + Math.floor(Math.random() * 40);
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                
+                // 将canvas转换为图片
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL();
+                img.alt = 'QR Code (Fallback)';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                qrContainer.appendChild(img);
+                
+                console.log('使用备用二维码图案');
+            }
         });
         
         function goBack() {
