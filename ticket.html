@@ -180,7 +180,7 @@
         .info-label {
             font-size: 7px;
             color: #666;
-            margin-bottom: -3px;  /* 左侧保持原样 */
+            margin-bottom: -3px;
             line-height: 1;
             text-align: center;
             position: relative;
@@ -213,12 +213,12 @@
             text-align: center;
             min-height: 12px;
             line-height: 1;
-            margin-top: -3px;  /* 左侧保持原样 */
+            margin-top: -3px;
             position: relative;
             left: 0px;
         }
         
-        /* 右侧区域样式调整 - 重点：增加标签和内容的间距 */
+        /* 右侧区域样式调整 */
         .right-part-1 .info-label-chinese,
         .right-part-2 .info-label-chinese {
             left: -10px;
@@ -240,7 +240,7 @@
             text-shadow: 0 0 3px rgba(255,255,255,0.8);
         }
         
-        /* 右侧单列布局 - 调整间距 */
+        /* 右侧单列布局 */
         .info-single-column {
             display: flex;
             flex-direction: column;
@@ -252,18 +252,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 4px;  /* 从3px增加到4px，增加项目间距 */
+            margin-bottom: 4px;
         }
         
-        /* ===== 重要修改：右侧标签与内容间距增加1px ===== */
         .right-part-1 .info-label,
         .right-part-2 .info-label {
-            margin-bottom: -2px;  /* 从-3px改为-2px，增加1px间距 */
+            margin-bottom: -2px;
         }
         
         .right-part-1 .info-content,
         .right-part-2 .info-content {
-            margin-top: -2px;     /* 从-3px改为-2px，增加1px间距 */
+            margin-top: -2px;
         }
         
         /* 二维码区域 */
@@ -294,7 +293,6 @@
             display: block;
         }
         
-        /* 二维码下方文字改为 SCAN GATE */
         .qrcode-text {
             font-size: 6px;
             color: #a05050;
@@ -315,38 +313,50 @@
             background-color: transparent;
         }
         
-        /* 操作按钮 */
+        /* 姓名和拼音容器 */
+        .name-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.2;
+        }
+        
+        .chinese-name {
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .pinyin-name {
+            font-size: 8px;
+            color: #444;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 操作按钮 - 只保留返回按钮，打印按钮已移除 */
         .action-buttons {
             display: flex;
             gap: 8px;
             width: 100%;
             max-width: 500px;
             margin-top: 15px;
+            justify-content: center;
         }
         
         .action-btn {
-            flex: 1;
-            padding: 8px;
+            padding: 8px 20px;
             border: none;
             border-radius: 3px;
             font-size: 11px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
-        }
-        
-        .print-btn {
-            background: #003366;
-            color: white;
-        }
-        
-        .print-btn:hover {
-            background: #002244;
-        }
-        
-        .back-btn {
             background: #666;
             color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 120px;
         }
         
         .back-btn:hover {
@@ -468,15 +478,14 @@
                 font-size: 9px;
             }
             
-            /* 移动端右侧标签内容间距调整 */
             .right-part-1 .info-label,
             .right-part-2 .info-label {
-                margin-bottom: -1px;  /* 移动端保持增加1px间距 */
+                margin-bottom: -1px;
             }
             
             .right-part-1 .info-content,
             .right-part-2 .info-content {
-                margin-top: -1px;     /* 移动端保持增加1px间距 */
+                margin-top: -1px;
             }
             
             .info-row {
@@ -520,11 +529,19 @@
             }
             
             .info-single-item {
-                margin-bottom: 3px;  /* 移动端项目间距调整 */
+                margin-bottom: 3px;
             }
             
             .info-single-column {
                 margin-top: 3px;
+            }
+            
+            .chinese-name {
+                font-size: 9px;
+            }
+            
+            .pinyin-name {
+                font-size: 7px;
             }
         }
         
@@ -554,6 +571,14 @@
             .qrcode-container {
                 width: 60px;
                 height: 60px;
+            }
+            
+            .chinese-name {
+                font-size: 8px;
+            }
+            
+            .pinyin-name {
+                font-size: 6px;
             }
         }
     </style>
@@ -615,14 +640,16 @@
                     <span class="info-label-chinese">目的地</span>
                     <span class="info-label-english">TO</span>
                 </div>
-                <div class="info-content" id="ticketToCity">SHANGHAI</div>
+                <!-- 目的地：保留客人填写的中文，不转拼音 -->
+                <div class="info-content" id="ticketToCity">上海</div>
             </div>
             <div class="info-item">
                 <div class="info-label">
                     <span class="info-label-chinese">始发地</span>
                     <span class="info-label-english">FROM</span>
                 </div>
-                <div class="info-content" id="ticketFromCity">BEIJING</div>
+                <!-- 始发地：保留客人填写的中文，不转拼音 -->
+                <div class="info-content" id="ticketFromCity">北京</div>
             </div>
             <div class="info-item">
                 <div class="info-label">
@@ -644,17 +671,22 @@
                     <span class="info-label-chinese">姓名</span>
                     <span class="info-label-english">NAME</span>
                 </div>
-                <div class="info-content" id="ticketPassengerName">ZHANG SAN</div>
+                <!-- 姓名：上方显示中文，下方显示拼音（通过JS填入） -->
+                <div class="info-content" style="padding: 0;">
+                    <div class="name-wrapper">
+                        <span class="chinese-name" id="ticketChineseName"></span>
+                        <span class="pinyin-name" id="ticketPinyinName"></span>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- 二维码区域 - 下方文字改为 SCAN GATE -->
+        <!-- 二维码区域 -->
         <div class="qrcode-area">
             <div class="qrcode-container" id="qrcodeContainer">
-                <!-- 这里将用JS生成二维码，不使用id="qrcode"避免冲突 -->
                 <div id="qrcodeDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"></div>
             </div>
-            <div class="qrcode-text">SCAN GATE</div>  <!-- 修改为 SCAN GATE -->
+            <div class="qrcode-text">SCAN GATE</div>
         </div>
         
         <!-- 红字提示 -->
@@ -663,7 +695,7 @@
         </div>
     </div>
         
-    <!-- 右侧：登机信息区 -->
+    <!-- 右侧：登机信息区（同样修改始发地/目的地和姓名显示） -->
     <div class="right-section">
         <!-- 右侧第一部分 -->
         <div class="right-part-1">
@@ -693,7 +725,8 @@
                         <span class="info-label-chinese">目的地</span>
                         <span class="info-label-english">TO</span>
                     </div>
-                    <div class="info-content" id="ticketToCityRight1">SHANGHAI</div>
+                    <!-- 目的地：保留中文 -->
+                    <div class="info-content" id="ticketToCityRight1">上海</div>
                 </div>
                 
                 <div class="info-single-item">
@@ -749,7 +782,8 @@
                         <span class="info-label-chinese">目的地</span>
                         <span class="info-label-english">TO</span>
                     </div>
-                    <div class="info-content" id="ticketToCityRight2">SHANGHAI</div>
+                    <!-- 目的地：保留中文 -->
+                    <div class="info-content" id="ticketToCityRight2">上海</div>
                 </div>
                 
                 <div class="info-single-item">
@@ -779,13 +813,55 @@
     </div>
 </div>
 
-    <!-- 操作按钮 -->
+    <!-- 操作按钮 - 只保留返回按钮，打印按钮已移除 -->
     <div class="action-buttons">
-        <button onclick="window.print()" class="action-btn print-btn">🖨️ 打印登机票</button>
         <button onclick="goBack()" class="action-btn back-btn">↩️ 返回首页</button>
     </div>
     
     <script>
+        // 简单的汉字转拼音函数（只转换常见姓氏和简单规则，仅作示例，实际可根据需要扩展）
+        function chineseToPinyinSimple(chinese) {
+            if (!chinese) return '';
+            
+            // 简单映射表（仅覆盖常见姓氏和示例，实际应用中可使用更完整的拼音库）
+            const pinyinMap = {
+                '张': 'ZHANG', '王': 'WANG', '李': 'LI', '赵': 'ZHAO', '刘': 'LIU',
+                '陈': 'CHEN', '杨': 'YANG', '黄': 'HUANG', '周': 'ZHOU', '吴': 'WU',
+                '徐': 'XU', '孙': 'SUN', '胡': 'HU', '朱': 'ZHU', '高': 'GAO',
+                '林': 'LIN', '何': 'HE', '郭': 'GUO', '马': 'MA', '罗': 'LUO',
+                '梁': 'LIANG', '宋': 'SONG', '郑': 'ZHENG', '谢': 'XIE', '韩': 'HAN',
+                '唐': 'TANG', '冯': 'FENG', '于': 'YU', '董': 'DONG', '萧': 'XIAO',
+                '程': 'CHENG', '曹': 'CAO', '袁': 'YUAN', '邓': 'DENG', '许': 'XU',
+                '傅': 'FU', '沈': 'SHEN', '曾': 'ZENG', '彭': 'PENG', '吕': 'LV',
+                '苏': 'SU', '卢': 'LU', '蒋': 'JIANG', '蔡': 'CAI', '贾': 'JIA',
+                '丁': 'DING', '魏': 'WEI', '薛': 'XUE', '叶': 'YE', '阎': 'YAN',
+                '余': 'YU', '潘': 'PAN', '杜': 'DU', '戴': 'DAI', '夏': 'XIA',
+                '钟': 'ZHONG', '汪': 'WANG', '田': 'TIAN', '任': 'REN', '姜': 'JIANG',
+                '范': 'FAN', '方': 'FANG', '石': 'SHI', '姚': 'YAO', '谭': 'TAN',
+                '廖': 'LIAO', '邹': 'ZOU', '熊': 'XIONG', '金': 'JIN', '陆': 'LU',
+                '郝': 'HAO', '孔': 'KONG', '白': 'BAI', '崔': 'CUI', '康': 'KANG',
+                '毛': 'MAO', '邱': 'QIU', '秦': 'QIN', '江': 'JIANG', '史': 'SHI',
+                '顾': 'GU', '侯': 'HOU', '邵': 'SHAO', '孟': 'MENG', '龙': 'LONG',
+                '万': 'WAN', '段': 'DUAN', '雷': 'LEI', '钱': 'QIAN', '汤': 'TANG'
+            };
+            
+            let pinyin = '';
+            for (let char of chinese) {
+                if (pinyinMap[char]) {
+                    pinyin += pinyinMap[char] + ' ';
+                } else {
+                    // 如果不在映射表中，保留原字符（大写处理）
+                    pinyin += char.toUpperCase() + ' ';
+                }
+            }
+            
+            // 去除末尾空格
+            pinyin = pinyin.trim();
+            
+            // 简单处理：如果是两个字，通常拼音连写或空格，这里用空格分隔
+            return pinyin;
+        }
+        
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
             return {
@@ -824,20 +900,23 @@
         document.addEventListener('DOMContentLoaded', function() {
             const params = getUrlParams();
             
-            const passengerName = params.name.toUpperCase();
-            const idNo = params.id;
+            // 中文姓名（保留原样）
+            const chineseName = params.name || '未填写姓名';
+            // 生成拼音（这里使用简单转换，实际可按需优化）
+            const pinyinName = chineseToPinyinSimple(chineseName);
             
-            document.getElementById('ticketPassengerName').textContent = passengerName;
-            // 注意：原代码中有一个ticketIdNo元素，但实际没有，这里忽略或可添加
-            // 如果有ID显示需求，可以添加对应元素
+            // 填入中文姓名和拼音
+            document.getElementById('ticketChineseName').textContent = chineseName;
+            document.getElementById('ticketPinyinName').textContent = pinyinName;
             
-            const fromCity = params.from;
-            const toCity = params.to;
+            const fromCity = params.from; // 保留中文
+            const toCity = params.to;     // 保留中文
             
-            document.getElementById('ticketFromCity').textContent = fromCity.toUpperCase();
-            document.getElementById('ticketToCity').textContent = toCity.toUpperCase();
-            document.getElementById('ticketToCityRight1').textContent = toCity.toUpperCase();
-            document.getElementById('ticketToCityRight2').textContent = toCity.toUpperCase();
+            // 始发地、目的地直接填入中文，不转拼音/大写
+            document.getElementById('ticketFromCity').textContent = fromCity;
+            document.getElementById('ticketToCity').textContent = toCity;
+            document.getElementById('ticketToCityRight1').textContent = toCity;
+            document.getElementById('ticketToCityRight2').textContent = toCity;
             
             let displayDate, displayTime;
             
@@ -862,9 +941,11 @@
             }
             
             const generateFlightNumber = (from, to) => {
-                if (!from || !to) return 'AA0011';
-                const fromCode = from.charAt(0).toUpperCase();
-                const toCode = to.charAt(0).toUpperCase();
+                // 航班号生成逻辑不变，使用拼音首字母
+                const fromPinyin = chineseToPinyinSimple(from).split(' ')[0] || 'B';
+                const toPinyin = chineseToPinyinSimple(to).split(' ')[0] || 'S';
+                const fromCode = fromPinyin.charAt(0).toUpperCase() || 'B';
+                const toCode = toPinyin.charAt(0).toUpperCase() || 'S';
                 const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 return `${fromCode}${toCode}${randomNum}`;
             };
@@ -915,7 +996,6 @@
             
             // 使用qrcode库生成二维码 (内容为 HAPPY WEDDING)
             if (typeof QRCode !== 'undefined') {
-                // 使用qrcode库 (版本1.5.1)
                 try {
                     QRCode.toDataURL('HAPPY WEDDING', {
                         width: 74,
@@ -948,30 +1028,25 @@
             
             // 备用方案：使用canvas手动绘制简单二维码样式
             function fallbackQR() {
-                // 创建一个简单图案表示二维码
                 const canvas = document.createElement('canvas');
                 canvas.width = 74;
                 canvas.height = 74;
                 const ctx = canvas.getContext('2d');
                 
-                // 绘制一个样式化的二维码样式 (为了视觉上不空白)
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, 74, 74);
                 
                 ctx.fillStyle = '#000000';
-                // 绘制三个定位图案
                 ctx.fillRect(5, 5, 14, 14);
                 ctx.fillRect(55, 5, 14, 14);
                 ctx.fillRect(5, 55, 14, 14);
                 
-                // 添加一些随机点模拟二维码
                 for (let i = 0; i < 30; i++) {
                     const x = 20 + Math.floor(Math.random() * 40);
                     const y = 20 + Math.floor(Math.random() * 40);
                     ctx.fillRect(x, y, 2, 2);
                 }
                 
-                // 将canvas转换为图片
                 const img = document.createElement('img');
                 img.src = canvas.toDataURL();
                 img.alt = 'QR Code (Fallback)';
@@ -986,10 +1061,6 @@
         function goBack() {
             window.location.href = 'index.html';
         }
-        
-        window.addEventListener('afterprint', function() {
-            alert('登机票打印完成！请妥善保管。');
-        });
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>首页 · 糖果按钮</title>
+    <title>首页 · 乳白糖果</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
             font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         }
 
-        /* 图片容器 - 深灰基底 (不变) */
+        /* 图片容器 - 深灰基底 */
         .image-container {
             position: absolute;
             top: 0;
@@ -44,14 +44,14 @@
             filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
         }
 
-        /* 动态光晕呼吸层 (微调得更温暖) */
+        /* 动态光晕层 - 暖白感 */
         .glow-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 220, 200, 0.15) 0%, rgba(230, 200, 180, 0.05) 40%, transparent 80%);
+            background: radial-gradient(circle at 50% 50%, rgba(255, 240, 230, 0.2) 0%, rgba(240, 220, 200, 0.05) 40%, transparent 80%);
             z-index: 5;
             pointer-events: none;
             animation: softBreath 8s infinite alternate ease-in-out;
@@ -62,7 +62,7 @@
             100% { opacity: 0.8; transform: scale(1.2); }
         }
 
-        /* 漂浮粒子 - 糖果色缤纷 (粉/黄/浅蓝/浅绿) */
+        /* 漂浮粒子 - 非常淡的暖白/米色 */
         .floating-particles {
             position: absolute;
             top: 0;
@@ -78,18 +78,19 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(3px);
-            animation: floatParticle 16s infinite linear;
-            box-shadow: 0 0 20px currentColor;
+            animation: floatParticle 18s infinite linear;
+            background: rgba(255, 250, 240, 0.5);
+            box-shadow: 0 0 25px rgba(255, 240, 220, 0.4);
         }
 
         @keyframes floatParticle {
             0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 0; }
-            15% { opacity: 0.6; }
-            85% { opacity: 0.5; }
+            15% { opacity: 0.4; }
+            85% { opacity: 0.3; }
             100% { transform: translateY(-10vh) translateX(30px) scale(0.5); opacity: 0; }
         }
 
-        /* 按钮容器 - 位置微调让糖果更突出 */
+        /* 按钮容器 */
         .button-wrapper {
             position: absolute;
             bottom: 18%;
@@ -100,107 +101,99 @@
             align-items: center;
             z-index: 30;
             pointer-events: none;
-            filter: drop-shadow(0 8px 25px rgba(255, 150, 200, 0.4));
+            filter: drop-shadow(0 10px 25px rgba(220, 200, 180, 0.5));
         }
 
-        /* ========= 糖果感按钮 ========= */
-        .btn-candy {
+        /* ========= 纯乳白糖果按钮 (无图案) ========= */
+        .btn-cream-candy {
             pointer-events: auto;
-            /* 渐变基底 — 草莓奶油感 */
-            background: linear-gradient(145deg, #ffe5b4 0%, #ffb6c1 50%, #ffdab9 100%);
-            background-size: 200% 200%;
+            /* 纯乳白渐变，带微微暖意 */
+            background: linear-gradient(165deg, 
+                #fffbf5 0%, 
+                #fff5e6 30%, 
+                #fef7e9 70%, 
+                #fffaf0 100%);
             border: none;
-            color: #8b4c5e;  /* 深玫瑰色文字，对比柔和 */
+            color: #8b6f5c;  /* 暖灰棕色文字，柔和 */
             font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            padding: 0.8rem 2.4rem;
-            border-radius: 60px 60px 60px 60px;
-            /* 糖果光泽 + 柔软内阴影 */
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            padding: 0.85rem 2.6rem;
+            
+            /* 糖果感圆角 - 非常圆润 */
+            border-radius: 80px 80px 80px 80px;
+            
+            /* 关键：乳白糖果光泽感 */
             box-shadow: 
-                0 15px 25px rgba(255, 140, 170, 0.5),
-                0 0 0 2px rgba(255, 245, 240, 0.7) inset,
-                0 -5px 0 rgba(180, 100, 120, 0.2) inset,
-                0 8px 15px rgba(0, 0, 0, 0.1);
-            text-shadow: 0 2px 5px rgba(255, 255, 255, 0.8);
+                0 18px 30px -8px rgba(160, 130, 110, 0.4),    /* 外阴影暖棕 */
+                0 0 0 2px rgba(255, 255, 255, 0.9) inset,      /* 内层白边 */
+                0 -8px 0 rgba(180, 150, 130, 0.15) inset,       /* 底部内阴影立体 */
+                0 10px 20px -5px rgba(90, 70, 60, 0.2);         /* 二次外阴影 */
+            
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1.2);
             line-height: 1.2;
-            min-width: 190px;
+            min-width: 200px;
             text-align: center;
             -webkit-touch-callout: none;
             user-select: none;
             z-index: 30;
             white-space: nowrap;
-            backdrop-filter: blur(2px);
-            /* 软萌字体 */
-            font-family: 'Segoe UI', 'Helvetica Neue', system-ui, cursive, sans-serif;
-            /* 微微倾斜的糖果感 */
-            transform: rotate(0.5deg);
+            
+            /* 温润字体 */
+            font-family: 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+            
+            /* 微微倾斜增加俏皮感 (糖果感) */
+            transform: rotate(-0.2deg);
+            
+            /* 无任何伪元素/图案 */
         }
 
-        /* 糖果悬停/点击效果 */
-        .btn-candy:active {
+        /* 点击效果 - 依然保持纯乳白，无图案 */
+        .btn-cream-candy:active {
             transform: scale(0.94) rotate(0deg);
-            background: linear-gradient(145deg, #ffdab9 0%, #ffa5b9 70%, #ffc9a9 100%);
+            background: linear-gradient(145deg, #fef3e4 0%, #ffefdb 70%, #fff2e0 100%);
             box-shadow: 
-                0 6px 15px rgba(255, 100, 130, 0.6),
-                0 0 0 3px rgba(255, 255, 255, 0.9) inset,
-                0 -2px 0 rgba(160, 80, 100, 0.2) inset,
-                0 5px 10px rgba(0, 0, 0, 0.1);
-            color: #6a3b48;
+                0 8px 18px -5px rgba(140, 110, 90, 0.5),
+                0 0 0 3px rgba(255, 255, 255, 0.95) inset,
+                0 -3px 0 rgba(150, 120, 100, 0.15) inset,
+                0 5px 12px rgba(0, 0, 0, 0.05);
+            color: #7a5f4b;
             transition: all 0.1s;
         }
 
-        /* 加一点波点装饰 (糖果 sprinkles) 用伪元素实现 */
-        .btn-candy::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            width: 12px;
-            height: 12px;
-            background: rgba(255, 255, 180, 0.8);
-            border-radius: 50%;
-            box-shadow: 
-                35px 8px 0 rgba(200, 230, 255, 0.9),
-                -10px 25px 0 rgba(255, 200, 220, 0.9),
-                45px 20px 0 rgba(210, 255, 200, 0.9),
-                15px 35px 0 rgba(255, 220, 140, 0.8);
-            pointer-events: none;
-            z-index: -1;  /* 藏在文字后面增加层次，但不影响点击 */
-            filter: blur(1.5px);
-            opacity: 0.8;
-        }
-
-        /* 小尺寸调整 */
+        /* 小尺寸适配 */
         @media (max-width: 480px) {
-            .btn-candy {
+            .btn-cream-candy {
                 font-size: 1.3rem;
-                padding: 0.65rem 1.8rem;
-                min-width: 160px;
-                letter-spacing: 1.5px;
-                border-radius: 50px;
-            }
-            .btn-candy::before {
-                transform: scale(0.7);
-                left: 5px;
+                padding: 0.7rem 1.9rem;
+                min-width: 170px;
+                letter-spacing: 2px;
+                border-radius: 70px;
             }
         }
 
         @media (orientation: landscape) and (max-height: 500px) {
-            .button-wrapper { bottom: 20%; }
-            .btn-candy { 
+            .button-wrapper { bottom: 22%; }
+            .btn-cream-candy { 
                 font-size: 1.2rem; 
                 padding: 0.5rem 2rem; 
-                min-width: 170px;
+                min-width: 180px;
             }
+        }
+
+        /* 确保没有任何伪元素或额外装饰 */
+        .btn-cream-candy::before,
+        .btn-cream-candy::after {
+            display: none;
+            content: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- 图片主体 (不变) -->
+    <!-- 图片主体 -->
     <div class="image-container">
         <img id="mainImage" 
              src="https://raw.githubusercontent.com/g2710068621-gif/virtual-plane-system/main/test2.jpg" 
@@ -208,15 +201,15 @@
              onerror="this.onerror=null; this.src='https://github.com/g2710068621-gif/virtual-plane-system/blob/main/test2.jpg?raw=true';">
     </div>
 
-    <!-- 温暖光晕层 (偏粉) -->
+    <!-- 暖白光晕 -->
     <div class="glow-overlay"></div>
 
-    <!-- 糖果色漂浮粒子 (重新生成) -->
+    <!-- 极淡暖白粒子 (无彩色) -->
     <div class="floating-particles" id="particleContainer"></div>
 
-    <!-- 糖果按钮 (替换) -->
+    <!-- 纯乳白糖果按钮 (无图案) -->
     <div class="button-wrapper">
-        <button class="btn-candy" id="magicButton">🍭点一下我🍬</button>
+        <button class="btn-cream-candy" id="magicButton">点一下我</button>
     </div>
 
     <script>
@@ -224,67 +217,58 @@
             const btn = document.getElementById('magicButton');
             const img = document.getElementById('mainImage');
 
-            // --- 生成糖果色粒子 (粉黄蓝绿) ---
+            // --- 生成极淡暖白粒子 (完全无彩色) ---
             function createParticles() {
                 const container = document.getElementById('particleContainer');
                 if (!container) return;
                 
                 container.innerHTML = '';
                 
-                const candyColors = [
-                    '#FFB7C5', // 浅粉
-                    '#FFD1A0', // 奶油黄
-                    '#C1E1FF', // 淡蓝
-                    '#CCE7CB', // 薄荷绿
-                    '#FDD0F9', // 浅紫
-                    '#FFC3A0'  // 蜜桃
-                ];
-                
-                const particleCount = 32; // 多一些更缤纷
+                const particleCount = 24;
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('div');
                     particle.className = 'particle';
                     
-                    const size = 4 + Math.random() * 14; // 大小不一
+                    const size = 5 + Math.random() * 16;
                     particle.style.width = size + 'px';
                     particle.style.height = size + 'px';
                     
-                    const color = candyColors[Math.floor(Math.random() * candyColors.length)];
-                    particle.style.background = color;
-                    particle.style.boxShadow = `0 0 ${15 + size * 2}px ${color}`;
+                    // 乳白/暖白半透明
+                    const opacity = 0.15 + Math.random() * 0.25;
+                    particle.style.background = `rgba(255, 250, 240, ${opacity})`;
+                    
+                    // 非常柔和的光晕
+                    particle.style.boxShadow = `0 0 ${15 + size}px rgba(255, 240, 220, 0.3)`;
                     
                     particle.style.left = Math.random() * 100 + '%';
                     particle.style.bottom = '-20px';
                     
-                    const duration = 12 + Math.random() * 20;
+                    const duration = 14 + Math.random() * 22;
                     particle.style.animation = `floatParticle ${duration}s infinite linear`;
-                    particle.style.animationDelay = Math.random() * 8 + 's';
+                    particle.style.animationDelay = Math.random() * 10 + 's';
                     
-                    // 随机轻微模糊变化
-                    particle.style.filter = `blur(${1 + Math.random() * 4}px)`;
+                    particle.style.filter = `blur(${2 + Math.random() * 4}px)`;
                     
                     container.appendChild(particle);
                 }
             }
             createParticles();
 
-            img.onload = () => console.log('✓ 图片加载成功 | 糖果按钮模式');
+            img.onload = () => console.log('✓ 图片加载成功 | 乳白糖果按钮 (无图案)');
             img.onerror = () => {
-                console.log('→ 图片备用地址 (不影响糖果按钮)');
+                console.log('→ 图片备用地址 (不影响按钮)');
             };
 
             const targetUrl = 'boarding-pass.html';
             
-            // 糖果点击事件 (保留手感, 加一点快乐)
+            // 点击事件
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // 弹跳小动画
-                btn.style.transform = 'scale(0.92) rotate(-0.5deg)';
-                btn.style.background = 'linear-gradient(145deg, #ffc9a9 0%, #ff9eb5 80%, #ffb694 100%)';
+                btn.style.transform = 'scale(0.93) rotate(0.2deg)';
+                btn.style.background = 'linear-gradient(145deg, #fef0df 0%, #ffeada 80%)';
                 
-                // 短暂延迟后跳转
                 setTimeout(() => {
                     window.location.href = targetUrl;
                 }, 180);
@@ -292,7 +276,7 @@
             
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                btn.style.transform = 'scale(0.94) rotate(0.2deg)';
+                btn.style.transform = 'scale(0.95) rotate(-0.1deg)';
             }, { passive: false });
             
             btn.addEventListener('touchend', (e) => {
@@ -303,11 +287,11 @@
             });
             
             btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'rotate(0.5deg) scale(1)';
-                btn.style.background = 'linear-gradient(145deg, #ffe5b4 0%, #ffb6c1 50%, #ffdab9 100%)';
+                btn.style.transform = 'rotate(-0.2deg) scale(1)';
+                btn.style.background = 'linear-gradient(165deg, #fffbf5 0%, #fff5e6 30%, #fef7e9 70%, #fffaf0 100%)';
             });
 
-            console.log('🍬 糖果按钮已就绪 | 甜度爆表');
+            console.log('🥛 纯乳白糖果按钮 | 无图案 · 极简温润');
         })();
     </script>
 </body>
